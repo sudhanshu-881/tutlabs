@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { setPendingRole } from '../lib/services/role';
 
 const Hero = () => (
   <div className="text-center py-16 sm:py-24">
@@ -32,6 +33,13 @@ const FeatureCard: React.FC<{ icon: string; title: string; description: string }
 );
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  const chooseRole = (role: 'student' | 'tutor') => {
+    setPendingRole(role);
+    navigate('/signup');
+  };
+
   return (
     <div className="space-y-16">
       <Hero />
@@ -64,6 +72,14 @@ const Home = () => {
                         title="Verified & Trusted"
                         description="Our platform features verified tutors to ensure quality and safety for all our users."
                       />
+                  </div>
+                  <div className="mt-10 flex justify-center gap-4">
+                    <button onClick={() => chooseRole('student')} className="inline-block bg-white/90 dark:bg-gray-900/70 text-blue-700 dark:text-white font-semibold px-8 py-3 rounded-md shadow-lg border border-white/20 dark:border-gray-700 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 hover:shadow-2xl">
+                      I’m a Student/Parent
+                    </button>
+                    <button onClick={() => chooseRole('tutor')} className="inline-block bg-blue-600 text-white font-semibold px-8 py-3 rounded-md shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 hover:shadow-2xl">
+                      I’m a Tutor
+                    </button>
                   </div>
               </div>
           </div>

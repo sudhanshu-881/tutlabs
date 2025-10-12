@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { getPendingRole, clearPendingRole } from '../lib/services/role';
 import toast from 'react-hot-toast';
 
 const Login: React.FC = () => {
@@ -15,6 +16,15 @@ const Login: React.FC = () => {
     setError('');
     try {
       await login(email, password);
+      const pending = getPendingRole();
+      if (pending) {
+        try {
+          // optional: role switching after login
+          // Not switching automatically on login to avoid confusion.
+        } finally {
+          clearPendingRole();
+        }
+      }
       navigate('/');
     } catch (err: any) {
       if (err.message && err.message.toLowerCase().includes('email not confirmed')) {

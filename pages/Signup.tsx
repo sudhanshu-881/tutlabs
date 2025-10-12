@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { setPendingRole, getPendingRole, clearPendingRole } from '../lib/services/role';
 import toast from 'react-hot-toast';
 
 const Signup: React.FC = () => {
@@ -8,7 +9,7 @@ const Signup: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { signup } = useContext(AuthContext);
+  const { signup, switchRole } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -20,6 +21,13 @@ const Signup: React.FC = () => {
     }
     try {
       await signup(name, email, password);
+      const pending = getPendingRole();
+      if (pending) {
+        try {
+          await switchRole(pending);
+        } catch {}
+        clearPendingRole();
+      }
       navigate('/awaiting-confirmation', { state: { email } });
     } catch (err: any) {
       const msg = err.message || 'Failed to create an account. Please try again.';
