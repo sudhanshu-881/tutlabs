@@ -23,8 +23,18 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
   if (isFeedScreen) {
     return (
       <nav className="sticky top-0 z-40 bg-white dark:bg-black">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-12 flex items-center justify-center">
-          <span className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">tutlabs</span>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-12 grid grid-cols-3 items-center">
+          <div />
+          <div className="flex items-center justify-center">
+            <span className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">tutlabs</span>
+          </div>
+          <div className="hidden md:flex items-center justify-end space-x-3">
+            {user && (
+              <button onClick={logout} className="px-3 py-1.5 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                Logout
+              </button>
+            )}
+          </div>
         </div>
       </nav>
     );
