@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext, supabase } from '../context/AuthContext';
+import type { Role } from '../types';
 import { getPendingRole, clearPendingRole } from '../lib/services/role';
 import toast from 'react-hot-toast';
 
@@ -25,7 +26,26 @@ const Login: React.FC = () => {
           clearPendingRole();
         }
       }
-      navigate('/');
+      // Redirect based on role: tutors -> find students, students -> find tutors
+      try {
+        let next: string = '/';
+        if (supabase) {
+          const { data: userData } = await supabase.auth.getUser();
+          const userId = userData.user?.id;
+          if (userId) {
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('active_role')
+              .eq('id', userId)
+              .single();
+            const role: Role = (profile?.active_role as Role) || 'student';
+            next = role === 'tutor' ? '/students' : '/tutors';
+          }
+        }
+        navigate(next);
+      } catch {
+        navigate('/');
+      }
     } catch (err: any) {
       if (err.message && err.message.toLowerCase().includes('email not confirmed')) {
         const msg = 'Please confirm your email address. Check your inbox for a confirmation link.';
