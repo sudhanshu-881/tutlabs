@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import ThemeToggle from '../ui/ThemeToggle';
 import { Theme } from '../../types';
 import { AuthContext } from '../../context/AuthContext';
-import RoleSwitcher from '../ui/RoleSwitcher';
+// import RoleSwitcher from '../ui/RoleSwitcher';
 
 interface NavbarProps {
   theme: Theme;
@@ -17,7 +17,7 @@ const activeLinkStyle = {
 
 const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { user, logout, switchRole, roleSwitching } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
   
   const linkClasses = "px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 hover:-translate-y-0.5";
   const mobileLinkClasses = "block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors";
@@ -43,11 +43,6 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
             <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
             {user ? (
               <>
-                <RoleSwitcher 
-                  currentRole={user.active_role} 
-                  onSwitchRole={switchRole}
-                  loading={roleSwitching}
-                />
                 <NavLink to="/profile" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-200 hover:-translate-y-0.5">Profile</NavLink>
                 <button onClick={logout} className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-0 active:shadow-md">Logout</button>
               </>
@@ -86,13 +81,6 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
                  {user ? (
                    <>
                     <p className="w-full text-left text-base font-medium text-gray-800 dark:text-gray-200">Welcome, {user.name}</p>
-                    <div className="flex justify-start">
-                      <RoleSwitcher 
-                        currentRole={user.active_role} 
-                        onSwitchRole={switchRole}
-                        loading={roleSwitching}
-                      />
-                    </div>
                     <NavLink to="/profile" className="block w-full text-left rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 py-2" onClick={() => setMobileMenuOpen(false)}>Profile</NavLink>
                     <button onClick={() => { logout(); setMobileMenuOpen(false); }} className="w-full text-center bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-md text-base font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-0 active:shadow-md">Logout</button>
                    </>
