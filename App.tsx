@@ -9,7 +9,7 @@ import StudentsFeed from './pages/feeds/StudentsFeed';
 import Messages from './pages/feeds/Messages';
 import TutorsNearMe from './pages/TutorsNearMe';
 import StudentsNearMe from './pages/StudentsNearMe';
-import Connect from './pages/Contact';
+import Connect from './pages/Connect';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import AwaitingConfirmation from './pages/AwaitingConfirmation';

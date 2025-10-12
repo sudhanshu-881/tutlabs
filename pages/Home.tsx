@@ -30,6 +30,16 @@ const FeatureCard: React.FC<{ icon: string; title: string; description: string }
 
 const Home = () => {
   const navigate = useNavigate();
+  React.useEffect(() => {
+    try {
+      const need = sessionStorage.getItem('ROLE_REQUIRED');
+      if (need === '1') {
+        sessionStorage.removeItem('ROLE_REQUIRED');
+        const el = document.getElementById('role-picker');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    } catch {}
+  }, []);
 
   const chooseRole = (role: 'student' | 'tutor') => {
     setPendingRole(role);

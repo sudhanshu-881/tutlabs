@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import ThemeToggle from '../ui/ThemeToggle';
 import { Theme } from '../../types';
 import { AuthContext } from '../../context/AuthContext';
@@ -20,6 +20,7 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, logout } = useContext(AuthContext);
   const location = useLocation();
+  const navigate = useNavigate();
   const isFeedScreen = location.pathname.startsWith('/feed') || location.pathname.startsWith('/profile');
   const feedPath = user ? (user.active_role === 'tutor' ? '/feed/tutor' : '/feed/student') : '/';
   if (isFeedScreen) {
@@ -81,7 +82,13 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
                     if (!getPendingRole()) {
                       e.preventDefault();
                       window.dispatchEvent(new Event('role:require'));
-                      window.location.hash = '#role-picker';
+                      const el = document.getElementById('role-picker');
+                      if (el) {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      } else {
+                        try { sessionStorage.setItem('ROLE_REQUIRED', '1'); } catch {}
+                        navigate('/');
+                      }
                     }
                   }}
                   className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 hover:-translate-y-0.5"
@@ -94,7 +101,13 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
                     if (!getPendingRole()) {
                       e.preventDefault();
                       window.dispatchEvent(new Event('role:require'));
-                      window.location.hash = '#role-picker';
+                      const el = document.getElementById('role-picker');
+                      if (el) {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      } else {
+                        try { sessionStorage.setItem('ROLE_REQUIRED', '1'); } catch {}
+                        navigate('/');
+                      }
                     }
                   }}
                   className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-500/30 active:translate-y-0 active:shadow-md"
