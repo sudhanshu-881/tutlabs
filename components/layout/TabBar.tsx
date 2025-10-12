@@ -4,7 +4,10 @@ import { AuthContext } from '../../context/AuthContext';
 
 const TabBar: React.FC = () => {
   const { user } = useContext(AuthContext);
-  const feedPath = user?.active_role === 'tutor' ? '/feed/tutor' : '/feed/student';
+  // Do not render bottom tabs for unauthenticated users
+  if (!user) return null;
+
+  const feedPath = user.active_role === 'tutor' ? '/feed/tutor' : '/feed/student';
 
   const base = 'flex-1 flex items-center justify-center py-2';
   const link = 'inline-flex flex-col items-center justify-center text-[11px] font-medium transition-colors';

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import TabBar from './components/layout/TabBar';
@@ -60,6 +60,19 @@ function App() {
     return <Home />;
   };
 
+  const FooterVisibility: React.FC = () => {
+    const { user } = React.useContext(AuthContext);
+    const location = useLocation();
+    const inApp = location.pathname.startsWith('/feed') || location.pathname.startsWith('/profile');
+    if (user || inApp) return null;
+    return <Footer />;
+  };
+
+  const TabBarVisibility: React.FC = () => {
+    const { user } = React.useContext(AuthContext);
+    return user ? <TabBar /> : null;
+  };
+
   return (
     <HashRouter>
       <AuthProvider>
@@ -84,16 +97,8 @@ function App() {
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
-          {(() => {
-            // Hide global footer after login, keep for unauthenticated (landing) only
-            const { user } = React.useContext(AuthContext);
-            return user ? null : <Footer />;
-          })()}
-          {(() => {
-            // Show bottom TabBar only after login
-            const { user } = React.useContext(AuthContext);
-            return user ? <TabBar /> : null;
-          })()}
+          <FooterVisibility />
+          <TabBarVisibility />
         </div>
       </AuthProvider>
     </HashRouter>
