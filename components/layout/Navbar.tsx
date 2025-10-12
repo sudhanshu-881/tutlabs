@@ -20,13 +20,16 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
   const { user, logout } = useContext(AuthContext);
   const location = useLocation();
   const isFeedScreen = location.pathname.startsWith('/feed') || location.pathname.startsWith('/profile');
+  const feedPath = user ? (user.active_role === 'tutor' ? '/feed/tutor' : '/feed/student') : '/';
   if (isFeedScreen) {
     return (
       <nav className="sticky top-0 z-40 bg-white dark:bg-black">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-12 grid grid-cols-3 items-center">
           <div />
           <div className="flex items-center justify-center">
-            <span className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">tutlabs</span>
+            <NavLink to={feedPath} className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
+              tutlabs
+            </NavLink>
           </div>
           <div className="hidden md:flex items-center justify-end space-x-3">
             {user && (
