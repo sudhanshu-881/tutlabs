@@ -3,6 +3,8 @@ import { HashRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import Home from './pages/Home';
+import TutorsFeed from './pages/feeds/TutorsFeed';
+import StudentsFeed from './pages/feeds/StudentsFeed';
 import TutorsNearMe from './pages/TutorsNearMe';
 import StudentsNearMe from './pages/StudentsNearMe';
 import Contact from './pages/Contact';
@@ -51,6 +53,8 @@ function App() {
           <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/feed/tutor" element={<ProtectedRoute><TutorsFeed /></ProtectedRoute>} />
+              <Route path="/feed/student" element={<ProtectedRoute><StudentsFeed /></ProtectedRoute>} />
               <Route path="/tutors" element={<TutorsNearMe />} />
               <Route path="/students" element={<StudentsNearMe />} />
               <Route path="/contact" element={<Contact />} />

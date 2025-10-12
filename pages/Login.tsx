@@ -39,7 +39,7 @@ const Login: React.FC = () => {
               .eq('id', userId)
               .single();
             const role: Role = (profile?.active_role as Role) || 'student';
-            next = role === 'tutor' ? '/students' : '/tutors';
+            next = role === 'tutor' ? '/feed/tutor' : '/feed/student';
           }
         }
         navigate(next);

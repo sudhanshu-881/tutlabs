@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { setPendingRole } from '../lib/services/role';
+import RolePicker from '../components/ui/RolePicker';
 
 const Hero = () => (
   <div className="text-center py-16 sm:py-24">
@@ -11,13 +12,8 @@ const Hero = () => (
     <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-white/90">
       Connect parents, students, and verified tutors. Find nearby tutors or students, manage your profile, and accelerate learning with AI tools.
     </p>
-    <div className="mt-8 flex justify-center gap-4 flex-wrap">
-      <Link to="/tutors" className="inline-block bg-blue-600 text-white font-semibold px-8 py-3 rounded-md shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 hover:shadow-2xl hover:shadow-blue-600/40 active:translate-y-0 active:scale-100">
-        Find a Tutor
-      </Link>
-      <Link to="/students" className="inline-block bg-white/90 dark:bg-gray-800/80 text-blue-700 dark:text-white font-semibold px-8 py-3 rounded-md shadow-lg border border-white/20 dark:border-gray-700 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 hover:shadow-2xl active:translate-y-0 active:scale-100">
-        Find a Student
-      </Link>
+    <div className="mt-8 flex justify-center">
+      <RolePicker />
     </div>
   </div>
 );
