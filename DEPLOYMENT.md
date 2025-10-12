@@ -250,3 +250,42 @@ values
 ,('Physics', '560002', 'Grade 11', 'Weekends', 'Residency Road, BLR', 'Mechanics & optics')
 ,('English', '560003', 'Grade 6', 'Flexible', 'Indiranagar, BLR', 'Grammar & reading');
 ```
+
+### Web Push Subscriptions (Notifications)
+
+This table stores browser push subscriptions so you can send notifications even when users are offline.
+
+```sql
+create extension if not exists pgcrypto; -- for gen_random_uuid()
+
+create table if not exists public.push_subscriptions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  endpoint text not null unique,
+  p256dh text not null,
+  auth text not null,
+  created_at timestamptz not null default now()
+);
+
+alter table public.push_subscriptions enable row level security;
+
+-- Allow each user to manage their own subscriptions
+do $$
+begin
+  if not exists (
+    select 1 from pg_policies where schemaname='public' and tablename='push_subscriptions' and policyname='Users can select own subs'
+  ) then
+    create policy "Users can select own subs" on public.push_subscriptions for select using (auth.uid() = user_id);
+  end if;
+  if not exists (
+    select 1 from pg_policies where schemaname='public' and tablename='push_subscriptions' and policyname='Users can insert own subs'
+  ) then
+    create policy "Users can insert own subs" on public.push_subscriptions for insert with check (auth.uid() = user_id);
+  end if;
+  if not exists (
+    select 1 from pg_policies where schemaname='public' and tablename='push_subscriptions' and policyname='Users can delete own subs'
+  ) then
+    create policy "Users can delete own subs" on public.push_subscriptions for delete using (auth.uid() = user_id);
+  end if;
+end$$;
+```

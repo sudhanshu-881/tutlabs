@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
+import { AuthContext } from '../../context/AuthContext';
+import { subscribeToPush } from '../../lib/services/push';
 
 type Conversation = {
   id: string;
@@ -14,6 +16,13 @@ const mockConversations: Conversation[] = [
 ];
 
 const Messages: React.FC = () => {
+  const { user } = useContext(AuthContext);
+  useEffect(() => {
+    const VAPID = (import.meta as any)?.env?.VITE_VAPID_PUBLIC_KEY;
+    if (user?.id && VAPID) {
+      subscribeToPush(user.id, VAPID).catch(() => {});
+    }
+  }, [user]);
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div className="md:col-span-1 space-y-3">
