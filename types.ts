@@ -8,6 +8,9 @@ export interface Tutor {
   rating: number;
   image_url: string;
   verified: boolean;
+  pincodes?: string[];
+  availability?: string | null;
+  bio?: string | null;
 }
 
 export interface Student {
@@ -17,6 +20,7 @@ export interface Student {
   location: string;
   level: string;
   image_url: string;
+  pincode?: string | null;
 }
 
 export type Theme = 'light' | 'dark';

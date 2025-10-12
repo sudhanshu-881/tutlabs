@@ -27,9 +27,12 @@ const EditProfile: React.FC = () => {
     const [experience, setExperience] = useState('');
     const [location, setLocation] = useState('');
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+    const [availability, setAvailability] = useState('');
+    const [bio, setBio] = useState('');
     // Role-specific fields
     const [tutorSubjectsInput, setTutorSubjectsInput] = useState<string>('');
     const [studentGoalsInput, setStudentGoalsInput] = useState<string>('');
+    const [pincodesInput, setPincodesInput] = useState<string>('');
     const [locationError, setLocationError] = useState<string | null>(null);
     
     const { coords, error: geoError, isLoading: isLocating, requestLocation } = useGeolocation();
@@ -61,6 +64,7 @@ const EditProfile: React.FC = () => {
                     setExperience(data.experience || '');
                     setLocation(data.location || '');
                     setAvatarUrl(data.avatar_url);
+                    // optional fields from profiles if present
                 }
 
                 // Try to fetch role-specific listing details if schema supports it
@@ -68,12 +72,15 @@ const EditProfile: React.FC = () => {
                     try {
                         const { data: tutorRow } = await supabase
                           .from('tutors')
-                          .select('subjects, location')
+                          .select('subjects, location, pincodes, availability, bio')
                           .eq('user_id', user.id)
                           .single();
                         if (tutorRow) {
                             setTutorSubjectsInput(Array.isArray(tutorRow.subjects) ? tutorRow.subjects.join(', ') : '');
                             if (tutorRow.location) setLocation(tutorRow.location);
+                            if (Array.isArray(tutorRow.pincodes)) setPincodesInput(tutorRow.pincodes.join(', '));
+                            setAvailability(tutorRow.availability || '');
+                            setBio(tutorRow.bio || '');
                         }
                     } catch (e) {
                         // Swallow if column does not exist or row not found
@@ -151,6 +158,10 @@ const EditProfile: React.FC = () => {
                   .split(',')
                   .map((s) => s.trim())
                   .filter(Boolean);
+                const pincodes: string[] = pincodesInput
+                  .split(',')
+                  .map((s) => s.trim())
+                  .filter(Boolean);
                 try {
                     // Try find existing row by user_id
                     const { data: existing } = await supabase
@@ -161,13 +172,13 @@ const EditProfile: React.FC = () => {
                     if (existing?.id) {
                         const { error: updErr } = await supabase
                           .from('tutors')
-                          .update({ name: fullName, subjects, location, image_url: avatarUrl || null })
+                          .update({ name: fullName, subjects, location, pincodes, availability, bio, image_url: avatarUrl || null })
                           .eq('id', existing.id);
                         if (updErr) throw updErr;
                     } else {
                         const { error: insErr } = await supabase
                           .from('tutors')
-                          .insert({ user_id: user.id, name: fullName, subjects, location, image_url: avatarUrl || null, rating: 0, verified: false });
+                          .insert({ user_id: user.id, name: fullName, subjects, location, pincodes, availability, bio, image_url: avatarUrl || null, rating: 0, verified: false });
                         if (insErr) throw insErr;
                     }
                 } catch (e: any) {
@@ -278,6 +289,23 @@ const EditProfile: React.FC = () => {
                           <label htmlFor="student-goals" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Learning goals (comma separated)</label>
                           <input id="student-goals" type="text" value={studentGoalsInput} onChange={(e) => setStudentGoalsInput(e.target.value)} className={inputClasses} placeholder="e.g., Calculus I, Essay Writing" />
                         </div>
+                    )}
+
+                    {user?.active_role === 'tutor' && (
+                        <>
+                          <div>
+                            <label htmlFor="pincodes" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Preferred Pincodes (comma separated)</label>
+                            <input id="pincodes" type="text" value={pincodesInput} onChange={(e) => setPincodesInput(e.target.value)} className={inputClasses} placeholder="e.g., 560001, 560002" />
+                          </div>
+                          <div>
+                            <label htmlFor="availability" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Availability (optional)</label>
+                            <input id="availability" type="text" value={availability} onChange={(e) => setAvailability(e.target.value)} className={inputClasses} placeholder="e.g., Weekdays 6-9 PM" />
+                          </div>
+                          <div>
+                            <label htmlFor="bio" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Bio/About (optional)</label>
+                            <textarea id="bio" rows={3} value={bio} onChange={(e) => setBio(e.target.value)} className={inputClasses} placeholder="Tell prospective students about your teaching style and results." />
+                          </div>
+                        </>
                     )}
 
                     <div className="flex justify-end space-x-4 pt-4">
