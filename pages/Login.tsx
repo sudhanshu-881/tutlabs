@@ -38,7 +38,7 @@ const Login: React.FC = () => {
           clearPendingRole();
         }
       }
-      // Redirect based on role: tutors -> find students, students -> find tutors
+      // Redirect based on role; tutors without listing go to onboarding
       try {
         let next: string = '/';
         if (supabase) {
@@ -51,7 +51,20 @@ const Login: React.FC = () => {
               .eq('id', userId)
               .single();
             const role: Role = (profile?.active_role as Role) || 'student';
-            next = role === 'tutor' ? '/feed/tutor' : '/feed/student';
+            if (role === 'tutor') {
+              try {
+                const { data: tutorRow } = await supabase
+                  .from('tutors')
+                  .select('id')
+                  .eq('user_id', userId)
+                  .single();
+                next = tutorRow?.id ? '/feed/tutor' : '/onboarding/tutor';
+              } catch {
+                next = '/feed/tutor';
+              }
+            } else {
+              next = '/feed/student';
+            }
           }
         }
         navigate(next);

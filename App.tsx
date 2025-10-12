@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { supabase } from './context/AuthContext';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import TabBar from './components/layout/TabBar';
@@ -18,6 +19,7 @@ import EditProfile from './pages/EditProfile';
 import ResetPassword from './pages/ResetPassword';
 import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/routing/ProtectedRoute';
+import OnboardingTutor from './pages/onboarding/TutorOnboarding';
 import { Theme } from './types';
 import { AuthProvider } from './context/AuthContext';
 import { useContext } from 'react';
@@ -53,11 +55,41 @@ function App() {
   // Auto-redirect to role-specific feed when logged-in users hit '/'
   const RootRoute = () => {
     const { user } = useContext(AuthContext);
-    if (user?.active_role) {
-      const next = (user.active_role as Role) === 'tutor' ? '/feed/tutor' : '/feed/student';
-      return <Navigate to={next} replace />;
-    }
-    return <Home />;
+    const [next, setNext] = useState<string | null>(null);
+
+    useEffect(() => {
+      let mounted = true;
+      const check = async () => {
+        if (!user?.active_role) {
+          if (mounted) setNext(null);
+          return;
+        }
+        if ((user.active_role as Role) === 'tutor') {
+          try {
+            if (!supabase) {
+              if (mounted) setNext('/feed/tutor');
+              return;
+            }
+            const { data } = await supabase
+              .from('tutors')
+              .select('id')
+              .eq('user_id', user.id)
+              .single();
+            if (mounted) setNext(data?.id ? '/feed/tutor' : '/onboarding/tutor');
+          } catch {
+            if (mounted) setNext('/feed/tutor');
+          }
+        } else {
+          if (mounted) setNext('/feed/student');
+        }
+      };
+      check();
+      return () => { mounted = false; };
+    }, [user]);
+
+    if (!user) return <Home />;
+    if (!next) return null;
+    return <Navigate to={next} replace />;
   };
 
   const FooterVisibility: React.FC = () => {
@@ -82,6 +114,7 @@ function App() {
           <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-8">
             <Routes>
               <Route path="/" element={<RootRoute />} />
+              <Route path="/onboarding/tutor" element={<ProtectedRoute><OnboardingTutor /></ProtectedRoute>} />
               <Route path="/feed/tutor" element={<ProtectedRoute><TutorsFeed /></ProtectedRoute>} />
               <Route path="/feed/student" element={<ProtectedRoute><StudentsFeed /></ProtectedRoute>} />
               <Route path="/feed/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
