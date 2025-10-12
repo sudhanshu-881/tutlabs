@@ -17,6 +17,9 @@ import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/routing/ProtectedRoute';
 import { Theme } from './types';
 import { AuthProvider } from './context/AuthContext';
+import { useContext } from 'react';
+import { AuthContext } from './context/AuthContext';
+import type { Role } from './types';
 import { Toaster } from 'react-hot-toast';
 
 function App() {
@@ -44,6 +47,16 @@ function App() {
     setTheme(theme === 'light' ? 'dark' : 'light');
   };
 
+  // Auto-redirect to role-specific feed when logged-in users hit '/'
+  const RootRoute = () => {
+    const { user } = useContext(AuthContext);
+    if (user?.active_role) {
+      const next = (user.active_role as Role) === 'tutor' ? '/feed/tutor' : '/feed/student';
+      return <Navigate to={next} replace />;
+    }
+    return <Home />;
+  };
+
   return (
     <HashRouter>
       <AuthProvider>
@@ -52,7 +65,7 @@ function App() {
           <Navbar theme={theme} toggleTheme={toggleTheme} />
           <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<RootRoute />} />
               <Route path="/feed/tutor" element={<ProtectedRoute><TutorsFeed /></ProtectedRoute>} />
               <Route path="/feed/student" element={<ProtectedRoute><StudentsFeed /></ProtectedRoute>} />
               <Route path="/tutors" element={<TutorsNearMe />} />

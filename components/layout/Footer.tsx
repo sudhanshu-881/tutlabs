@@ -20,8 +20,8 @@ const Footer: React.FC = () => {
             <h3 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Solutions</h3>
             <ul className="mt-4 space-y-2">
               <li><Link to="/" className="text-base text-gray-600 dark:text-gray-400 hover:text-blue-700 dark:hover:text-blue-300">AI Tools</Link></li>
-              <li><Link to="/tutors" className="text-base text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400">Find Tutors</Link></li>
-              <li><Link to="/students" className="text-base text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400">Find Students</Link></li>
+              <li><Link to="/tutors" className="text-base text-gray-600 dark:text-gray-400 hover:text-pink-600 dark:hover:text-pink-400">Find Tutors</Link></li>
+              <li><Link to="/students" className="text-base text-gray-600 dark:text-gray-400 hover:text-pink-600 dark:hover:text-pink-400">Find Students</Link></li>
             </ul>
           </div>
           <div>

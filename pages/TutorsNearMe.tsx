@@ -138,7 +138,7 @@ const TutorsNearMe: React.FC = () => {
             {isLocating ? <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-blue-500"></div> : <ion-icon name="locate-outline" className="text-xl" />}
           </button>
         </div>
-        <button type="submit" className="bg-emerald-500 text-white px-6 py-2 rounded-md hover:bg-emerald-600 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/30 active:translate-y-0 active:shadow-md">Search</button>
+        <button type="submit" className="bg-pink-600 text-white px-6 py-2 rounded-md hover:bg-pink-700 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:shadow-pink-500/30 active:translate-y-0 active:shadow-md">Search</button>
         <button type="button" onClick={handleClear} className="bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-0 active:shadow-md">Clear</button>
       </form>
 

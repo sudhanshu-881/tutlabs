@@ -43,7 +43,7 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
             <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
             {user ? (
               <>
-                <NavLink to="/profile" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-200 hover:-translate-y-0.5">Profile</NavLink>
+                <NavLink to="/profile" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-pink-600 dark:hover:text-pink-400 transition-all duration-200 hover:-translate-y-0.5">Profile</NavLink>
                 <button onClick={logout} className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-0 active:shadow-md">Logout</button>
               </>
             ) : (

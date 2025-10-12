@@ -129,9 +129,30 @@ const Login: React.FC = () => {
             </div>
 
             <div className="text-sm">
-              <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+              <button
+                type="button"
+                onClick={async () => {
+                  setError('');
+                  try {
+                    if (!email) {
+                      setError('Enter your email above to receive a reset link.');
+                      return;
+                    }
+                    const { error } = await supabase!.auth.resetPasswordForEmail(email, {
+                      redirectTo: window.location.origin + '/#/login'
+                    });
+                    if (error) throw error;
+                    toast.success('Password reset link sent to your email.');
+                  } catch (e: any) {
+                    const msg = e?.message || 'Failed to send reset link. Try again.';
+                    setError(msg);
+                    toast.error(msg);
+                  }
+                }}
+                className="font-medium text-blue-600 hover:text-blue-500"
+              >
                 Forgot your password?
-              </a>
+              </button>
             </div>
           </div>
 
