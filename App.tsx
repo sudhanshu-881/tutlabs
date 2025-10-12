@@ -6,6 +6,7 @@ import TabBar from './components/layout/TabBar';
 import Home from './pages/Home';
 import TutorsFeed from './pages/feeds/TutorsFeed';
 import StudentsFeed from './pages/feeds/StudentsFeed';
+import Messages from './pages/feeds/Messages';
 import TutorsNearMe from './pages/TutorsNearMe';
 import StudentsNearMe from './pages/StudentsNearMe';
 import Contact from './pages/Contact';
@@ -70,6 +71,7 @@ function App() {
               <Route path="/" element={<RootRoute />} />
               <Route path="/feed/tutor" element={<ProtectedRoute><TutorsFeed /></ProtectedRoute>} />
               <Route path="/feed/student" element={<ProtectedRoute><StudentsFeed /></ProtectedRoute>} />
+              <Route path="/feed/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
               <Route path="/tutors" element={<TutorsNearMe />} />
               <Route path="/students" element={<StudentsNearMe />} />
               <Route path="/contact" element={<Contact />} />
