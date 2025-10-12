@@ -17,7 +17,16 @@ export async function listTuitionRequests(filter: { pincodes?: string[]; subject
   let query = supabase.from('tuition_requests').select('*');
   // Apply subject filter client-side for now; server-side can be added with RPC
   const { data, error } = await query.order('created_at', { ascending: false });
-  if (error) throw new Error(error.message);
+  if (error) {
+    const msg = (error.message || '').toLowerCase();
+    const code = (error as any).code;
+    // Gracefully handle missing table during rollout
+    if (code === '42P01' || msg.includes('tuition_requests') || msg.includes('schema cache') || msg.includes('does not exist')) {
+      console.warn('[requestsService] tuition_requests table not found yet; returning empty list');
+      return [];
+    }
+    throw new Error(error.message);
+  }
   let rows = (data || []) as TuitionRequest[];
 
   if (filter.pincodes && filter.pincodes.length > 0) {
