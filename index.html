@@ -19,7 +19,19 @@
       base-uri 'self';
       form-action 'self';
     ">
-    <title>tutlabs - Modern Learning Platform</title>
+    <title>tutlabs — Find Tutors & Students Near You | AI‑Powered Learning</title>
+    <meta name="description" content="Connect parents, students, and verified tutors. Find nearby tutors or students, manage profiles, and accelerate learning with AI tools.">
+    <meta name="keywords" content="edtech, education, tutoring, find tutor, coaching, online classes, students, parents, teachers, learning platform">
+    <link rel="canonical" href="/">
+    <meta property="og:title" content="tutlabs — Find Tutors & Students Near You">
+    <meta property="og:description" content="Connect parents, students, and verified tutors. Nearby search, profiles, and AI tools to learn faster.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://via.placeholder.com/1200x630.png?text=tutlabs">
+    <meta property="og:url" content="/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="tutlabs — Find Tutors & Students Near You">
+    <meta name="twitter:description" content="Connect tutors with parents and students. Nearby search, profiles, and AI tools.">
+    <meta name="twitter:image" content="https://via.placeholder.com/1200x630.png?text=tutlabs">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -27,6 +39,16 @@
         darkMode: 'class',
         theme: {
           extend: {
+            keyframes: {
+              shimmer: {
+                '0%': { backgroundPosition: '0% 50%' },
+                '50%': { backgroundPosition: '100% 50%' },
+                '100%': { backgroundPosition: '0% 50%' },
+              },
+            },
+            animation: {
+              shimmer: 'shimmer 14s ease-in-out infinite',
+            },
             colors: {
               border: 'hsl(214.3 31.8% 91.4%)',
               input: 'hsl(214.3 31.8% 91.4%)',
@@ -83,7 +105,7 @@
 <!-- Optional: local stylesheet. Remove if unused -->
 <!-- <link rel="stylesheet" href="/index.css"> -->
 </head>
-  <body class="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-neon text-foreground dark:from-gray-900 dark:via-blue-950 dark:to-neon">
+  <body class="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-neon bg-[length:200%_200%] animate-shimmer text-foreground dark:from-gray-900 dark:via-blue-950 dark:to-neon">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

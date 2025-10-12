@@ -19,7 +19,7 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Solutions</h3>
             <ul className="mt-4 space-y-2">
-              <li><Link to="#" className="text-base text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">AI Tools</Link></li>
+              <li><Link to="/" className="text-base text-gray-600 dark:text-gray-400 hover:text-blue-700 dark:hover:text-blue-300">AI Tools</Link></li>
               <li><Link to="/tutors" className="text-base text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400">Find Tutors</Link></li>
               <li><Link to="/students" className="text-base text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400">Find Students</Link></li>
             </ul>
@@ -27,17 +27,17 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Support</h3>
             <ul className="mt-4 space-y-2">
-              <li><Link to="#" className="text-base text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Pricing</Link></li>
-              <li><Link to="#" className="text-base text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Documentation</Link></li>
+              <li><Link to="/contact" className="text-base text-gray-600 dark:text-gray-400 hover:text-blue-700 dark:hover:text-blue-300">Pricing</Link></li>
+              <li><Link to="/contact" className="text-base text-gray-600 dark:text-gray-400 hover:text-blue-700 dark:hover:text-blue-300">Documentation</Link></li>
               <li><Link to="/contact" className="text-base text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Contact Us</Link></li>
             </ul>
           </div>
           <div>
             <h3 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Company</h3>
             <ul className="mt-4 space-y-2">
-              <li><Link to="#" className="text-base text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">About</Link></li>
-              <li><Link to="#" className="text-base text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Blog</Link></li>
-              <li><Link to="#" className="text-base text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Careers</Link></li>
+              <li><Link to="/contact" className="text-base text-gray-600 dark:text-gray-400 hover:text-blue-700 dark:hover:text-blue-300">About</Link></li>
+              <li><Link to="/contact" className="text-base text-gray-600 dark:text-gray-400 hover:text-blue-700 dark:hover:text-blue-300">Blog</Link></li>
+              <li><Link to="/contact" className="text-base text-gray-600 dark:text-gray-400 hover:text-blue-700 dark:hover:text-blue-300">Careers</Link></li>
             </ul>
           </div>
         </div>

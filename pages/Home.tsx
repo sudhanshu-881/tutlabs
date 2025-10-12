@@ -7,8 +7,8 @@ const Hero = () => (
       <span className="block">Unlock Your Potential with</span>
       <span className="block text-white">AI-Powered Learning</span>
     </h1>
-    <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-gray-600 dark:text-gray-300">
-      Connect with expert tutors, find eager students, and leverage cutting-edge AI tools to accelerate your educational journey.
+    <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-white/90">
+      Connect parents, students, and verified tutors. Find nearby tutors or students, manage your profile, and accelerate learning with AI tools.
     </p>
     <div className="mt-8 flex justify-center gap-4 flex-wrap">
       <Link to="/tutors" className="inline-block bg-blue-600 text-white font-semibold px-8 py-3 rounded-md shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 hover:shadow-2xl hover:shadow-blue-600/40 active:translate-y-0 active:scale-100">
