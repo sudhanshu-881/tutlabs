@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import ThemeToggle from '../ui/ThemeToggle';
 import { Theme } from '../../types';
 import { AuthContext } from '../../context/AuthContext';
@@ -19,11 +19,10 @@ const activeLinkStyle = {
 const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, logout } = useContext(AuthContext);
-  const location = useLocation();
   const navigate = useNavigate();
-  const isFeedScreen = location.pathname.startsWith('/feed') || location.pathname.startsWith('/profile');
   const feedPath = user ? (user.active_role === 'tutor' ? '/feed/tutor' : '/feed/student') : '/';
-  if (isFeedScreen) {
+  // When authenticated, show compact in-app header and rely on bottom TabBar for navigation
+  if (user) {
     return (
       <nav className="sticky top-0 z-40 bg-white dark:bg-black">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-12 grid grid-cols-3 items-center">
@@ -150,8 +149,48 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
                    </>
                  ) : (
                    <>
-                    <NavLink to="/login" className="w-full text-left text-base font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 py-2" onClick={() => setMobileMenuOpen(false)}>Login</NavLink>
-                    <NavLink to="/signup" className="w-full text-center bg-blue-600 text-white px-4 py-2 rounded-md text-base font-medium hover:bg-blue-700 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-0" onClick={() => setMobileMenuOpen(false)}>Sign Up</NavLink>
+                    <NavLink
+                      to="/login"
+                      className="w-full text-left text-base font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 py-2"
+                      onClick={(e) => {
+                        if (!getPendingRole()) {
+                          e.preventDefault();
+                          window.dispatchEvent(new Event('role:require'));
+                          const el = document.getElementById('role-picker');
+                          if (el) {
+                            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                          } else {
+                            try { sessionStorage.setItem('ROLE_REQUIRED', '1'); } catch {}
+                            navigate('/');
+                          }
+                        } else {
+                          setMobileMenuOpen(false);
+                        }
+                      }}
+                    >
+                      Login
+                    </NavLink>
+                    <NavLink
+                      to="/signup"
+                      className="w-full text-center bg-blue-600 text-white px-4 py-2 rounded-md text-base font-medium hover:bg-blue-700 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-0"
+                      onClick={(e) => {
+                        if (!getPendingRole()) {
+                          e.preventDefault();
+                          window.dispatchEvent(new Event('role:require'));
+                          const el = document.getElementById('role-picker');
+                          if (el) {
+                            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                          } else {
+                            try { sessionStorage.setItem('ROLE_REQUIRED', '1'); } catch {}
+                            navigate('/');
+                          }
+                        } else {
+                          setMobileMenuOpen(false);
+                        }
+                      }}
+                    >
+                      Sign Up
+                    </NavLink>
                    </>
                  )}
               </div>

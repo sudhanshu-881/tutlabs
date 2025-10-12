@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useContext, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext, supabase } from '../context/AuthContext';
 import type { Role } from '../types';
 import { getPendingRole, clearPendingRole } from '../lib/services/role';
@@ -11,6 +11,18 @@ const Login: React.FC = () => {
   const [error, setError] = useState('');
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Guard direct navigation without role selection, except when redirected from a protected route
+  useEffect(() => {
+    const pending = getPendingRole();
+    const cameFromProtected = Boolean((location as any)?.state?.from);
+    if (!pending && !cameFromProtected) {
+      window.dispatchEvent(new Event('role:require'));
+      try { sessionStorage.setItem('ROLE_REQUIRED', '1'); } catch {}
+      navigate('/');
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

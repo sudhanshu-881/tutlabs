@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { setPendingRole, getPendingRole, clearPendingRole } from '../lib/services/role';
@@ -11,6 +11,16 @@ const Signup: React.FC = () => {
   const [error, setError] = useState('');
   const { signup, switchRole } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  // Guard against starting signup without role on mobile/direct link
+  useEffect(() => {
+    const pending = getPendingRole();
+    if (!pending) {
+      window.dispatchEvent(new Event('role:require'));
+      try { sessionStorage.setItem('ROLE_REQUIRED', '1'); } catch {}
+      navigate('/');
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
