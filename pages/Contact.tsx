@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Contact: React.FC = () => {
+const Connect: React.FC = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // In a real application, you would handle form submission here,
@@ -14,7 +14,7 @@ const Contact: React.FC = () => {
     <div className="bg-white dark:bg-gray-800/50 py-12 px-4 sm:px-6 lg:px-8 rounded-lg">
       <div className="relative max-w-xl mx-auto">
         <div className="text-center">
-          <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">Contact Us</h2>
+          <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">Connect</h2>
           <p className="mt-4 text-lg leading-6 text-gray-500 dark:text-gray-400">
             Have a question or need support? Fill out the form below and we'll get back to you as soon as possible.
           </p>
@@ -57,4 +57,4 @@ const Contact: React.FC = () => {
   );
 };
 
-export default Contact;
+export default Connect;

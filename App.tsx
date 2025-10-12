@@ -9,7 +9,7 @@ import StudentsFeed from './pages/feeds/StudentsFeed';
 import Messages from './pages/feeds/Messages';
 import TutorsNearMe from './pages/TutorsNearMe';
 import StudentsNearMe from './pages/StudentsNearMe';
-import Contact from './pages/Contact';
+import Connect from './pages/Contact';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import AwaitingConfirmation from './pages/AwaitingConfirmation';
@@ -66,7 +66,7 @@ function App() {
         <div className="flex flex-col min-h-screen bg-transparent text-foreground">
           <Toaster position="top-right" />
           <Navbar theme={theme} toggleTheme={toggleTheme} />
-          <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-8">
             <Routes>
               <Route path="/" element={<RootRoute />} />
               <Route path="/feed/tutor" element={<ProtectedRoute><TutorsFeed /></ProtectedRoute>} />
@@ -74,7 +74,7 @@ function App() {
               <Route path="/feed/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
               <Route path="/tutors" element={<TutorsNearMe />} />
               <Route path="/students" element={<StudentsNearMe />} />
-              <Route path="/contact" element={<Contact />} />
+              <Route path="/connect" element={<Connect />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/awaiting-confirmation" element={<AwaitingConfirmation />} />

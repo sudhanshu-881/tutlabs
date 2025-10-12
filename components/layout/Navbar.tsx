@@ -62,7 +62,7 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
                 <NavLink to={homePath} className={linkClasses} style={({ isActive }) => isActive ? activeLinkStyle : undefined }>Home</NavLink>
                 <NavLink to="/tutors" className={linkClasses} style={({ isActive }) => isActive ? activeLinkStyle : undefined }>Tutors Near Me</NavLink>
                 <NavLink to="/students" className={linkClasses} style={({ isActive }) => isActive ? activeLinkStyle : undefined }>Students Near Me</NavLink>
-                <NavLink to="/contact" className={linkClasses} style={({ isActive }) => isActive ? activeLinkStyle : undefined }>Contact</NavLink>
+                <NavLink to="/connect" className={linkClasses} style={({ isActive }) => isActive ? activeLinkStyle : undefined }>Connect</NavLink>
               </div>
             </div>
           </div>
@@ -124,7 +124,7 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
             <NavLink to={homePath} className={mobileLinkClasses} onClick={() => setMobileMenuOpen(false)} style={({ isActive }) => isActive ? activeLinkStyle : undefined }>Home</NavLink>
             <NavLink to="/tutors" className={mobileLinkClasses} onClick={() => setMobileMenuOpen(false)} style={({ isActive }) => isActive ? activeLinkStyle : undefined }>Tutors Near Me</NavLink>
             <NavLink to="/students" className={mobileLinkClasses} onClick={() => setMobileMenuOpen(false)} style={({ isActive }) => isActive ? activeLinkStyle : undefined }>Students Near Me</NavLink>
-            <NavLink to="/contact" className={mobileLinkClasses} onClick={() => setMobileMenuOpen(false)} style={({ isActive }) => isActive ? activeLinkStyle : undefined }>Contact</NavLink>
+            <NavLink to="/connect" className={mobileLinkClasses} onClick={() => setMobileMenuOpen(false)} style={({ isActive }) => isActive ? activeLinkStyle : undefined }>Connect</NavLink>
           </div>
           <div className="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
             <div className="px-5">
