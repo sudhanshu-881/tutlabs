@@ -18,10 +18,18 @@ const ResetPassword: React.FC = () => {
 
         const url = new URL(window.location.href);
         const searchParams = url.searchParams;
-        const hash = window.location.hash || '';
-        const hashQueryIndex = hash.indexOf('?');
-        const hashQueryString = hashQueryIndex >= 0 ? hash.substring(hashQueryIndex + 1) : '';
-        const hashParams = new URLSearchParams(hashQueryString);
+        // Robust parse for hash params (handles '#/reset-password#access_token=...' and '#access_token=...')
+        const rawHash = window.location.hash || '';
+        const hashWithoutPound = rawHash.startsWith('#') ? rawHash.slice(1) : rawHash;
+        // Take last segment after any additional '#', or query part after '?'
+        let candidate = '';
+        if (hashWithoutPound.includes('#')) {
+          candidate = hashWithoutPound.split('#').pop() || '';
+        }
+        if (!candidate && hashWithoutPound.includes('?')) {
+          candidate = hashWithoutPound.split('?').pop() || '';
+        }
+        const hashParams = new URLSearchParams(candidate);
 
         const code = searchParams.get('code') || hashParams.get('code');
         const accessToken = hashParams.get('access_token');
