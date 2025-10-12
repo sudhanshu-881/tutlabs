@@ -13,6 +13,7 @@ import Signup from './pages/Signup';
 import AwaitingConfirmation from './pages/AwaitingConfirmation';
 import Profile from './pages/Profile';
 import EditProfile from './pages/EditProfile';
+import ResetPassword from './pages/ResetPassword';
 import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/routing/ProtectedRoute';
 import { Theme } from './types';
@@ -74,6 +75,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/awaiting-confirmation" element={<AwaitingConfirmation />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
               <Route path="/profile/edit" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
