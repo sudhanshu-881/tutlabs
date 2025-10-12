@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 const ResetPassword: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [sessionReady, setSessionReady] = useState(false);
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [error, setError] = useState('');
@@ -14,8 +15,32 @@ const ResetPassword: React.FC = () => {
     const run = async () => {
       try {
         if (!supabase) throw new Error('Auth service unavailable');
-        const { error } = await supabase.auth.exchangeCodeForSession(window.location.href);
-        if (error) throw error;
+
+        const url = new URL(window.location.href);
+        const searchParams = url.searchParams;
+        const hash = window.location.hash || '';
+        const hashQueryIndex = hash.indexOf('?');
+        const hashQueryString = hashQueryIndex >= 0 ? hash.substring(hashQueryIndex + 1) : '';
+        const hashParams = new URLSearchParams(hashQueryString);
+
+        const code = searchParams.get('code') || hashParams.get('code');
+        const accessToken = hashParams.get('access_token');
+        const refreshToken = hashParams.get('refresh_token');
+
+        if (code) {
+          const { error } = await supabase.auth.exchangeCodeForSession(code);
+          if (error) throw error;
+        } else if (accessToken && refreshToken) {
+          const { error } = await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
+          if (error) throw error;
+        }
+
+        const { data } = await supabase.auth.getSession();
+        if (!data.session) {
+          setError('Invalid or expired reset link. Please request a new one.');
+        } else {
+          setSessionReady(true);
+        }
       } catch (e: any) {
         setError(e?.message || 'Invalid or expired reset link.');
       } finally {
@@ -30,6 +55,8 @@ const ResetPassword: React.FC = () => {
     setError('');
     try {
       if (!supabase) throw new Error('Auth service unavailable');
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) throw new Error('Auth session missing. Please use a valid reset link.');
       if (password.length < 6) throw new Error('Password must be at least 6 characters.');
       if (password !== confirm) throw new Error('Passwords do not match.');
       const { error } = await supabase.auth.updateUser({ password });
@@ -59,13 +86,13 @@ const ResetPassword: React.FC = () => {
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <div>
           <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">New password</label>
-          <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-pink-500/50 sm:text-sm dark:bg-gray-700 dark:text-white" required />
+          <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-pink-500/50 sm:text-sm dark:bg-gray-700 dark:text-white" required disabled={!sessionReady} />
         </div>
         <div>
           <label htmlFor="confirm" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm password</label>
-          <input id="confirm" type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-pink-500/50 sm:text-sm dark:bg-gray-700 dark:text-white" required />
+          <input id="confirm" type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-pink-500/50 sm:text-sm dark:bg-gray-700 dark:text-white" required disabled={!sessionReady} />
         </div>
-        <button type="submit" className="w-full bg-pink-600 text-white px-4 py-2 rounded-md hover:bg-pink-700 transition">Update password</button>
+        <button type="submit" className="w-full bg-pink-600 text-white px-4 py-2 rounded-md hover:bg-pink-700 transition disabled:opacity-60 disabled:cursor-not-allowed" disabled={!sessionReady}>Update password</button>
       </form>
     </div>
   );
