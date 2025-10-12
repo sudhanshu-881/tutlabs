@@ -3,6 +3,8 @@ import { Student } from '../types';
 import StudentCard from '../components/ui/StudentCard';
 import { supabase } from '../context/AuthContext';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
+import CardSkeleton from '../components/ui/CardSkeleton';
+import toast from 'react-hot-toast';
 import { useGeolocation } from '../hooks/useGeolocation';
 import { reverseGeocode } from '../utils/geocoding';
 
@@ -56,7 +58,9 @@ const StudentsNearMe: React.FC = () => {
 
       setStudents(finalData);
     } catch (err: any) {
-      setError('Failed to fetch students. Please make sure you have created a "students" table in your Supabase project as per the documentation.');
+      const message = 'Failed to fetch students. Please make sure you have created a "students" table in your Supabase project as per the documentation.';
+      setError(message);
+      toast.error(message);
       console.error(err);
     } finally {
       setLoading(false);
@@ -102,7 +106,13 @@ const StudentsNearMe: React.FC = () => {
 
   const renderContent = () => {
     if (loading) {
-      return <LoadingSpinner />;
+      return (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <CardSkeleton key={i} />
+          ))}
+        </div>
+      );
     }
 
     if (error) {
@@ -155,7 +165,7 @@ const StudentsNearMe: React.FC = () => {
             {isLocating ? <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-blue-500"></div> : <ion-icon name="locate-outline" className="text-xl" />}
           </button>
         </div>
-        <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-500/30 active:translate-y-0 active:shadow-md">Search</button>
+        <button type="submit" className="bg-emerald-500 text-white px-6 py-2 rounded-md hover:bg-emerald-600 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/30 active:translate-y-0 active:shadow-md">Search</button>
         <button type="button" onClick={handleClear} className="bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-0 active:shadow-md">Clear</button>
       </form>
 

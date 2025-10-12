@@ -20,7 +20,7 @@ const StudentCard: React.FC<StudentCardProps> = ({ student }) => {
             </span>
           ))}
         </div>
-         <button className="mt-4 w-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 py-2 px-4 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 active:shadow-sm text-sm font-medium">
+         <button className="mt-4 w-full bg-emerald-500 text-white py-2 px-4 rounded-md hover:bg-emerald-600 transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md hover:shadow-emerald-500/30 active:translate-y-0 active:shadow-sm text-sm font-medium">
           Connect
         </button>
       </div>

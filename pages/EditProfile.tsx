@@ -5,6 +5,7 @@ import Avatar from '../components/ui/Avatar';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import { useGeolocation } from '../hooks/useGeolocation';
 import { reverseGeocode } from '../utils/geocoding';
+import toast from 'react-hot-toast';
 
 // SECURITY NOTE: The security of this page depends on Supabase Row Level Security (RLS).
 // Ensure that you have an RLS policy on the `profiles` table that only allows users to update their own profile.
@@ -26,6 +27,9 @@ const EditProfile: React.FC = () => {
     const [experience, setExperience] = useState('');
     const [location, setLocation] = useState('');
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+    // Role-specific fields
+    const [tutorSubjectsInput, setTutorSubjectsInput] = useState<string>('');
+    const [studentGoalsInput, setStudentGoalsInput] = useState<string>('');
     const [locationError, setLocationError] = useState<string | null>(null);
     
     const { coords, error: geoError, isLoading: isLocating, requestLocation } = useGeolocation();
@@ -58,8 +62,39 @@ const EditProfile: React.FC = () => {
                     setLocation(data.location || '');
                     setAvatarUrl(data.avatar_url);
                 }
+
+                // Try to fetch role-specific listing details if schema supports it
+                if (user?.active_role === 'tutor') {
+                    try {
+                        const { data: tutorRow } = await supabase
+                          .from('tutors')
+                          .select('subjects, location')
+                          .eq('user_id', user.id)
+                          .single();
+                        if (tutorRow) {
+                            setTutorSubjectsInput(Array.isArray(tutorRow.subjects) ? tutorRow.subjects.join(', ') : '');
+                            if (tutorRow.location) setLocation(tutorRow.location);
+                        }
+                    } catch (e) {
+                        // Swallow if column does not exist or row not found
+                    }
+                } else if (user?.active_role === 'student') {
+                    try {
+                        const { data: studentRow } = await supabase
+                          .from('students')
+                          .select('learning_goals, location')
+                          .eq('user_id', user.id)
+                          .single();
+                        if (studentRow) {
+                            setStudentGoalsInput(Array.isArray(studentRow.learning_goals) ? studentRow.learning_goals.join(', ') : '');
+                            if (studentRow.location) setLocation(studentRow.location);
+                        }
+                    } catch (e) {
+                        // Swallow if column does not exist or row not found
+                    }
+                }
             } catch (error: any) {
-                alert(error.message);
+                toast.error(error.message || 'Failed to load your profile');
             } finally {
                 setLoading(false);
             }
@@ -109,11 +144,68 @@ const EditProfile: React.FC = () => {
             };
             let { error } = await supabase.from('profiles').upsert(updates);
             if (error) throw error;
+
+            // 3. Upsert role-specific listing details into tutors/students tables if available
+            if (user.active_role === 'tutor') {
+                const subjects: string[] = tutorSubjectsInput
+                  .split(',')
+                  .map((s) => s.trim())
+                  .filter(Boolean);
+                try {
+                    // Try find existing row by user_id
+                    const { data: existing } = await supabase
+                      .from('tutors')
+                      .select('id')
+                      .eq('user_id', user.id)
+                      .single();
+                    if (existing?.id) {
+                        const { error: updErr } = await supabase
+                          .from('tutors')
+                          .update({ name: fullName, subjects, location, image_url: avatarUrl || null })
+                          .eq('id', existing.id);
+                        if (updErr) throw updErr;
+                    } else {
+                        const { error: insErr } = await supabase
+                          .from('tutors')
+                          .insert({ user_id: user.id, name: fullName, subjects, location, image_url: avatarUrl || null, rating: 0, verified: false });
+                        if (insErr) throw insErr;
+                    }
+                } catch (e: any) {
+                    // Likely schema missing user_id; inform user non-blocking
+                    console.warn('Tutor listing sync skipped:', e?.message);
+                }
+            } else if (user.active_role === 'student') {
+                const learningGoals: string[] = studentGoalsInput
+                  .split(',')
+                  .map((s) => s.trim())
+                  .filter(Boolean);
+                try {
+                    const { data: existing } = await supabase
+                      .from('students')
+                      .select('id')
+                      .eq('user_id', user.id)
+                      .single();
+                    if (existing?.id) {
+                        const { error: updErr } = await supabase
+                          .from('students')
+                          .update({ name: fullName, learning_goals: learningGoals, location, image_url: avatarUrl || null })
+                          .eq('id', existing.id);
+                        if (updErr) throw updErr;
+                    } else {
+                        const { error: insErr } = await supabase
+                          .from('students')
+                          .insert({ user_id: user.id, name: fullName, learning_goals: learningGoals, location, image_url: avatarUrl || null, level: '' });
+                        if (insErr) throw insErr;
+                    }
+                } catch (e: any) {
+                    console.warn('Student listing sync skipped:', e?.message);
+                }
+            }
             
-            alert('Profile updated successfully!');
+            toast.success('Profile updated successfully');
             navigate('/profile');
         } catch (error: any) {
-            alert(error.message);
+            toast.error(error.message || 'Failed to update profile');
         } finally {
             setSaving(false);
         }
@@ -173,6 +265,20 @@ const EditProfile: React.FC = () => {
                         <label htmlFor="experience" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Experience</label>
                         <textarea id="experience" rows={4} placeholder="Describe your tutoring or professional experience..." value={experience} onChange={e => setExperience(e.target.value)} className={inputClasses} maxLength={5000}></textarea>
                     </div>
+
+                    {user?.active_role === 'tutor' && (
+                        <div>
+                          <label htmlFor="tutor-subjects" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Subjects you teach (comma separated)</label>
+                          <input id="tutor-subjects" type="text" value={tutorSubjectsInput} onChange={(e) => setTutorSubjectsInput(e.target.value)} className={inputClasses} placeholder="e.g., Math, Physics, Chemistry" />
+                        </div>
+                    )}
+
+                    {user?.active_role === 'student' && (
+                        <div>
+                          <label htmlFor="student-goals" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Learning goals (comma separated)</label>
+                          <input id="student-goals" type="text" value={studentGoalsInput} onChange={(e) => setStudentGoalsInput(e.target.value)} className={inputClasses} placeholder="e.g., Calculus I, Essay Writing" />
+                        </div>
+                    )}
 
                     <div className="flex justify-end space-x-4 pt-4">
                         <button type="button" onClick={() => navigate('/profile')} className="bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-6 py-2 rounded-md hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">Cancel</button>

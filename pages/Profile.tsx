@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext, supabase } from '../context/AuthContext';
 import { Profile } from '../types';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
+import toast from 'react-hot-toast';
 
 const ProfilePage: React.FC = () => {
     const { user } = useContext(AuthContext);
@@ -43,7 +44,9 @@ const ProfilePage: React.FC = () => {
                 }
 
             } catch (err: any) {
-                setError(err.message || "An error occurred while fetching the profile.");
+                const message = err.message || "An error occurred while fetching the profile.";
+                setError(message);
+                toast.error(message);
             } finally {
                 setLoading(false);
             }

@@ -11,7 +11,7 @@ interface NavbarProps {
 }
 
 const activeLinkStyle = {
-  color: '#3b82f6',
+  color: '#10B981',
   fontWeight: '600'
 };
 
@@ -28,7 +28,7 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <NavLink to="/" className="flex-shrink-0">
-              <span className="text-2xl font-bold text-blue-600 dark:text-blue-500">tutlabs</span>
+              <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">tutlabs</span>
             </NavLink>
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
@@ -48,13 +48,13 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
                   onSwitchRole={switchRole}
                   loading={roleSwitching}
                 />
-                <NavLink to="/profile" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 hover:-translate-y-0.5">Profile</NavLink>
-                <button onClick={logout} className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-0 active:shadow-md">Logout</button>
+                <NavLink to="/profile" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-200 hover:-translate-y-0.5">Profile</NavLink>
+                <button onClick={logout} className="bg-emerald-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-emerald-600 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-0 active:shadow-md">Logout</button>
               </>
             ) : (
               <>
-                <NavLink to="/login" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 hover:-translate-y-0.5">Login</NavLink>
-                <NavLink to="/signup" className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-500/30 active:translate-y-0 active:shadow-md">Sign Up</NavLink>
+                <NavLink to="/login" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-200 hover:-translate-y-0.5">Login</NavLink>
+                <NavLink to="/signup" className="bg-emerald-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-emerald-600 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/30 active:translate-y-0 active:shadow-md">Sign Up</NavLink>
               </>
             )}
           </div>

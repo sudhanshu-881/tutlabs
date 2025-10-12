@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import toast from 'react-hot-toast';
 
 const Signup: React.FC = () => {
   const [name, setName] = useState('');
@@ -21,7 +22,9 @@ const Signup: React.FC = () => {
       await signup(name, email, password);
       navigate('/awaiting-confirmation', { state: { email } });
     } catch (err: any) {
-      setError(err.message || 'Failed to create an account. Please try again.');
+      const msg = err.message || 'Failed to create an account. Please try again.';
+      setError(msg);
+      toast.error(msg);
     }
   };
 

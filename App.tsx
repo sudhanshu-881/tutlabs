@@ -11,8 +11,11 @@ import Signup from './pages/Signup';
 import AwaitingConfirmation from './pages/AwaitingConfirmation';
 import Profile from './pages/Profile';
 import EditProfile from './pages/EditProfile';
+import NotFound from './pages/NotFound';
+import ProtectedRoute from './components/routing/ProtectedRoute';
 import { Theme } from './types';
 import { AuthProvider } from './context/AuthContext';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   const [theme, setTheme] = useState<Theme>('light');
@@ -43,6 +46,7 @@ function App() {
     <HashRouter>
       <AuthProvider>
         <div className="flex flex-col min-h-screen bg-background text-foreground dark:bg-gray-900 dark:text-gray-100">
+          <Toaster position="top-right" />
           <Navbar theme={theme} toggleTheme={toggleTheme} />
           <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <Routes>
@@ -53,8 +57,9 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/awaiting-confirmation" element={<AwaitingConfirmation />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/profile/edit" element={<EditProfile />} />
+              <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+              <Route path="/profile/edit" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
           <Footer />

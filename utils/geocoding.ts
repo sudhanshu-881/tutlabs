@@ -12,12 +12,14 @@ type NominatimResponse = {
 };
 
 export const reverseGeocode = async (lat: number, lon: number): Promise<string> => {
-  const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`;
+  const email = (import.meta as any)?.env?.VITE_CONTACT_EMAIL || 'support@example.com';
+  const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&email=${encodeURIComponent(email)}`;
   
   try {
     const response = await fetch(url, {
       headers: {
         'Accept-Language': 'en-US,en;q=0.9',
+        'User-Agent': `tutlabs/1.0 (${email})`
       },
     });
 

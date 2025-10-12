@@ -29,7 +29,7 @@ const TutorCard: React.FC<TutorCardProps> = ({ tutor }) => {
             </span>
           ))}
         </div>
-        <button className="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md hover:shadow-blue-500/30 active:translate-y-0 active:shadow-sm text-sm font-medium">
+        <button className="mt-4 w-full bg-emerald-500 text-white py-2 px-4 rounded-md hover:bg-emerald-600 transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md hover:shadow-emerald-500/30 active:translate-y-0 active:shadow-sm text-sm font-medium">
           View Profile
         </button>
       </div>

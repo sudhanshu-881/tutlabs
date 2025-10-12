@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { supabase } from '../context/AuthContext';
+import toast from 'react-hot-toast';
 
 const AwaitingConfirmation: React.FC = () => {
   const location = useLocation();
@@ -36,9 +37,13 @@ const AwaitingConfirmation: React.FC = () => {
         throw resendError;
       }
 
-      setMessage('A new confirmation link has been sent to your email address.');
+      const msg = 'A new confirmation link has been sent to your email address.';
+      setMessage(msg);
+      toast.success(msg);
     } catch (err: any) {
-        setError(err.message || 'An error occurred while resending the link. Please try again.');
+        const message = err.message || 'An error occurred while resending the link. Please try again.';
+        setError(message);
+        toast.error(message);
     } finally {
         setLoading(false);
     }

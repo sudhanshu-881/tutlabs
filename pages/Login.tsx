@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import toast from 'react-hot-toast';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -17,12 +18,18 @@ const Login: React.FC = () => {
       navigate('/');
     } catch (err: any) {
       if (err.message && err.message.toLowerCase().includes('email not confirmed')) {
-        setError('Please confirm your email address. Check your inbox for a confirmation link.');
+        const msg = 'Please confirm your email address. Check your inbox for a confirmation link.';
+        setError(msg);
+        toast.error(msg);
       } else if (err.message && err.message.toLowerCase().includes('invalid login credentials')) {
-        setError('Invalid email or password. Please try again.');
+        const msg = 'Invalid email or password. Please try again.';
+        setError(msg);
+        toast.error(msg);
       }
       else {
-        setError(err.message || 'Failed to sign in. Please check your credentials.');
+        const msg = err.message || 'Failed to sign in. Please check your credentials.';
+        setError(msg);
+        toast.error(msg);
       }
     }
   };
