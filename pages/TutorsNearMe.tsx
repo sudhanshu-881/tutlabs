@@ -22,13 +22,14 @@ const TutorsNearMe: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [subjectQuery, setSubjectQuery] = useState('');
   const [locationQuery, setLocationQuery] = useState('');
+  const [pincodeQuery, setPincodeQuery] = useState('');
   const { coords, error: geoError, isLoading: isLocating, requestLocation } = useGeolocation();
 
-  const fetchTutors = useCallback(async (subject: string, location: string) => {
+  const fetchTutors = useCallback(async (subject: string, location: string, pincode: string) => {
     try {
       setLoading(true);
       setError(null);
-      const data = await listTutors({ subject, location });
+      const data = await listTutors({ subject, location, pincode });
       setTutors(data);
     } catch (err: any) {
       const message = 'Failed to fetch tutors. Please make sure you have created a "tutors" table in your Supabase project as per the documentation.';
@@ -41,7 +42,7 @@ const TutorsNearMe: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    fetchTutors('', '');
+    fetchTutors('', '', '');
   }, [fetchTutors]);
   
   // Effect to handle geolocation result
@@ -50,7 +51,7 @@ const TutorsNearMe: React.FC = () => {
       reverseGeocode(coords.latitude, coords.longitude)
         .then(locationName => {
           setLocationQuery(locationName);
-          fetchTutors(subjectQuery, locationName); // Auto-search with new location
+          fetchTutors(subjectQuery, locationName, pincodeQuery); // Auto-search with new location
         })
         .catch(err => {
           setError(err.message);
@@ -63,13 +64,14 @@ const TutorsNearMe: React.FC = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    fetchTutors(subjectQuery, locationQuery);
+    fetchTutors(subjectQuery, locationQuery, pincodeQuery);
   };
   
   const handleClear = () => {
     setSubjectQuery('');
     setLocationQuery('');
-    fetchTutors('', '');
+    setPincodeQuery('');
+    fetchTutors('', '', '');
   };
 
   const handleFindNearMe = () => {
@@ -119,6 +121,13 @@ const TutorsNearMe: React.FC = () => {
           value={subjectQuery}
           onChange={(e) => setSubjectQuery(e.target.value)}
           className="flex-grow p-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-shadow"
+        />
+        <input 
+          type="text" 
+          placeholder="Pincode (e.g., 560001)" 
+          value={pincodeQuery}
+          onChange={(e) => setPincodeQuery(e.target.value)}
+          className="w-full md:w-40 p-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-shadow"
         />
         <div className="relative flex-grow">
           <input 

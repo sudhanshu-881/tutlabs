@@ -310,7 +310,7 @@ const EditProfile: React.FC = () => {
 
                     <div className="flex justify-end space-x-4 pt-4">
                         <button type="button" onClick={() => navigate('/profile')} className="bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-6 py-2 rounded-md hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">Cancel</button>
-                        <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/30 active:translate-y-0 active:shadow-md" disabled={saving}>
+                        <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/30 active:translate-y-0 active:shadow-md" disabled={saving || (user?.active_role==='tutor' && (!tutorSubjectsInput.trim() || !pincodesInput.trim() || !location.trim()))}>
                             {saving ? 'Saving...' : 'Save Changes'}
                         </button>
                     </div>
