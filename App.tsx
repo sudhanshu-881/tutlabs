@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
+import TabBar from './components/layout/TabBar';
 import Home from './pages/Home';
 import TutorsFeed from './pages/feeds/TutorsFeed';
 import StudentsFeed from './pages/feeds/StudentsFeed';
@@ -82,6 +83,7 @@ function App() {
             </Routes>
           </main>
           <Footer />
+          <TabBar />
         </div>
       </AuthProvider>
     </HashRouter>
