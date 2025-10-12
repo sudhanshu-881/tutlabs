@@ -80,7 +80,7 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
                   onClick={(e) => {
                     if (!getPendingRole()) {
                       e.preventDefault();
-                      alert('Please select your role first. Choose Student/Parent or Tutor from the homepage.');
+                      window.dispatchEvent(new Event('role:require'));
                       window.location.hash = '#role-picker';
                     }
                   }}
@@ -93,7 +93,7 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
                   onClick={(e) => {
                     if (!getPendingRole()) {
                       e.preventDefault();
-                      alert('Please select your role first. Choose Student/Parent or Tutor from the homepage.');
+                      window.dispatchEvent(new Event('role:require'));
                       window.location.hash = '#role-picker';
                     }
                   }}
