@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import ThemeToggle from '../ui/ThemeToggle';
 import { Theme } from '../../types';
 import { AuthContext } from '../../context/AuthContext';
@@ -18,6 +18,17 @@ const activeLinkStyle = {
 const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, logout } = useContext(AuthContext);
+  const location = useLocation();
+  const isFeedScreen = location.pathname.startsWith('/feed') || location.pathname.startsWith('/profile');
+  if (isFeedScreen) {
+    return (
+      <nav className="sticky top-0 z-40 bg-white dark:bg-black">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-12 flex items-center justify-center">
+          <span className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">tutlabs</span>
+        </div>
+      </nav>
+    );
+  }
   
   const linkClasses = "px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 hover:-translate-y-0.5";
   const mobileLinkClasses = "block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors";
