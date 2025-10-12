@@ -89,7 +89,11 @@ function App() {
             const { user } = React.useContext(AuthContext);
             return user ? null : <Footer />;
           })()}
-          <TabBar />
+          {(() => {
+            // Show bottom TabBar only after login
+            const { user } = React.useContext(AuthContext);
+            return user ? <TabBar /> : null;
+          })()}
         </div>
       </AuthProvider>
     </HashRouter>
