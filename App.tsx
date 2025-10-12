@@ -84,7 +84,11 @@ function App() {
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
-          <Footer />
+          {(() => {
+            // Hide global footer after login, keep for unauthenticated (landing) only
+            const { user } = React.useContext(AuthContext);
+            return user ? null : <Footer />;
+          })()}
           <TabBar />
         </div>
       </AuthProvider>

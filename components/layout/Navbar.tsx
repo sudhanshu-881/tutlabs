@@ -3,6 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import ThemeToggle from '../ui/ThemeToggle';
 import { Theme } from '../../types';
 import { AuthContext } from '../../context/AuthContext';
+import { getPendingRole } from '../../lib/services/role';
 // import RoleSwitcher from '../ui/RoleSwitcher';
 
 interface NavbarProps {
@@ -74,8 +75,32 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
               </>
             ) : (
               <>
-                <NavLink to="/login" className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 hover:-translate-y-0.5">Login</NavLink>
-                <NavLink to="/signup" className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-500/30 active:translate-y-0 active:shadow-md">Sign Up</NavLink>
+                <NavLink
+                  to="/login"
+                  onClick={(e) => {
+                    if (!getPendingRole()) {
+                      e.preventDefault();
+                      alert('Please select your role first. Choose Student/Parent or Tutor from the homepage.');
+                      window.location.hash = '#role-picker';
+                    }
+                  }}
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 hover:-translate-y-0.5"
+                >
+                  Login
+                </NavLink>
+                <NavLink
+                  to="/signup"
+                  onClick={(e) => {
+                    if (!getPendingRole()) {
+                      e.preventDefault();
+                      alert('Please select your role first. Choose Student/Parent or Tutor from the homepage.');
+                      window.location.hash = '#role-picker';
+                    }
+                  }}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-500/30 active:translate-y-0 active:shadow-md"
+                >
+                  Sign Up
+                </NavLink>
               </>
             )}
           </div>

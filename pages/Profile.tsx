@@ -6,7 +6,7 @@ import LoadingSpinner from '../components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
 
 const ProfilePage: React.FC = () => {
-    const { user } = useContext(AuthContext);
+    const { user, logout } = useContext(AuthContext);
     const [profile, setProfile] = useState<Profile | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -76,6 +76,7 @@ const ProfilePage: React.FC = () => {
                         >
                             Edit Profile
                         </Link>
+                        <button onClick={logout} className="mt-2 inline-block md:hidden bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-6 py-2 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition-all">Logout</button>
                     </div>
                 </div>
                 <div className="mt-8 border-t border-gray-200 dark:border-gray-700 pt-8">
