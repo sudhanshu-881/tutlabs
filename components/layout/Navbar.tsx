@@ -23,12 +23,12 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
   const mobileLinkClasses = "block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors";
 
   return (
-    <nav className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800 shadow-sm">
+    <nav className="bg-white/70 dark:bg-gray-900/70 backdrop-blur-md sticky top-0 z-50 border-b border-white/20 dark:border-white/10 shadow-sm">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <NavLink to="/" className="flex-shrink-0">
-              <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">tutlabs</span>
+              <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">tutlabs</span>
             </NavLink>
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
@@ -49,12 +49,12 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
                   loading={roleSwitching}
                 />
                 <NavLink to="/profile" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-200 hover:-translate-y-0.5">Profile</NavLink>
-                <button onClick={logout} className="bg-emerald-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-emerald-600 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-0 active:shadow-md">Logout</button>
+                <button onClick={logout} className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-0 active:shadow-md">Logout</button>
               </>
             ) : (
               <>
-                <NavLink to="/login" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-200 hover:-translate-y-0.5">Login</NavLink>
-                <NavLink to="/signup" className="bg-emerald-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-emerald-600 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/30 active:translate-y-0 active:shadow-md">Sign Up</NavLink>
+                <NavLink to="/login" className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 hover:-translate-y-0.5">Login</NavLink>
+                <NavLink to="/signup" className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-500/30 active:translate-y-0 active:shadow-md">Sign Up</NavLink>
               </>
             )}
           </div>

@@ -135,11 +135,11 @@ const StudentsNearMe: React.FC = () => {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Find Students Near You</h1>
-        <p className="mt-2 text-lg text-gray-600 dark:text-gray-400">Connect with students who need your expertise.</p>
+        <h1 className="text-3xl font-bold text-white drop-shadow-[0_2px_10px_rgba(59,130,246,0.35)]">Find Students Near You</h1>
+        <p className="mt-2 text-lg text-white/90">Connect with students who need your expertise.</p>
       </div>
 
-      <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+      <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-4 p-4 bg-white/80 dark:bg-gray-900/60 backdrop-blur rounded-lg">
         <input 
           type="text" 
           placeholder="Subject you teach (e.g., Physics)"

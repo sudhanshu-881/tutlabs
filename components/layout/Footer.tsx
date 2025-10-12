@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+    <footer className="bg-white/70 dark:bg-gray-900/70 backdrop-blur border-t border-white/20 dark:border-white/10">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
-            <h2 className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">tutlabs</h2>
+            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">tutlabs</h2>
             <p className="text-gray-600 dark:text-gray-400">The modern educational platform offering interactive AI-driven tools and learning experiences.</p>
             <div className="flex space-x-4">
                 <a href="#" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-transform duration-300 hover:scale-110 hover:-translate-y-1"><ion-icon name="logo-facebook" className="text-2xl" /></a>

@@ -7,7 +7,7 @@ interface StudentCardProps {
 
 const StudentCard: React.FC<StudentCardProps> = ({ student }) => {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transform hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
+    <div className="bg-white/90 dark:bg-gray-900/70 backdrop-blur rounded-lg shadow-md overflow-hidden transform hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
       <img className="h-48 w-full object-cover" src={student.image_url} alt={student.name} />
       <div className="p-4">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{student.name}</h3>
@@ -20,7 +20,7 @@ const StudentCard: React.FC<StudentCardProps> = ({ student }) => {
             </span>
           ))}
         </div>
-         <button className="mt-4 w-full bg-emerald-500 text-white py-2 px-4 rounded-md hover:bg-emerald-600 transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md hover:shadow-emerald-500/30 active:translate-y-0 active:shadow-sm text-sm font-medium">
+         <button className="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md hover:shadow-blue-500/30 active:translate-y-0 active:shadow-sm text-sm font-medium">
           Connect
         </button>
       </div>

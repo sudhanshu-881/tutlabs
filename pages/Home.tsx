@@ -3,18 +3,18 @@ import { Link } from 'react-router-dom';
 
 const Hero = () => (
   <div className="text-center py-16 sm:py-24">
-    <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-gray-900 dark:text-white">
+    <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white drop-shadow-[0_2px_10px_rgba(59,130,246,0.35)]">
       <span className="block">Unlock Your Potential with</span>
-      <span className="block text-blue-600 dark:text-blue-500">AI-Powered Learning</span>
+      <span className="block text-white">AI-Powered Learning</span>
     </h1>
     <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-gray-600 dark:text-gray-300">
       Connect with expert tutors, find eager students, and leverage cutting-edge AI tools to accelerate your educational journey.
     </p>
     <div className="mt-8 flex justify-center gap-4 flex-wrap">
-      <Link to="/tutors" className="inline-block bg-emerald-500 text-white font-semibold px-8 py-3 rounded-md shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 hover:shadow-2xl hover:shadow-emerald-500/40 active:translate-y-0 active:scale-100">
+      <Link to="/tutors" className="inline-block bg-blue-600 text-white font-semibold px-8 py-3 rounded-md shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 hover:shadow-2xl hover:shadow-blue-600/40 active:translate-y-0 active:scale-100">
         Find a Tutor
       </Link>
-      <Link to="/students" className="inline-block bg-white dark:bg-gray-700 text-emerald-600 dark:text-white font-semibold px-8 py-3 rounded-md shadow-lg border border-gray-200 dark:border-gray-600 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 hover:shadow-2xl active:translate-y-0 active:scale-100">
+      <Link to="/students" className="inline-block bg-white/90 dark:bg-gray-800/80 text-blue-700 dark:text-white font-semibold px-8 py-3 rounded-md shadow-lg border border-white/20 dark:border-gray-700 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 hover:shadow-2xl active:translate-y-0 active:scale-100">
         Find a Student
       </Link>
     </div>
@@ -38,7 +38,7 @@ const Home = () => {
       <div className="py-12 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center">
-                  <h2 className="text-base text-emerald-600 dark:text-emerald-400 font-semibold tracking-wide uppercase">Why tutlabs?</h2>
+                  <h2 className="text-base text-blue-200 dark:text-blue-300 font-semibold tracking-wide uppercase">Why tutlabs?</h2>
                   <p className="mt-2 text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight sm:text-4xl">
                       A better way to learn and teach
                   </p>

@@ -135,11 +135,11 @@ const TutorsNearMe: React.FC = () => {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Find Tutors Near You</h1>
-        <p className="mt-2 text-lg text-gray-600 dark:text-gray-400">Browse our list of verified and experienced tutors.</p>
+        <h1 className="text-3xl font-bold text-white drop-shadow-[0_2px_10px_rgba(59,130,246,0.35)]">Find Tutors Near You</h1>
+        <p className="mt-2 text-lg text-white/90">Browse our list of verified and experienced tutors.</p>
       </div>
 
-      <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+      <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-4 p-4 bg-white/80 dark:bg-gray-900/60 backdrop-blur rounded-lg">
         <input 
           type="text" 
           placeholder="Search by subject (e.g., Math)" 
