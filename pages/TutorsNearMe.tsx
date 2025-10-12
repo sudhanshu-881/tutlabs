@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Tutor } from '../types';
 import TutorCard from '../components/ui/TutorCard';
-import { supabase } from '../context/AuthContext';
+import { listTutors } from '../lib/services/tutorService';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import CardSkeleton from '../components/ui/CardSkeleton';
 import toast from 'react-hot-toast';
@@ -25,38 +25,11 @@ const TutorsNearMe: React.FC = () => {
   const { coords, error: geoError, isLoading: isLocating, requestLocation } = useGeolocation();
 
   const fetchTutors = useCallback(async (subject: string, location: string) => {
-    if (!supabase) {
-      setError("Database connection is not available. Please configure your Supabase credentials.");
-      setLoading(false);
-      return;
-    }
-
     try {
       setLoading(true);
       setError(null);
-      let query = supabase
-        .from('tutors')
-        .select('*');
-
-      if (location) {
-        query = query.ilike('location', `%${location}%`);
-      }
-      
-      const { data, error } = await query;
-
-      if (error) {
-        throw new Error(error.message);
-      }
-      
-      let finalData = data || [];
-
-      if (subject) {
-        finalData = finalData.filter(tutor => 
-          (tutor.subjects || []).some(s => s.toLowerCase().includes(subject.toLowerCase()))
-        );
-      }
-
-      setTutors(finalData);
+      const data = await listTutors({ subject, location });
+      setTutors(data);
     } catch (err: any) {
       const message = 'Failed to fetch tutors. Please make sure you have created a "tutors" table in your Supabase project as per the documentation.';
       setError(message);

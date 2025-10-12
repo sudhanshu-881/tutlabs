@@ -13,7 +13,8 @@
     "react-dom": "^19.2.0",
     "react-router-dom": "^6.23.0",
     "@supabase/supabase-js": "^2.47.10",
-    "react-hot-toast": "^2.4.1"
+    "react-hot-toast": "^2.4.1",
+    "@upstash/redis": "^1.28.3"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

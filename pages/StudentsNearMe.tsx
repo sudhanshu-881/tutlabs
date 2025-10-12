@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Student } from '../types';
 import StudentCard from '../components/ui/StudentCard';
-import { supabase } from '../context/AuthContext';
+import { listStudents } from '../lib/services/studentService';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import CardSkeleton from '../components/ui/CardSkeleton';
 import toast from 'react-hot-toast';
@@ -25,38 +25,11 @@ const StudentsNearMe: React.FC = () => {
   const { coords, error: geoError, isLoading: isLocating, requestLocation } = useGeolocation();
 
   const fetchStudents = useCallback(async (subject: string, location: string) => {
-    if (!supabase) {
-      setError("Database connection is not available. Please configure your Supabase credentials.");
-      setLoading(false);
-      return;
-    }
-    
     try {
       setLoading(true);
       setError(null);
-      let query = supabase
-        .from('students')
-        .select('*');
-
-      if (location) {
-        query = query.ilike('location', `%${location}%`);
-      }
-
-      const { data, error } = await query;
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      let finalData = data || [];
-
-      if (subject) {
-        finalData = finalData.filter(student =>
-          (student.learning_goals || []).some(goal => goal.toLowerCase().includes(subject.toLowerCase()))
-        );
-      }
-
-      setStudents(finalData);
+      const data = await listStudents({ subject, location });
+      setStudents(data);
     } catch (err: any) {
       const message = 'Failed to fetch students. Please make sure you have created a "students" table in your Supabase project as per the documentation.';
       setError(message);
