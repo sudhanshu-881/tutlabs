@@ -7,10 +7,10 @@ const Hero = () => (
   <div className="text-center py-16 sm:py-24">
     <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white drop-shadow-[0_2px_10px_rgba(59,130,246,0.35)]">
       <span className="block">Unlock Your Potential with</span>
-      <span className="block text-white">AI-Powered Learning</span>
+      <span className="block text-white">One on 1 Personalised Learning</span>
     </h1>
     <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-white/90">
-      Connect parents, students, and verified tutors. Find nearby tutors or students, manage your profile, and accelerate learning with AI tools.
+      Connect parents, students, and verified tutors. Find nearby tutors or students, manage your profile, and accelerate learning with tutlabs.
     </p>
     <div className="mt-8 flex justify-center">
       <RolePicker />
@@ -47,7 +47,7 @@ const Home = () => {
                       A better way to learn and teach
                   </p>
                   <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-500 dark:text-gray-400">
-                      We provide the tools and connections to make education more effective and accessible for everyone.
+                      We provide the platform and connections to make education more effective and accessible for everyone.
                   </p>
               </div>
 
@@ -66,7 +66,7 @@ const Home = () => {
                       <FeatureCard 
                         icon="shield-checkmark-outline"
                         title="Verified & Trusted"
-                        description="Our platform features verified tutors to ensure quality and safety for all our users."
+                        description="Our platform features verified local tutors to ensure quality and safety for all our users."
                       />
                   </div>
                   <div className="mt-10 flex justify-center gap-4">
