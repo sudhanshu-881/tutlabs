@@ -131,7 +131,7 @@ function App() {
             </Routes>
           </main>
           <FooterVisibility />
-          <TabBarVisibility />
+          <TabBar />
         </div>
       </AuthProvider>
     </HashRouter>
