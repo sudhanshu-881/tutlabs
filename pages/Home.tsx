@@ -42,7 +42,7 @@ const Home = () => {
       <div className="py-12 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center">
-                  <h2 className="text-base text-blue-200 dark:text-blue-300 font-semibold tracking-wide uppercase">Why tutlabs?</h2>
+                  <h2 className="text-base text-blue-200 dark:text-blue-300 font-semibold tracking-wide lowercase">Why tutlabs?</h2>
                   <p className="mt-2 text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight sm:text-4xl">
                       A better way to learn and teach
                   </p>
