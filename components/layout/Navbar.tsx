@@ -28,7 +28,7 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-12 grid grid-cols-3 items-center">
           <div />
           <div className="flex items-center justify-center">
-            <NavLink to={feedPath} className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white font-brand lowercase">
+            <NavLink to={feedPath} className="text-[1.875rem] leading-none font-semibold tracking-tight text-gray-900 dark:text-white font-brand lowercase">
               tutlabs
             </NavLink>
           </div>
@@ -55,7 +55,7 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <NavLink to={homePath} className="flex-shrink-0">
-              <span className="text-2xl font-bold text-blue-600 dark:text-blue-400 font-brand lowercase">tutlabs</span>
+              <span className="text-[2.25rem] leading-none font-bold text-blue-600 dark:text-blue-400 font-brand lowercase">tutlabs</span>
             </NavLink>
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
