@@ -21,7 +21,7 @@
     ">
     <title>tutlabs — Find Tutors & Students Near You | AI‑Powered Learning</title>
     <meta name="description" content="tutlabs connects tutors with parents and students. Discover nearby tutors or students, manage your profile, and accelerate learning with AI‑powered tools.">
-    <meta name="keywords" content="edtech, education, tutoring, find tutor, coaching, online classes, students, parents, teachers, learning platform">
+    <meta name="keywords" content="tutlabs, tutoring, find tutor, parents, students, near me, coaching, education platform">
     <link rel="canonical" href="https://www.tutlabs.in/">
     <meta name="robots" content="index, follow">
     <meta property="og:site_name" content="tutlabs">
@@ -64,11 +64,11 @@
     <meta name="twitter:image" content="https://via.placeholder.com/1200x630.png?text=tutlabs">
     <meta name="twitter:site" content="@tutlabs">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&display=swap" rel="stylesheet">
-    <script>
+    <script defer>
       tailwind.config = {
         darkMode: 'class',
         theme: {
@@ -137,12 +137,19 @@
   }
 }
 </script>
-     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js" defer></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js" defer></script>
 <!-- Optional: local stylesheet. Remove if unused -->
 <!-- <link rel="stylesheet" href="/index.css"> -->
 </head>
   <body class="min-h-screen bg-gradient-to-br from-blue-700 via-indigo-600 to-pink-600 bg-[length:300%_300%] animate-shimmer text-foreground dark:from-slate-950 dark:via-indigo-950 dark:to-fuchsia-900">
+    <noscript>
+      <div class="max-w-3xl mx-auto my-8 p-6 bg-white text-gray-900 rounded-lg shadow">
+        <h1 class="text-2xl font-brand lowercase mb-2">tutlabs — connect tutors with parents & students</h1>
+        <p class="text-sm">Discover nearby tutors or students, manage your profile, and accelerate learning with AI‑powered tools.</p>
+        <p class="text-sm mt-2">Browse: <a href="/#/tutors" class="text-blue-600 underline">Find Tutors</a> · <a href="/#/students" class="text-blue-600 underline">Find Students</a> · <a href="/#/connect" class="text-blue-600 underline">Connect</a></p>
+      </div>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>
