@@ -22,25 +22,25 @@ const Connect: React.FC = () => {
         <div className="mt-12">
           <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
             <div>
-              <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">First name</label>
+              <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">First name <span className="text-red-500">*</span></label>
               <div className="mt-1">
                 <input type="text" name="first-name" id="first-name" autoComplete="given-name" required maxLength={50} className="py-3 px-4 block w-full shadow-sm border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-shadow"/>
               </div>
             </div>
             <div>
-              <label htmlFor="last-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Last name</label>
+              <label htmlFor="last-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Last name <span className="text-red-500">*</span></label>
               <div className="mt-1">
                 <input type="text" name="last-name" id="last-name" autoComplete="family-name" required maxLength={50} className="py-3 px-4 block w-full shadow-sm border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-shadow"/>
               </div>
             </div>
             <div className="sm:col-span-2">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email <span className="text-red-500">*</span></label>
               <div className="mt-1">
                 <input id="email" name="email" type="email" autoComplete="email" required maxLength={100} className="py-3 px-4 block w-full shadow-sm border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-shadow"/>
               </div>
             </div>
             <div className="sm:col-span-2">
-              <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Message</label>
+              <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Message <span className="text-red-500">*</span></label>
               <div className="mt-1">
                 <textarea id="message" name="message" rows={4} required maxLength={5000} className="py-3 px-4 block w-full shadow-sm border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-shadow"></textarea>
               </div>

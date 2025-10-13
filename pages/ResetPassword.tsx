@@ -93,11 +93,11 @@ const ResetPassword: React.FC = () => {
       {error && <p className="mt-4 text-sm text-red-500 bg-red-100 dark:bg-red-900/50 p-3 rounded-md">{error}</p>}
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">New password</label>
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">New password <span className="text-red-500">*</span></label>
           <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-pink-500/50 sm:text-sm dark:bg-gray-700 dark:text-white" required disabled={!sessionReady} />
         </div>
         <div>
-          <label htmlFor="confirm" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm password</label>
+          <label htmlFor="confirm" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm password <span className="text-red-500">*</span></label>
           <input id="confirm" type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-pink-500/50 sm:text-sm dark:bg-gray-700 dark:text-white" required disabled={!sessionReady} />
         </div>
         <button type="submit" className="w-full bg-pink-600 text-white px-4 py-2 rounded-md hover:bg-pink-700 transition disabled:opacity-60 disabled:cursor-not-allowed" disabled={!sessionReady}>Update password</button>

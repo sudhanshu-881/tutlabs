@@ -246,17 +246,17 @@ const EditProfile: React.FC = () => {
                     />
                     
                     <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email <span className="text-red-500">*</span></label>
                         <input type="text" id="email" value={user?.email} disabled className="mt-1 block w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 sm:text-sm text-gray-500 dark:text-gray-400" />
                     </div>
 
                     <div>
-                        <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Full Name</label>
+                        <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Full Name <span className="text-red-500">*</span></label>
                         <input type="text" id="fullName" value={fullName} onChange={e => setFullName(e.target.value)} className={inputClasses} required maxLength={100} />
                     </div>
 
                      <div>
-                        <label htmlFor="location" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Location / Locality</label>
+                        <label htmlFor="location" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Location / Locality <span className="text-red-500">*</span></label>
                          <div className="mt-1 flex rounded-md shadow-sm">
                             <input type="text" id="location" placeholder="e.g., San Francisco, CA" value={location} onChange={e => setLocation(e.target.value)} className="flex-1 block w-full min-w-0 rounded-none rounded-l-md border-gray-300 dark:border-gray-600 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 sm:text-sm dark:bg-gray-700 dark:text-white transition-shadow" required maxLength={100} />
                             <button type="button" onClick={handleGetCurrentLocation} disabled={isLocating} className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-wait">
@@ -279,14 +279,14 @@ const EditProfile: React.FC = () => {
 
                     {user?.active_role === 'tutor' && (
                         <div>
-                          <label htmlFor="tutor-subjects" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Subjects you teach (comma separated)</label>
+                          <label htmlFor="tutor-subjects" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Subjects you teach (comma separated) <span className="text-red-500">*</span></label>
                           <input id="tutor-subjects" type="text" value={tutorSubjectsInput} onChange={(e) => setTutorSubjectsInput(e.target.value)} className={inputClasses} placeholder="e.g., Math, Physics, Chemistry" />
                         </div>
                     )}
 
                     {user?.active_role === 'student' && (
                         <div>
-                          <label htmlFor="student-goals" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Learning goals (comma separated)</label>
+                          <label htmlFor="student-goals" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Learning goals (comma separated) <span className="text-red-500">*</span></label>
                           <input id="student-goals" type="text" value={studentGoalsInput} onChange={(e) => setStudentGoalsInput(e.target.value)} className={inputClasses} placeholder="e.g., Calculus I, Essay Writing" />
                         </div>
                     )}
@@ -294,7 +294,7 @@ const EditProfile: React.FC = () => {
                     {user?.active_role === 'tutor' && (
                         <>
                           <div>
-                            <label htmlFor="pincodes" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Preferred Pincodes (comma separated)</label>
+                            <label htmlFor="pincodes" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Preferred Pincodes (comma separated) <span className="text-red-500">*</span></label>
                             <input id="pincodes" type="text" value={pincodesInput} onChange={(e) => setPincodesInput(e.target.value)} className={inputClasses} placeholder="e.g., 560001, 560002" />
                           </div>
                           <div>

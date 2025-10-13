@@ -65,7 +65,7 @@ const Signup: React.FC = () => {
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
               <label htmlFor="name" className="sr-only">
-                Full Name
+                Full Name *
               </label>
               <input
                 id="name"
@@ -82,7 +82,7 @@ const Signup: React.FC = () => {
             </div>
             <div>
               <label htmlFor="email-address" className="sr-only">
-                Email address
+                Email address *
               </label>
               <input
                 id="email-address"
@@ -98,7 +98,7 @@ const Signup: React.FC = () => {
             </div>
             <div>
               <label htmlFor="password" className="sr-only">
-                Password
+                Password *
               </label>
               <input
                 id="password"

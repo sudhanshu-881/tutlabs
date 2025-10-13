@@ -106,22 +106,22 @@ const TutorOnboarding: React.FC = () => {
       <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">Complete these details to appear in student searches near your location.</p>
       <form onSubmit={handleSubmit} className="space-y-5 bg-white dark:bg-gray-800/50 p-6 rounded-lg shadow">
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Full Name</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Full Name <span className="text-red-500">*</span></label>
           <input type="text" value={fullName} onChange={e => setFullName(e.target.value)} className={inputClasses} required maxLength={100} />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Subjects (comma separated)</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Subjects (comma separated) <span className="text-red-500">*</span></label>
           <input type="text" value={subjects} onChange={e => setSubjects(e.target.value)} className={inputClasses} required placeholder="e.g., Math, Physics" />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Location</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Location <span className="text-red-500">*</span></label>
           <div className="mt-1 flex">
             <input type="text" value={location} onChange={e => setLocation(e.target.value)} className="flex-1 block w-full min-w-0 rounded-l-md border border-gray-300 dark:border-gray-600 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 sm:text-sm dark:bg-gray-700 dark:text-white" required />
             <button type="button" onClick={handleUseLocation} disabled={isLocating} className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 disabled:opacity-50">{isLocating ? '...' : '📍'}</button>
           </div>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Pincodes (comma separated)</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Pincodes (comma separated) <span className="text-red-500">*</span></label>
           <input type="text" value={pincodes} onChange={e => setPincodes(e.target.value)} className={inputClasses} required placeholder="e.g., 560001, 560002" />
         </div>
         <div>
