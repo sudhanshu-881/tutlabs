@@ -84,11 +84,22 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           throw error;
         }
 
+        // Determine effective role: if user has a tutor listing, treat as tutor
+        let effectiveRole: Role = (profile?.active_role as Role) || 'student';
+        try {
+          const { data: trow } = await supabase
+            .from('tutors')
+            .select('id')
+            .eq('user_id', sessionUser.id)
+            .maybeSingle();
+          if (trow?.id) effectiveRole = 'tutor';
+        } catch {}
+
         setUser({
           id: sessionUser.id,
           email: sessionUser.email || '',
           name: profile?.full_name || sessionUser.user_metadata?.full_name || sessionUser.email?.split('@')[0] || 'User',
-          active_role: profile?.active_role || 'student', // Default to student
+          active_role: effectiveRole,
           preferred_location: (profile as any)?.preferred_location || null,
         });
 
