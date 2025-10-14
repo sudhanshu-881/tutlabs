@@ -12,6 +12,7 @@ import Messages from './pages/feeds/Messages';
 import TutorsNearMe from './pages/TutorsNearMe';
 import StudentsNearMe from './pages/StudentsNearMe';
 import Blog from './pages/Blog';
+import Admin from './pages/Admin';
 import Connect from './pages/Connect';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
@@ -21,6 +22,7 @@ import EditProfile from './pages/EditProfile';
 import ResetPassword from './pages/ResetPassword';
 import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/routing/ProtectedRoute';
+import AdminRoute from './components/routing/AdminRoute';
 import OnboardingTutor from './pages/onboarding/TutorOnboarding';
 import { Theme } from './types';
 import { AuthProvider } from './context/AuthContext';
@@ -181,6 +183,7 @@ function App() {
                 }
               />
               <Route path="/connect" element={<Connect />} />
+              <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
