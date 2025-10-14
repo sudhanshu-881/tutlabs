@@ -35,8 +35,8 @@ const TutorsFeed: React.FC = () => {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-white drop-shadow-[0_2px_10px_rgba(59,130,246,0.35)]">Your Tutor Feed</h1>
-        <p className="mt-2 text-lg text-white/90">Browse students near you who need your expertise{user?.name ? `, ${user.name}` : ''}.</p>
+        <h1 className="text-3xl font-bold text-white drop-shadow-[0_2px_10px_rgba(59,130,246,0.35)]">Find student requirements near you</h1>
+        <p className="mt-2 text-lg text-white/90">Browse nearby requirements posted by parents and students{user?.name ? `, ${user.name}` : ''}.</p>
         {/* Top tabs removed; bottom TabBar provides navigation */}
       </div>
       {loading ? (

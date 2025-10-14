@@ -62,26 +62,17 @@ function App() {
     useEffect(() => {
       let mounted = true;
       const check = async () => {
-        if (!user?.active_role) {
-          if (mounted) setNext(null);
-          return;
-        }
-        if ((user.active_role as Role) === 'tutor') {
-          try {
-            if (!supabase) {
-              if (mounted) setNext('/feed/tutor');
-              return;
-            }
-            const { data } = await supabase
-              .from('tutors')
-              .select('id')
-              .eq('user_id', user.id)
-              .single();
-            if (mounted) setNext(data?.id ? '/feed/tutor' : '/onboarding/tutor');
-          } catch {
-            if (mounted) setNext('/feed/tutor');
-          }
-        } else {
+        if (!user) { if (mounted) setNext(null); return; }
+        try {
+          if (!supabase) { if (mounted) setNext('/feed/student'); return; }
+          // Prefer actual tutor listing presence over active_role to avoid misroutes
+          const { data: trow } = await supabase
+            .from('tutors')
+            .select('id')
+            .eq('user_id', user.id)
+            .single();
+          if (mounted) setNext(trow?.id ? '/feed/tutor' : '/feed/student');
+        } catch {
           if (mounted) setNext('/feed/student');
         }
       };
