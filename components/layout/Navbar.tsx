@@ -26,9 +26,7 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
     return (
       <nav className="sticky top-0 z-40 bg-white dark:bg-black">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-12 grid grid-cols-3 items-center">
-          <div className="flex items-center">
-            <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
-          </div>
+          <div />
           <div className="flex items-center justify-center">
             <NavLink to={feedPath} className="text-[1.875rem] leading-none font-semibold tracking-tight text-gray-900 dark:text-white font-brand lowercase">
               tutlabs
@@ -69,7 +67,6 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
             </div>
           </div>
           <div className="hidden md:flex items-center space-x-4">
-            <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
             {user ? (
               <>
                 <NavLink to="/profile" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-pink-600 dark:hover:text-pink-400 transition-all duration-200 hover:-translate-y-0.5">Profile</NavLink>
@@ -121,7 +118,6 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
             )}
           </div>
           <div className="-mr-2 flex md:hidden">
-            <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
             <button onClick={() => setMobileMenuOpen(!isMobileMenuOpen)} type="button" className="bg-gray-100 dark:bg-gray-800 inline-flex items-center justify-center p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-800 focus:ring-blue-500 ml-2">
               <span className="sr-only">Open main menu</span>
               {isMobileMenuOpen ? (
