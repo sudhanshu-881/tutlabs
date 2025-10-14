@@ -15,7 +15,7 @@ const TabBar: React.FC = () => {
   const iconClass = (isActive: boolean) => isActive ? 'text-pink-500' : 'text-white/70';
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/20 dark:border-white/10 bg-white/25 dark:bg-slate-900/50 backdrop-blur-xl" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/20 dark:border-white/10 bg-white/40 dark:bg-slate-900/60 backdrop-blur-xl supports-[backdrop-filter]:bg-white/40 supports-[backdrop-filter]:dark:bg-slate-900/60" style={{ paddingBottom: 'env(safe-area-inset-bottom)', boxShadow: '0 -8px 24px rgba(0,0,0,0.08)' }}>
       <div className="max-w-4xl mx-auto flex">
         <NavLink to={feedPath} className={base} end>
           {({ isActive }) => (
