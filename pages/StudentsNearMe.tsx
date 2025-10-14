@@ -23,7 +23,8 @@ const StudentsNearMe: React.FC = () => {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [subjectQuery, setSubjectQuery] = useState('');
+  const [keyword, setKeyword] = useState('');
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [locationQuery, setLocationQuery] = useState('');
   const { coords, error: geoError, isLoading: isLocating, requestLocation } = useGeolocation();
 
@@ -44,7 +45,10 @@ const StudentsNearMe: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    fetchStudents('', '');
+    // Use saved preferred location if available
+    let initialLocation = '';
+    try { initialLocation = localStorage.getItem('PREFERRED_LOCATION_NAME') || ''; } catch {}
+    fetchStudents('', initialLocation);
   }, [fetchStudents]);
   
   // Effect to handle geolocation result
@@ -53,7 +57,8 @@ const StudentsNearMe: React.FC = () => {
       reverseGeocode(coords.latitude, coords.longitude)
         .then(locationName => {
           setLocationQuery(locationName);
-          fetchStudents(subjectQuery, locationName); // Auto-search with new location
+          try { localStorage.setItem('PREFERRED_LOCATION_NAME', locationName); } catch {}
+          fetchStudents(keyword, locationName); // Auto-search with new location
         })
         .catch(err => {
           setError(err.message);
@@ -62,17 +67,19 @@ const StudentsNearMe: React.FC = () => {
     if (geoError) {
       setError(geoError.message);
     }
-  }, [coords, geoError, subjectQuery, fetchStudents]);
+  }, [coords, geoError, keyword, fetchStudents]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    fetchStudents(subjectQuery, locationQuery);
+    fetchStudents(keyword, locationQuery);
   };
 
   const handleClear = () => {
-    setSubjectQuery('');
+    setKeyword('');
     setLocationQuery('');
-    fetchStudents('', '');
+    let initialLocation = '';
+    try { initialLocation = localStorage.getItem('PREFERRED_LOCATION_NAME') || ''; } catch {}
+    fetchStudents('', initialLocation);
   };
 
   const handleFindNearMe = () => {
@@ -120,34 +127,42 @@ const StudentsNearMe: React.FC = () => {
         <p className="mt-2 text-lg text-white/90">Connect with students who need your expertise.</p>
       </div>
 
-      <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-4 p-4 bg-white/80 dark:bg-gray-900/60 backdrop-blur rounded-lg">
-        <input 
-          type="text" 
-          placeholder="Subject you teach (e.g., Physics)"
-          value={subjectQuery}
-          onChange={(e) => setSubjectQuery(e.target.value)}
-          className="flex-grow p-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-shadow"
-        />
-        <div className="relative flex-grow">
-          <input 
-            type="text" 
-            placeholder="Your Location" 
-            value={locationQuery}
-            onChange={(e) => setLocationQuery(e.target.value)}
-            className="w-full p-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-shadow"
+      <form onSubmit={handleSearch} className="space-y-3">
+        <div className="flex items-center gap-2 p-3 bg-white/80 dark:bg-gray-900/60 backdrop-blur rounded-lg border border-white/20 dark:border-white/10">
+          <ion-icon name="search" class="text-xl text-gray-600 dark:text-gray-300" />
+          <input
+            type="text"
+            placeholder="Search students by subject, class, board, or location"
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            className="flex-grow bg-transparent outline-none text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
           />
-          <button 
-            type="button" 
-            onClick={handleFindNearMe}
-            disabled={isLocating}
-            className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors disabled:opacity-50 disabled:cursor-wait"
-            aria-label="Find near me"
-          >
-            {isLocating ? <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-blue-500"></div> : <ion-icon name="locate-outline" className="text-xl" />}
-          </button>
+          <button type="submit" className="px-4 py-2 rounded-md bg-pink-600 text-white hover:bg-pink-700 transition">Search</button>
+          <button type="button" onClick={() => setFiltersOpen(!filtersOpen)} className="px-3 py-2 rounded-md bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200">Filters</button>
         </div>
-        <button type="submit" className="bg-pink-600 text-white px-6 py-2 rounded-md hover:bg-pink-700 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:shadow-pink-500/30 active:translate-y-0 active:shadow-md">Search</button>
-        <button type="button" onClick={handleClear} className="bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-0 active:shadow-md">Clear</button>
+        {filtersOpen && (
+          <div className="flex flex-wrap items-center gap-3 p-3 bg-white/70 dark:bg-gray-900/50 rounded-lg border border-white/20 dark:border-white/10">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Location"
+                value={locationQuery}
+                onChange={(e) => setLocationQuery(e.target.value)}
+                className="w-60 p-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-shadow"
+              />
+              <button
+                type="button"
+                onClick={handleFindNearMe}
+                disabled={isLocating}
+                className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors disabled:opacity-50 disabled:cursor-wait"
+                aria-label="Find near me"
+              >
+                {isLocating ? <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-blue-500"></div> : <ion-icon name="locate-outline" className="text-xl" />}
+              </button>
+            </div>
+            <button type="button" onClick={handleClear} className="px-4 py-2 rounded-md bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600">Clear</button>
+          </div>
+        )}
       </form>
 
       {renderContent()}
