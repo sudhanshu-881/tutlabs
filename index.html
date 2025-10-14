@@ -3,6 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      // Prevent theme flash by applying dark class before React mounts
+      (function() {
+        try {
+          var ls = localStorage.getItem('theme');
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (ls === 'dark' || (!ls && prefersDark)) {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
     <!--
       SECURITY ENHANCEMENT: Content Security Policy (CSP)
       This CSP helps prevent Cross-Site Scripting (XSS) and other injection attacks by defining

@@ -27,6 +27,7 @@ import { useContext } from 'react';
 import { AuthContext } from './context/AuthContext';
 import type { Role } from './types';
 import { Toaster } from 'react-hot-toast';
+import LoadingSpinner from './components/ui/LoadingSpinner';
 
 function App() {
   const [theme, setTheme] = useState<Theme>('light');
@@ -89,7 +90,7 @@ function App() {
     }, [user]);
 
     if (!user) return <Home />;
-    if (!next) return null;
+    if (!next) return <LoadingSpinner inline={true} />;
     return <Navigate to={next} replace />;
   };
 
