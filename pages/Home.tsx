@@ -1,9 +1,8 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { setPendingRole } from '../lib/services/role';
-import RolePicker from '../components/ui/RolePicker';
 
-const Hero = () => (
+const Hero: React.FC<{ onChooseRole: (role: 'student' | 'tutor') => void }> = ({ onChooseRole }) => (
   <div className="text-center py-16 sm:py-24">
     <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white drop-shadow-[0_2px_10px_rgba(59,130,246,0.35)]">
       <span className="block">Unlock Your Potential with</span>
@@ -12,8 +11,13 @@ const Hero = () => (
     <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-white/90">
       Connect parents, students, and verified tutors. Find nearby tutors or students, manage your profile, and accelerate learning with tutlabs.
     </p>
-    <div className="mt-8 flex justify-center">
-      <RolePicker />
+    <div id="role-picker" className="mt-8 flex justify-center gap-4">
+      <button onClick={() => onChooseRole('student')} className="inline-block bg-white/90 dark:bg-gray-900/70 text-blue-700 dark:text-white font-semibold px-8 py-3 rounded-md shadow-lg border border-white/20 dark:border-gray-700 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 hover:shadow-2xl">
+        I’m a Student/Parent
+      </button>
+      <button onClick={() => onChooseRole('tutor')} className="inline-block bg-blue-600 text-white font-semibold px-8 py-3 rounded-md shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 hover:shadow-2xl">
+        I’m a Tutor
+      </button>
     </div>
   </div>
 );
@@ -48,7 +52,7 @@ const Home = () => {
 
   return (
     <div className="space-y-16">
-      <Hero />
+      <Hero onChooseRole={chooseRole} />
       <div className="py-12 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center">
@@ -79,14 +83,7 @@ const Home = () => {
                         description="Our platform features verified local tutors to ensure quality and safety for all our users."
                       />
                   </div>
-                  <div className="mt-10 flex justify-center gap-4">
-                    <button onClick={() => chooseRole('student')} className="inline-block bg-white/90 dark:bg-gray-900/70 text-blue-700 dark:text-white font-semibold px-8 py-3 rounded-md shadow-lg border border-white/20 dark:border-gray-700 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 hover:shadow-2xl">
-                      I’m a Student/Parent
-                    </button>
-                    <button onClick={() => chooseRole('tutor')} className="inline-block bg-blue-600 text-white font-semibold px-8 py-3 rounded-md shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 hover:shadow-2xl">
-                      I’m a Tutor
-                    </button>
-                  </div>
+                  {/* CTA moved to hero; keep section informational */}
               </div>
           </div>
       </div>
