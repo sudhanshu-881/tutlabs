@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { Student } from '../types';
 import StudentCard from '../components/ui/StudentCard';
 import { listStudents } from '../lib/services/studentService';
@@ -7,6 +7,8 @@ import CardSkeleton from '../components/ui/CardSkeleton';
 import toast from 'react-hot-toast';
 import { useGeolocation } from '../hooks/useGeolocation';
 import { reverseGeocode } from '../utils/geocoding';
+import { AuthContext } from '../context/AuthContext';
+import { Navigate } from 'react-router-dom';
 
 // SECURITY NOTE: The security of this page depends on Supabase Row Level Security (RLS).
 // Ensure that you have an RLS policy on the `students` table that allows public read access.
@@ -17,6 +19,7 @@ import { reverseGeocode } from '../utils/geocoding';
 // USING (true);
 
 const StudentsNearMe: React.FC = () => {
+  const { user } = useContext(AuthContext);
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -104,6 +107,11 @@ const StudentsNearMe: React.FC = () => {
       </div>
     );
   };
+
+  // If a logged-in student/parent reaches here, redirect to their student feed
+  if (user?.active_role === 'student') {
+    return <Navigate to="/feed/student" replace />;
+  }
 
   return (
     <div className="space-y-8">

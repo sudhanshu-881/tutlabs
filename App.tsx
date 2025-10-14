@@ -92,6 +92,16 @@ function App() {
     return <Navigate to={next} replace />;
   };
 
+  // Hide public near-me pages for logged-in users of the same role
+  const RoleRedirectGate: React.FC<{ blockRole: Role; children: React.ReactElement }> = ({ blockRole, children }) => {
+    const { user } = useContext(AuthContext);
+    if (user?.active_role === blockRole) {
+      const target = blockRole === 'tutor' ? '/feed/tutor' : '/feed/student';
+      return <Navigate to={target} replace />;
+    }
+    return children;
+  };
+
   const FooterVisibility: React.FC = () => {
     const { user } = React.useContext(AuthContext);
     const location = useLocation();
@@ -118,8 +128,22 @@ function App() {
               <Route path="/feed/tutor" element={<ProtectedRoute><TutorsFeed /></ProtectedRoute>} />
               <Route path="/feed/student" element={<ProtectedRoute><StudentsFeed /></ProtectedRoute>} />
               <Route path="/feed/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
-              <Route path="/tutors" element={<TutorsNearMe />} />
-              <Route path="/students" element={<StudentsNearMe />} />
+              <Route
+                path="/tutors"
+                element={
+                  <RoleRedirectGate blockRole="tutor">
+                    <TutorsNearMe />
+                  </RoleRedirectGate>
+                }
+              />
+              <Route
+                path="/students"
+                element={
+                  <RoleRedirectGate blockRole="student">
+                    <StudentsNearMe />
+                  </RoleRedirectGate>
+                }
+              />
               <Route path="/connect" element={<Connect />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { Tutor } from '../types';
 import TutorCard from '../components/ui/TutorCard';
 import { listTutors } from '../lib/services/tutorService';
@@ -7,6 +7,8 @@ import CardSkeleton from '../components/ui/CardSkeleton';
 import toast from 'react-hot-toast';
 import { useGeolocation } from '../hooks/useGeolocation';
 import { reverseGeocode } from '../utils/geocoding';
+import { AuthContext } from '../context/AuthContext';
+import { Navigate } from 'react-router-dom';
 
 // SECURITY NOTE: The security of this page depends on Supabase Row Level Security (RLS).
 // Ensure that you have an RLS policy on the `tutors` table that allows public read access.
@@ -17,6 +19,7 @@ import { reverseGeocode } from '../utils/geocoding';
 // USING (true);
 
 const TutorsNearMe: React.FC = () => {
+  const { user } = useContext(AuthContext);
   const [tutors, setTutors] = useState<Tutor[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -106,6 +109,11 @@ const TutorsNearMe: React.FC = () => {
       </div>
     );
   };
+
+  // If a logged-in tutor reaches here (e.g., direct URL), redirect to their feed
+  if (user?.active_role === 'tutor') {
+    return <Navigate to="/feed/tutor" replace />;
+  }
 
   return (
     <div className="space-y-8">

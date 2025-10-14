@@ -8,6 +8,7 @@ const TabBar: React.FC = () => {
   if (!user) return null;
 
   const feedPath = user.active_role === 'tutor' ? '/feed/tutor' : '/feed/student';
+  const discoverPath = user.active_role === 'tutor' ? '/students' : '/tutors';
 
   const base = 'flex-1 flex items-center justify-center py-2';
   const link = 'inline-flex flex-col items-center justify-center text-[11px] font-medium transition-colors';
@@ -21,6 +22,14 @@ const TabBar: React.FC = () => {
             <span className={link + ' ' + iconClass(isActive)} aria-label="Feed">
               <ion-icon name={isActive ? 'home' : 'home-outline'} class="text-2xl"></ion-icon>
               <span className="mt-1">Feed</span>
+            </span>
+          )}
+        </NavLink>
+        <NavLink to={discoverPath} className={base}>
+          {({ isActive }) => (
+            <span className={link + ' ' + iconClass(isActive)} aria-label="Discover">
+              <ion-icon name={isActive ? 'search' : 'search-outline'} class="text-2xl"></ion-icon>
+              <span className="mt-1">Discover</span>
             </span>
           )}
         </NavLink>
