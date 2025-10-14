@@ -7,7 +7,7 @@ interface LocationConsentProps {
 
 const LocationConsent: React.FC<LocationConsentProps> = ({ onAccept, onDismiss }) => {
   return (
-    <div className="fixed bottom-16 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:right-auto z-50 max-w-xl">
+    <div className="fixed bottom-16 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:right-auto z-[60] max-w-xl">
       <div className="rounded-xl border border-white/20 dark:border-white/10 bg-white/90 dark:bg-gray-900/80 backdrop-blur shadow-xl p-4 flex items-start gap-3">
         <div className="mt-1 text-blue-600 dark:text-blue-300">
           <ion-icon name="locate-outline" class="text-2xl"></ion-icon>

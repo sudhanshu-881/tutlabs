@@ -21,6 +21,10 @@ export const useGeolocation = () => {
 
     setState(s => ({ ...s, isLoading: true, error: null, coords: null }));
 
+    navigator.permissions?.query?.({ name: 'geolocation' as PermissionName }).then((status) => {
+      // Some browsers auto-deny without prompt if previously denied; allow reattempt via settings note
+    }).catch(() => { /* ignore unsupported Permissions API */ });
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setState({ isLoading: false, coords: position.coords, error: null });
@@ -29,7 +33,7 @@ export const useGeolocation = () => {
         let errorMessage = "An unknown error occurred.";
         switch (error.code) {
           case error.PERMISSION_DENIED:
-            errorMessage = "You denied the request for Geolocation. Please enable it in your browser settings to use this feature.";
+            errorMessage = "Permission denied. Please allow location access in your browser settings and try again.";
             break;
           case error.POSITION_UNAVAILABLE:
             errorMessage = "Location information is unavailable.";
@@ -39,7 +43,8 @@ export const useGeolocation = () => {
             break;
         }
         setState({ isLoading: false, coords: null, error: new Error(errorMessage) });
-      }
+      },
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }
     );
   };
 

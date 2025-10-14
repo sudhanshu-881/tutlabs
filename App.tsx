@@ -132,8 +132,14 @@ function App() {
 
     const accept = () => {
       try { localStorage.setItem('LOC_CONSENT_DISMISSED', '1'); } catch {}
-      // Trigger geolocation via a transient event consumed by pages if needed
-      window.dispatchEvent(new Event('location:request'));
+      // Trigger geolocation via a transient event consumed by pages and feeds
+      try { window.dispatchEvent(new Event('location:request')); } catch {}
+      // Also try capture immediately here to ensure prompt appears
+      try {
+        if (navigator?.geolocation) {
+          navigator.geolocation.getCurrentPosition(() => {}, () => {});
+        }
+      } catch {}
       setShow(false);
     };
     const dismiss = () => { try { localStorage.setItem('LOC_CONSENT_DISMISSED', '1'); } catch {}; setShow(false); };
