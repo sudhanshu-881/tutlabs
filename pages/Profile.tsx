@@ -32,10 +32,12 @@ const ProfilePage: React.FC = () => {
                 let profileRow: any = null;
                 let avatarPath: string | null = null;
                 if (viewingTutorId) {
-                  -- if a tutor tries to view another tutor, disallow
-                  if (user && user.active_role === 'tutor') then
-                    raise exception 'not allowed';
-                  end if;
+                  // Tutors should not view other tutors' profiles
+                  if (user && user.active_role === 'tutor') {
+                    setLoading(false);
+                    setError('Not allowed: tutors can only view student profiles.');
+                    return;
+                  }
                   const { data: tutorRow } = await supabase
                     .from('tutors')
                     .select('user_id, bio, subjects, pincodes, availability')
@@ -51,6 +53,12 @@ const ProfilePage: React.FC = () => {
                     setTutorInfo({ subjects: tutorRow.subjects || [], pincodes: tutorRow.pincodes || [], availability: tutorRow.availability || null, bio: tutorRow.bio || null });
                   }
                 } else if (viewingStudentId) {
+                  // Students should not view other students' profiles
+                  if (user && user.active_role === 'student') {
+                    setLoading(false);
+                    setError('Not allowed: students can only view tutor profiles.');
+                    return;
+                  }
                   const { data: srow } = await supabase
                     .from('students')
                     .select('user_id, learning_goals, level, location')
@@ -111,8 +119,12 @@ const ProfilePage: React.FC = () => {
     if (loading) return <LoadingSpinner />;
     if (error) return <div className="text-center text-red-500 bg-red-100 dark:bg-red-900/50 p-4 rounded-md">{error}</div>;
 
-    const viewingOther = Boolean(viewingTutorId);
-    const connectHref = viewingTutorId ? `/feed/messages?peer=${encodeURIComponent('t:' + viewingTutorId)}&name=${encodeURIComponent(profile?.full_name || 'Tutor')}` : undefined;
+    const viewingOther = Boolean(viewingTutorId || viewingStudentId);
+    const connectHref = viewingTutorId
+      ? `/feed/messages?peer=${encodeURIComponent('t:' + viewingTutorId)}&name=${encodeURIComponent(profile?.full_name || 'tutor')}`
+      : viewingStudentId
+      ? `/feed/messages?peer=${encodeURIComponent('s:' + viewingStudentId)}&name=${encodeURIComponent(profile?.full_name || 'student')}`
+      : undefined;
 
     return (
       <div className="max-w-5xl mx-auto">
