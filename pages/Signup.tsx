@@ -35,8 +35,14 @@ const Signup: React.FC = () => {
       if (pending) {
         try {
           await switchRole(pending);
-        } catch {}
-        clearPendingRole();
+        } finally {
+          clearPendingRole();
+        }
+      } else {
+        // Enforce explicit role selection before signup completes
+        setError('Select your current role: Student/Parent or Tutor');
+        toast.error('Select your current role: Student/Parent or Tutor');
+        return;
       }
       navigate('/awaiting-confirmation', { state: { email } });
     } catch (err: any) {

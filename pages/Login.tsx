@@ -30,13 +30,30 @@ const Login: React.FC = () => {
     try {
       await login(email, password);
       const pending = getPendingRole();
-      if (pending) {
-        try {
-          // optional: role switching after login
-          // Not switching automatically on login to avoid confusion.
-        } finally {
-          clearPendingRole();
+      // Strong validation: user must log in as their existing role
+      try {
+        if (supabase) {
+          const { data: u } = await supabase.auth.getUser();
+          const uid = u.user?.id;
+          if (uid) {
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('active_role')
+              .eq('id', uid)
+              .single();
+            const currentRole = (profile?.active_role as 'student' | 'tutor') || 'student';
+            if (pending && pending !== currentRole) {
+              // Logout and force correct selection
+              await supabase.auth.signOut();
+              setError(`Select your current role: ${currentRole === 'student' ? 'Student/Parent' : 'Tutor'}`);
+              toast.error(`Select your current role: ${currentRole === 'student' ? 'Student/Parent' : 'Tutor'}`);
+              return;
+            }
+          }
         }
+      } catch {}
+      if (pending) {
+        clearPendingRole();
       }
       // Redirect based on role; tutors without listing go to onboarding
       try {
