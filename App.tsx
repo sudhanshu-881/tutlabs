@@ -11,6 +11,7 @@ import StudentsFeed from './pages/feeds/StudentsFeed';
 import Messages from './pages/feeds/Messages';
 import TutorsNearMe from './pages/TutorsNearMe';
 import StudentsNearMe from './pages/StudentsNearMe';
+import Blog from './pages/Blog';
 import Connect from './pages/Connect';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
@@ -178,6 +179,7 @@ function App() {
                 }
               />
               <Route path="/connect" element={<Connect />} />
+              <Route path="/blog" element={<Blog />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/awaiting-confirmation" element={<AwaitingConfirmation />} />
