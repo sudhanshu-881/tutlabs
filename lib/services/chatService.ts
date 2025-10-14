@@ -32,6 +32,15 @@ export async function resolvePeerUserId(peer: string): Promise<string | null> {
       const { data } = await supabase.from('students').select('user_id').eq('id', id).single();
       return (data as any)?.user_id ?? null;
     }
+    // Backward-compat: plain numeric id defaults to tutor id, then student id
+    if (/^\d+$/.test(peer)) {
+      const num = Number(peer);
+      const { data: t } = await supabase.from('tutors').select('user_id').eq('id', num).maybeSingle();
+      if ((t as any)?.user_id) return (t as any).user_id as string;
+      const { data: s } = await supabase.from('students').select('user_id').eq('id', num).maybeSingle();
+      if ((s as any)?.user_id) return (s as any).user_id as string;
+      return null;
+    }
     // fallback: assume profile id
     return peer;
   } catch {
