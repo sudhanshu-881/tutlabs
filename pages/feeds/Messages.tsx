@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { subscribeToPush } from '../../lib/services/push';
-import { ensureConversation, listConversations, getConversation, sendMessage, Conversation } from '../../lib/services/messages';
+import { ensureConversation, listConversations, getConversation, sendMessage, updateMessageStatus, markRead } from '../../lib/services/messages';
 import { useSearchParams } from 'react-router-dom';
 
 type Conversation = {
@@ -40,10 +40,21 @@ const Messages: React.FC = () => {
   const handleSend = () => {
     if (!user?.id || !selectedPeer || !input.trim()) return;
     const name = current?.peerName || 'User';
-    sendMessage({ fromId: user.id, peerId: selectedPeer, peerName: name, text: input.trim() });
+    const m = sendMessage({ fromId: user.id, peerId: selectedPeer, peerName: name, text: input.trim() });
+    // Simulate delivery/read after short delays; replace with backend events later
+    setTimeout(() => { updateMessageStatus(selectedPeer, m.id, 'delivered'); setRefresh((x)=>x+1); }, 400);
+    setTimeout(() => { updateMessageStatus(selectedPeer, m.id, 'read'); setRefresh((x)=>x+1); }, 1200);
     setInput('');
     setRefresh((x) => x + 1);
   };
+
+  // Mark messages as read when opening a conversation
+  useEffect(() => {
+    if (selectedPeer && user?.id) {
+      markRead(selectedPeer, user.id);
+      setRefresh((x) => x + 1);
+    }
+  }, [selectedPeer, user?.id]);
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div className="md:col-span-1 space-y-3 bg-white/60 dark:bg-slate-900/60 backdrop-blur rounded-2xl p-3 border border-white/20 dark:border-white/10">
@@ -73,12 +84,22 @@ const Messages: React.FC = () => {
         ) : (
           <>
             <div className="px-4 py-3 border-b border-white/20 dark:border-white/10 flex items-center justify-between sticky top-0 bg-white/80 dark:bg-slate-900/70 rounded-t-2xl">
-              <div className="font-semibold text-gray-900 dark:text-white text-sm">{current.peerName}</div>
+              <div className="font-semibold text-gray-900 dark:text-white text-sm flex items-center gap-2">
+                <span>{current.peerName}</span>
+                <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
+                  <span className="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span> Online
+                </span>
+              </div>
               <div className="text-xs text-gray-500">Secure</div>
             </div>
             <div className="flex-1 overflow-auto p-4 space-y-2 scroll-smooth">
               {current.messages.map((m) => (
-                <div key={m.id} className={`max-w-[75%] px-3 py-2 rounded-2xl shadow-sm ${m.fromId===user?.id ? 'ml-auto bg-gradient-to-r from-blue-600 to-indigo-600 text-white' : 'bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-100'}`}>{m.text}</div>
+                <div key={m.id} className={`max-w-[75%] px-3 py-2 rounded-2xl shadow-sm ${m.fromId===user?.id ? 'ml-auto bg-gradient-to-r from-blue-600 to-indigo-600 text-white' : 'bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-100'}`}>
+                  <div>{m.text}</div>
+                  <div className={`mt-1 text-[10px] ${m.fromId===user?.id ? 'text-white/80' : 'text-gray-500 dark:text-gray-400'}`}>
+                    {m.status === 'read' ? 'Read' : m.status === 'delivered' ? 'Delivered' : 'Sent'}
+                  </div>
+                </div>
               ))}
             </div>
             <div className="p-3 border-t border-white/20 dark:border-white/10 flex items-center gap-2 bg-white/80 dark:bg-slate-900/70 rounded-b-2xl">
