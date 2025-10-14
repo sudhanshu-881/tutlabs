@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { subscribeToPush } from '../../lib/services/push';
-import { ensureConversation, listConversations, getConversation, sendMessage, updateMessageStatus, markRead } from '../../lib/services/messages';
+import { resolvePeerUserId, ensureDirectConversationWith, listMyConversations, fetchConversationMessages, insertMessage } from '../../lib/services/chatService';
 import { useSearchParams } from 'react-router-dom';
 
 type Conversation = {
@@ -14,7 +14,7 @@ type Conversation = {
 const Messages: React.FC = () => {
   const { user } = useContext(AuthContext);
   const [params, setParams] = useSearchParams();
-  const [selectedPeer, setSelectedPeer] = useState<string | null>(null);
+  const [selectedConv, setSelectedConv] = useState<string | null>(null);
   const [input, setInput] = useState('');
   const [refresh, setRefresh] = useState(0);
   useEffect(() => {
@@ -24,37 +24,36 @@ const Messages: React.FC = () => {
     }
   }, [user]);
 
-  // Initialize from deep link ?peer= & name=
+  // Initialize from deep link ?peer=
   useEffect(() => {
     const peer = params.get('peer');
-    const name = params.get('name') || 'User';
     if (peer && user?.id) {
-      ensureConversation(peer, name);
-      setSelectedPeer(peer);
+      resolvePeerUserId(peer).then(async (peerUserId) => {
+        if (!peerUserId) return;
+        const conv = await ensureDirectConversationWith(peerUserId);
+        if (conv) setSelectedConv(conv);
+        setRefresh((x)=>x+1);
+      });
     }
   }, [params, user?.id]);
 
-  const conversations = useMemo(() => listConversations(), [refresh]);
-  const current = selectedPeer ? getConversation(selectedPeer) : null;
+  const [conversations, setConversations] = useState<Array<{ conversation_id: string; peer_id: string; peer_name: string; last: any }>>([]);
+  useEffect(() => { listMyConversations().then(setConversations); }, [refresh, selectedConv]);
+  const [messages, setMessages] = useState<any[]>([]);
+  useEffect(() => {
+    if (!selectedConv) { setMessages([]); return; }
+    fetchConversationMessages(selectedConv).then(setMessages);
+  }, [selectedConv, refresh]);
 
-  const handleSend = () => {
-    if (!user?.id || !selectedPeer || !input.trim()) return;
-    const name = current?.peerName || 'User';
-    const m = sendMessage({ fromId: user.id, peerId: selectedPeer, peerName: name, text: input.trim() });
-    // Simulate delivery/read after short delays; replace with backend events later
-    setTimeout(() => { updateMessageStatus(selectedPeer, m.id, 'delivered'); setRefresh((x)=>x+1); }, 400);
-    setTimeout(() => { updateMessageStatus(selectedPeer, m.id, 'read'); setRefresh((x)=>x+1); }, 1200);
+  const handleSend = async () => {
+    if (!user?.id || !selectedConv || !input.trim()) return;
+    const m = await insertMessage(selectedConv, input.trim());
+    if (m) setMessages((prev) => [...prev, m]);
     setInput('');
     setRefresh((x) => x + 1);
   };
 
-  // Mark messages as read when opening a conversation
-  useEffect(() => {
-    if (selectedPeer && user?.id) {
-      markRead(selectedPeer, user.id);
-      setRefresh((x) => x + 1);
-    }
-  }, [selectedPeer, user?.id]);
+  // TODO: call upsert_receipt via RPC and subscribe to realtime for live updates
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div className="md:col-span-1 space-y-3 bg-white/60 dark:bg-slate-900/60 backdrop-blur rounded-2xl p-3 border border-white/20 dark:border-white/10">
@@ -63,24 +62,24 @@ const Messages: React.FC = () => {
         ) : (
           conversations.map((c) => (
             <button
-              key={c.peerId}
-              onClick={() => setSelectedPeer(c.peerId)}
-              className={`w-full text-left p-3 rounded-xl border border-white/15 dark:border-white/10 transition ${selectedPeer===c.peerId ? 'bg-white/90 dark:bg-slate-900/70' : 'bg-white/70 dark:bg-slate-900/50 hover:bg-white/80 dark:hover:bg-slate-900/60'}`}
+              key={c.conversation_id}
+              onClick={() => setSelectedConv(c.conversation_id)}
+              className={`w-full text-left p-3 rounded-xl border border-white/15 dark:border-white/10 transition ${selectedConv===c.conversation_id ? 'bg-white/90 dark:bg-slate-900/70' : 'bg-white/70 dark:bg-slate-900/50 hover:bg-white/80 dark:hover:bg-slate-900/60'}`}
             >
               <div className="flex items-center justify-between">
                 <span className="font-medium text-gray-900 dark:text-white flex items-center gap-2">
-                  {c.peerName}
+                  {c.peer_name}
                   <span className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" title="Online"></span>
                 </span>
-                <span className="text-xs text-gray-600 dark:text-gray-400">{c.messages.at(-1)?.ts ? new Date(c.messages.at(-1)!.ts).toLocaleTimeString() : ''}</span>
+                <span className="text-xs text-gray-600 dark:text-gray-400">{c.last?.created_at ? new Date(c.last.created_at).toLocaleTimeString() : ''}</span>
               </div>
-              <p className="mt-1 text-sm text-gray-700/80 dark:text-gray-300/90 truncate">{c.messages.at(-1)?.text || 'New conversation'}</p>
+              <p className="mt-1 text-sm text-gray-700/80 dark:text-gray-300/90 truncate">{c.last?.body || 'New conversation'}</p>
             </button>
           ))
         )}
       </div>
       <div className="md:col-span-2 p-0 rounded-2xl border border-white/15 dark:border-white/10 bg-white/80 dark:bg-slate-900/70 backdrop-blur h-[30rem] flex flex-col shadow-lg">
-        {!current ? (
+        {!selectedConv ? (
           <div className="h-full flex items-center justify-center text-gray-700/80 dark:text-gray-300/90">
             Select a conversation to start messaging.
           </div>
@@ -96,10 +95,10 @@ const Messages: React.FC = () => {
               <div className="text-xs text-gray-500">Secure</div>
             </div>
             <div className="flex-1 overflow-auto p-4 space-y-2 scroll-smooth">
-              {current.messages.map((m) => (
-                <div key={m.id} className={`max-w-[75%] px-3 py-2 rounded-2xl shadow-sm ${m.fromId===user?.id ? 'ml-auto bg-gradient-to-r from-blue-600 to-indigo-600 text-white' : 'bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-100'}`}>
-                  <div>{m.text}</div>
-                  <div className={`mt-1 text-[10px] ${m.fromId===user?.id ? 'text-white/80' : 'text-gray-500 dark:text-gray-400'}`}>
+              {messages.map((m) => (
+                <div key={m.id} className={`max-w-[75%] px-3 py-2 rounded-2xl shadow-sm ${m.sender_id===user?.id ? 'ml-auto bg-gradient-to-r from-blue-600 to-indigo-600 text-white' : 'bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-100'}`}>
+                  <div>{m.body}</div>
+                  <div className={`mt-1 text-[10px] ${m.sender_id===user?.id ? 'text-white/80' : 'text-gray-500 dark:text-gray-400'}`}>
                     {m.status === 'read' ? 'Read' : m.status === 'delivered' ? 'Delivered' : 'Sent'}
                   </div>
                 </div>
