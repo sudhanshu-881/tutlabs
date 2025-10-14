@@ -40,6 +40,10 @@ const Messages: React.FC = () => {
   const [conversations, setConversations] = useState<Array<{ conversation_id: string; peer_id: string; peer_name: string; last: any }>>([]);
   useEffect(() => { listMyConversations().then(setConversations); }, [refresh, selectedConv]);
   const [messages, setMessages] = useState<any[]>([]);
+  const currentPeerName = useMemo(() => {
+    const conv = conversations.find((c) => c.conversation_id === selectedConv);
+    return conv?.peer_name || params.get('name') || 'User';
+  }, [conversations, selectedConv, params]);
   useEffect(() => {
     if (!selectedConv) { setMessages([]); return; }
     fetchConversationMessages(selectedConv).then(setMessages);
@@ -87,7 +91,7 @@ const Messages: React.FC = () => {
           <>
             <div className="px-4 py-3 border-b border-white/20 dark:border-white/10 flex items-center justify-between sticky top-0 bg-white/80 dark:bg-slate-900/70 rounded-t-2xl">
               <div className="font-semibold text-gray-900 dark:text-white text-sm flex items-center gap-2">
-                <span>{current.peerName}</span>
+                <span>{currentPeerName}</span>
                 <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
                   <span className="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span> Online
                 </span>
