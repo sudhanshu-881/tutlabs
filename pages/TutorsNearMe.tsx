@@ -58,7 +58,7 @@ const TutorsNearMe: React.FC = () => {
       reverseGeocode(coords.latitude, coords.longitude)
         .then(locationName => {
           setLocationQuery(locationName);
-          fetchTutors(subjectQuery, locationName, pincodeQuery); // Auto-search with new location
+          fetchTutors(keyword, locationName, pincodeQuery); // Auto-search with new location
         })
         .catch(err => {
           setError(err.message);
@@ -67,7 +67,7 @@ const TutorsNearMe: React.FC = () => {
     if (geoError) {
       setError(geoError.message);
     }
-  }, [coords, geoError, subjectQuery, fetchTutors]);
+  }, [coords, geoError, keyword, fetchTutors]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
