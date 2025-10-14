@@ -216,6 +216,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  useEffect(() => {
+    // Surface preferred_location globally for quick access by non-context code paths
+    try {
+      if (user?.preferred_location) {
+        (window as any).__AUTH_PREFERRED_LOCATION__ = user.preferred_location;
+      } else {
+        delete (window as any).__AUTH_PREFERRED_LOCATION__;
+      }
+    } catch {}
+  }, [user?.preferred_location]);
+
   const value = {
     user,
     login,

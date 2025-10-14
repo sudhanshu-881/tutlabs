@@ -1,4 +1,3 @@
-import React from 'react';
 import React, { useContext } from 'react';
 import StudentsNearMe from '../StudentsNearMe';
 import { useEffect, useState } from 'react';
@@ -20,6 +19,8 @@ const TutorsFeed: React.FC = () => {
         setError(null);
         const pincodes = [] as string[];
         // In a full implementation, fetch tutor pincodes from 'tutors' by user_id
+        // Prime by preferred location name if available (server can map to pincodes later)
+        const preferred = user?.preferred_location || localStorage.getItem('PREFERRED_LOCATION_NAME') || undefined;
         const data = await listTuitionRequests({ pincodes });
         setRequests(data);
       } catch (e: any) {
@@ -29,7 +30,7 @@ const TutorsFeed: React.FC = () => {
       }
     };
     run();
-  }, []);
+  }, [user?.preferred_location]);
 
   return (
     <div className="space-y-8">

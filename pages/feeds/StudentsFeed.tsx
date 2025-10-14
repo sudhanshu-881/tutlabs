@@ -29,10 +29,11 @@ const StudentsFeed: React.FC = () => {
     }
   }, []);
 
-  // Load saved location or request it once
+  // Load preferred location from profile/localStorage or request it once
   useEffect(() => {
     try {
-      const saved = localStorage.getItem('PREFERRED_LOCATION_NAME');
+      const fromProfile = (window as any).__AUTH_PREFERRED_LOCATION__ as string | undefined;
+      const saved = fromProfile || localStorage.getItem('PREFERRED_LOCATION_NAME');
       if (saved) {
         setLocationName(saved);
         fetchByLocation(saved);
