@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { AuthContext, supabase } from '../context/AuthContext';
 import { Profile } from '../types';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
@@ -7,6 +7,8 @@ import toast from 'react-hot-toast';
 
 const ProfilePage: React.FC = () => {
     const { user, logout } = useContext(AuthContext);
+    const [params] = useSearchParams();
+    const viewingTutorId = params.get('tutor');
     const [profile, setProfile] = useState<Profile | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -16,7 +18,7 @@ const ProfilePage: React.FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!user) {
+        if (!user && !viewingTutorId) {
             navigate('/login');
             return;
         }
@@ -26,23 +28,40 @@ const ProfilePage: React.FC = () => {
                 if (!supabase) throw new Error("Supabase client not available");
                 setLoading(true);
 
-                const { data, error } = await supabase
+                let profileRow: any = null;
+                let avatarPath: string | null = null;
+                if (viewingTutorId) {
+                  const { data: tutorRow } = await supabase
+                    .from('tutors')
+                    .select('user_id, bio, subjects, pincodes, availability')
+                    .eq('id', Number(viewingTutorId))
+                    .single();
+                  if (tutorRow?.user_id) {
+                    const { data: prof } = await supabase
+                      .from('profiles')
+                      .select('*')
+                      .eq('id', tutorRow.user_id)
+                      .single();
+                    profileRow = prof;
+                    setTutorInfo({ subjects: tutorRow.subjects || [], pincodes: tutorRow.pincodes || [], availability: tutorRow.availability || null, bio: tutorRow.bio || null });
+                  }
+                } else {
+                  const { data: prof, error } = await supabase
                     .from('profiles')
                     .select('*')
-                    .eq('id', user.id)
+                    .eq('id', user!.id)
                     .single();
-
-                if (error && error.code !== 'PGRST116') { // PGRST116: no rows found
-                    throw error;
+                  if (error && error.code !== 'PGRST116') throw error;
+                  profileRow = prof;
                 }
-                
-                if (data) {
-                    setProfile(data);
-                    if (data.avatar_url) {
-                        const { data: imageData, error: imageError } = await supabase.storage.from('avatars').download(data.avatar_url);
-                        if (imageError) throw imageError;
-                        setAvatarUrl(URL.createObjectURL(imageData));
-                    }
+
+                if (profileRow) {
+                  setProfile(profileRow);
+                  if (profileRow.avatar_url) {
+                    const { data: imageData, error: imageError } = await supabase.storage.from('avatars').download(profileRow.avatar_url);
+                    if (imageError) throw imageError;
+                    setAvatarUrl(URL.createObjectURL(imageData));
+                  }
                 }
 
             } catch (err: any) {
@@ -67,11 +86,14 @@ const ProfilePage: React.FC = () => {
             if (trow) setTutorInfo({ subjects: trow.subjects || [], pincodes: trow.pincodes || [], availability: trow.availability || null, bio: trow.bio || null });
           } catch {}
         };
-        fetchTutor();
-    }, [user, navigate]);
+        if (!viewingTutorId) fetchTutor();
+    }, [user, navigate, viewingTutorId]);
     
     if (loading) return <LoadingSpinner />;
     if (error) return <div className="text-center text-red-500 bg-red-100 dark:bg-red-900/50 p-4 rounded-md">{error}</div>;
+
+    const viewingOther = Boolean(viewingTutorId);
+    const connectHref = viewingTutorId ? `/feed/messages?peer=${encodeURIComponent('t:' + viewingTutorId)}&name=${encodeURIComponent(profile?.full_name || 'Tutor')}` : undefined;
 
     return (
       <div className="max-w-5xl mx-auto">
@@ -87,8 +109,14 @@ const ProfilePage: React.FC = () => {
               <h1 className="text-2xl font-semibold text-gray-900 dark:text-white truncate leading-tight">{profile?.full_name || user?.name}</h1>
               <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user?.email}</p>
               <div className="mt-2 flex gap-2">
-                <Link to="/profile/edit" className="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Edit Profile</Link>
-                <button onClick={logout} className="text-xs bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-3 py-1 rounded hover:bg-gray-300 dark:hover:bg-gray-600">Logout</button>
+                {viewingOther ? (
+                  <a href={connectHref} className="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Connect</a>
+                ) : (
+                  <>
+                    <Link to="/profile/edit" className="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Edit Profile</Link>
+                    <button onClick={logout} className="text-xs bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-3 py-1 rounded hover:bg-gray-300 dark:hover:bg-gray-600">Logout</button>
+                  </>
+                )}
               </div>
             </div>
           </div>

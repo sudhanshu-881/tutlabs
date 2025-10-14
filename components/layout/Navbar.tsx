@@ -26,7 +26,9 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
     return (
       <nav className="sticky top-0 z-40 bg-white dark:bg-black">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-12 grid grid-cols-3 items-center">
-          <div />
+          <div className="flex items-center">
+            <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
+          </div>
           <div className="flex items-center justify-center">
             <NavLink to={feedPath} className="text-[1.875rem] leading-none font-semibold tracking-tight text-gray-900 dark:text-white font-brand lowercase">
               tutlabs
