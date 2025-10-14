@@ -164,7 +164,7 @@ function App() {
   return (
     <HashRouter>
       <AuthProvider>
-        <div className="flex flex-col min-h-screen bg-transparent text-foreground">
+        <div className="flex flex-col min-h-screen bg-transparent text-gray-900 dark:text-white">
           <Toaster position="top-right" />
           <Navbar theme={theme} toggleTheme={toggleTheme} />
           <MainContainer>
