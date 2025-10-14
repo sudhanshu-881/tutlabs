@@ -47,7 +47,13 @@ const Home = () => {
 
   const chooseRole = (role: 'student' | 'tutor') => {
     setPendingRole(role);
-    navigate('/signup');
+    // If user intended to auth, respect it, else go signup
+    let next = '/signup';
+    try {
+      const pref = sessionStorage.getItem('NEXT_AUTH');
+      if (pref === 'login') next = '/login';
+    } catch {}
+    navigate(next);
   };
 
   return (

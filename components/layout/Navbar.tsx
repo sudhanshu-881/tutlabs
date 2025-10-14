@@ -82,6 +82,7 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
                   onClick={(e) => {
                     if (!getPendingRole()) {
                       e.preventDefault();
+                      try { sessionStorage.setItem('NEXT_AUTH', 'login'); } catch {}
                       window.dispatchEvent(new Event('role:require'));
                       const el = document.getElementById('role-picker');
                       if (el) {
@@ -101,6 +102,7 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
                   onClick={(e) => {
                     if (!getPendingRole()) {
                       e.preventDefault();
+                      try { sessionStorage.setItem('NEXT_AUTH', 'signup'); } catch {}
                       window.dispatchEvent(new Event('role:require'));
                       const el = document.getElementById('role-picker');
                       if (el) {
@@ -157,6 +159,7 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
                       onClick={(e) => {
                         if (!getPendingRole()) {
                           e.preventDefault();
+                          try { sessionStorage.setItem('NEXT_AUTH', 'login'); } catch {}
                           window.dispatchEvent(new Event('role:require'));
                           const el = document.getElementById('role-picker');
                           if (el) {
@@ -178,6 +181,7 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
                       onClick={(e) => {
                         if (!getPendingRole()) {
                           e.preventDefault();
+                          try { sessionStorage.setItem('NEXT_AUTH', 'signup'); } catch {}
                           window.dispatchEvent(new Event('role:require'));
                           const el = document.getElementById('role-picker');
                           if (el) {
