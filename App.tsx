@@ -149,13 +149,25 @@ function App() {
     return <LocationConsent onAccept={accept} onDismiss={dismiss} />;
   };
 
+  // Uniform main spacing wrapper: smaller padding on all pages except landing
+  const MainContainer: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const location = useLocation();
+    const isHome = location.pathname === '/';
+    const padding = isHome ? 'py-20 md:py-12' : 'py-6 md:py-6';
+    return (
+      <main className={`flex-grow container mx-auto px-4 sm:px-6 lg:px-8 ${padding}`}>
+        {children}
+      </main>
+    );
+  };
+
   return (
     <HashRouter>
       <AuthProvider>
         <div className="flex flex-col min-h-screen bg-transparent text-foreground">
           <Toaster position="top-right" />
           <Navbar theme={theme} toggleTheme={toggleTheme} />
-          <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-8">
+          <MainContainer>
             <Routes>
               <Route path="/" element={<RootRoute />} />
               <Route path="/onboarding/tutor" element={<ProtectedRoute><OnboardingTutor /></ProtectedRoute>} />
@@ -188,7 +200,7 @@ function App() {
               <Route path="/profile/edit" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </main>
+          </MainContainer>
           <FooterVisibility />
           <LocationConsentGate />
           <TabBarVisibility />
