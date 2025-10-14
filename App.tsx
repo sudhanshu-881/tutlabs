@@ -62,29 +62,28 @@ function App() {
     const [next, setNext] = useState<string | null>(null);
 
     useEffect(() => {
-      let mounted = true;
-      const check = async () => {
-        if (!user) { if (mounted) setNext(null); return; }
-        try {
-          if (!supabase) { if (mounted) setNext('/feed/student'); return; }
-          // Prefer actual tutor listing presence over active_role to avoid misroutes
-          const { data: trow } = await supabase
-            .from('tutors')
-            .select('id')
-            .eq('user_id', user.id)
-            .single();
-          if (mounted) setNext(trow?.id ? '/feed/tutor' : '/feed/student');
-        } catch {
-          if (mounted) setNext('/feed/student');
-        }
-      };
-      check();
-      return () => { mounted = false; };
+      if (!user) { setNext(null); return; }
+      // Trust the effective role computed in AuthContext; onboarding handled by ProtectedRoute
+      if ((user.active_role as Role) === 'tutor') setNext('/feed/tutor');
+      else setNext('/feed/student');
     }, [user]);
 
     if (!user) return <Home />;
     if (!next) return <LoadingSpinner inline={true} />;
     return <Navigate to={next} replace />;
+  };
+
+  // Role-based feed guards
+  const TutorOnly: React.FC<{ children: React.ReactElement }> = ({ children }) => {
+    const { user } = useContext(AuthContext);
+    if (!user) return children;
+    return (user.active_role as Role) === 'tutor' ? children : <Navigate to="/feed/student" replace />;
+  };
+
+  const StudentOnly: React.FC<{ children: React.ReactElement }> = ({ children }) => {
+    const { user } = useContext(AuthContext);
+    if (!user) return children;
+    return (user.active_role as Role) === 'student' ? children : <Navigate to="/feed/tutor" replace />;
   };
 
   // Hide public near-me pages for logged-in users of the same role
@@ -163,8 +162,8 @@ function App() {
             <Routes>
               <Route path="/" element={<RootRoute />} />
               <Route path="/onboarding/tutor" element={<ProtectedRoute><OnboardingTutor /></ProtectedRoute>} />
-              <Route path="/feed/tutor" element={<ProtectedRoute><TutorsFeed /></ProtectedRoute>} />
-              <Route path="/feed/student" element={<ProtectedRoute><StudentsFeed /></ProtectedRoute>} />
+              <Route path="/feed/tutor" element={<ProtectedRoute><TutorOnly><TutorsFeed /></TutorOnly></ProtectedRoute>} />
+              <Route path="/feed/student" element={<ProtectedRoute><StudentOnly><StudentsFeed /></StudentOnly></ProtectedRoute>} />
               <Route path="/feed/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
               <Route
                 path="/tutors"
