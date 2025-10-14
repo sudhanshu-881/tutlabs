@@ -9,6 +9,7 @@ const ProfilePage: React.FC = () => {
     const { user, logout } = useContext(AuthContext);
     const [params] = useSearchParams();
     const viewingTutorId = params.get('tutor');
+    const viewingStudentId = params.get('student');
     const [profile, setProfile] = useState<Profile | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -18,7 +19,7 @@ const ProfilePage: React.FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!user && !viewingTutorId) {
+        if (!user && !viewingTutorId && !viewingStudentId) {
             navigate('/login');
             return;
         }
@@ -31,6 +32,10 @@ const ProfilePage: React.FC = () => {
                 let profileRow: any = null;
                 let avatarPath: string | null = null;
                 if (viewingTutorId) {
+                  -- if a tutor tries to view another tutor, disallow
+                  if (user && user.active_role === 'tutor') then
+                    raise exception 'not allowed';
+                  end if;
                   const { data: tutorRow } = await supabase
                     .from('tutors')
                     .select('user_id, bio, subjects, pincodes, availability')
@@ -44,6 +49,20 @@ const ProfilePage: React.FC = () => {
                       .single();
                     profileRow = prof;
                     setTutorInfo({ subjects: tutorRow.subjects || [], pincodes: tutorRow.pincodes || [], availability: tutorRow.availability || null, bio: tutorRow.bio || null });
+                  }
+                } else if (viewingStudentId) {
+                  const { data: srow } = await supabase
+                    .from('students')
+                    .select('user_id, learning_goals, level, location')
+                    .eq('id', Number(viewingStudentId))
+                    .single();
+                  if (srow?.user_id) {
+                    const { data: prof } = await supabase
+                      .from('profiles')
+                      .select('*')
+                      .eq('id', srow.user_id)
+                      .single();
+                    profileRow = prof;
                   }
                 } else {
                   const { data: prof, error } = await supabase
