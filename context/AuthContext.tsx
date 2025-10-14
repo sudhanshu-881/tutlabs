@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { createClient, Session, SupabaseClient } from '@supabase/supabase-js';
 import { Role } from '../types';
+import { reverseGeocode } from '../utils/geocoding';
 
 // --- SECURITY BEST PRACTICE ---
 // Credentials are now loaded from Vite's environment variables. This is a critical security measure
@@ -124,6 +125,31 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       subscription?.unsubscribe();
     };
   }, []);
+
+  // Capture user location shortly after login for location-based feeds
+  useEffect(() => {
+    if (!user) return;
+    // Skip if already captured recently (24h)
+    try {
+      const ts = Number(localStorage.getItem('PREFERRED_LOCATION_TS') || '0');
+      if (ts && Date.now() - ts < 24 * 60 * 60 * 1000) return;
+    } catch {}
+
+    if (typeof navigator === 'undefined' || !navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        try {
+          const name = await reverseGeocode(pos.coords.latitude, pos.coords.longitude);
+          localStorage.setItem('PREFERRED_LOCATION_NAME', name);
+          localStorage.setItem('PREFERRED_LOCATION_TS', String(Date.now()));
+        } catch {}
+      },
+      () => {
+        // ignore errors silently here; users can manually use "near me" later
+      },
+      { enableHighAccuracy: false, timeout: 8000, maximumAge: 10 * 60 * 1000 }
+    );
+  }, [user]);
 
   const login = async (email: string, password: string) => {
     if (!supabase) throw new Error("Authentication is currently unavailable. Please try again later.");
