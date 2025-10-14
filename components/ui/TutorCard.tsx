@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Tutor } from '../../types';
 import { StarIcon, VerifiedIcon } from './Icons';
 
@@ -29,9 +30,10 @@ const TutorCard: React.FC<TutorCardProps> = ({ tutor }) => {
             </span>
           ))}
         </div>
-        <button className="mt-5 w-full bg-blue-600 text-white py-2.5 px-4 rounded-lg hover:bg-blue-700 transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md hover:shadow-blue-500/30 active:translate-y-0 active:shadow-sm text-sm font-medium">
-          View Profile
-        </button>
+        <div className="mt-5 grid grid-cols-2 gap-2">
+          <Link to={`/profile?tutor=${encodeURIComponent(String(tutor.id))}`} className="w-full text-center bg-blue-600 text-white py-2.5 px-4 rounded-lg hover:bg-blue-700 transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md hover:shadow-blue-500/30 active:translate-y-0 active:shadow-sm text-sm font-medium">View Profile</Link>
+          <Link to={`/feed/messages?peer=${encodeURIComponent(String(tutor.id))}&name=${encodeURIComponent(tutor.name)}`} className="w-full text-center bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 py-2.5 px-4 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-all text-sm font-medium">Connect</Link>
+        </div>
       </div>
     </div>
   );

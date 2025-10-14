@@ -7,10 +7,10 @@ type LoadingSpinnerProps = {
 };
 
 const defaultMessages = [
-  'Thinking…',
-  'Crunching the numbers…',
-  'Polishing results…',
-  'Cross‑checking the details…',
+  'Preparing results…',
+  'Analyzing details…',
+  'Curating your experience…',
+  'Finalizing the update…',
   'Almost there…',
 ];
 
