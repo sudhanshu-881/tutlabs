@@ -46,7 +46,7 @@ const Messages: React.FC = () => {
   };
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div className="md:col-span-1 space-y-3">
+      <div className="md:col-span-1 space-y-3 bg-white/60 dark:bg-slate-900/60 backdrop-blur rounded-2xl p-3 border border-white/20 dark:border-white/10">
         {conversations.length === 0 ? (
           <div className="text-sm text-gray-700/80 dark:text-gray-300/90">No conversations yet.</div>
         ) : (
@@ -54,7 +54,7 @@ const Messages: React.FC = () => {
             <button
               key={c.peerId}
               onClick={() => setSelectedPeer(c.peerId)}
-              className={`w-full text-left p-4 rounded-2xl border border-white/15 dark:border-white/10 backdrop-blur-xl transition ${selectedPeer===c.peerId ? 'bg-white/50 dark:bg-slate-900/50' : 'bg-white/30 dark:bg-slate-900/30 hover:bg-white/40 dark:hover:bg-slate-900/40'}`}
+              className={`w-full text-left p-3 rounded-xl border border-white/15 dark:border-white/10 transition ${selectedPeer===c.peerId ? 'bg-white/90 dark:bg-slate-900/70' : 'bg-white/70 dark:bg-slate-900/50 hover:bg-white/80 dark:hover:bg-slate-900/60'}`}
             >
               <div className="flex items-center justify-between">
                 <span className="font-medium text-gray-900 dark:text-white">{c.peerName}</span>
@@ -65,30 +65,31 @@ const Messages: React.FC = () => {
           ))
         )}
       </div>
-      <div className="md:col-span-2 p-0 rounded-2xl border border-white/15 dark:border-white/10 bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl h-[28rem] flex flex-col">
+      <div className="md:col-span-2 p-0 rounded-2xl border border-white/15 dark:border-white/10 bg-white/80 dark:bg-slate-900/70 backdrop-blur h-[30rem] flex flex-col shadow-lg">
         {!current ? (
           <div className="h-full flex items-center justify-center text-gray-700/80 dark:text-gray-300/90">
             Select a conversation to start messaging.
           </div>
         ) : (
           <>
-            <div className="px-4 py-3 border-b border-white/20 dark:border-white/10 flex items-center justify-between">
-              <div className="font-semibold text-gray-900 dark:text-white">{current.peerName}</div>
+            <div className="px-4 py-3 border-b border-white/20 dark:border-white/10 flex items-center justify-between sticky top-0 bg-white/80 dark:bg-slate-900/70 rounded-t-2xl">
+              <div className="font-semibold text-gray-900 dark:text-white text-sm">{current.peerName}</div>
+              <div className="text-xs text-gray-500">Secure</div>
             </div>
-            <div className="flex-1 overflow-auto p-4 space-y-2">
+            <div className="flex-1 overflow-auto p-4 space-y-2 scroll-smooth">
               {current.messages.map((m) => (
-                <div key={m.id} className={`max-w-[75%] px-3 py-2 rounded-xl ${m.fromId===user?.id ? 'ml-auto bg-blue-600 text-white' : 'bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-100'}`}>{m.text}</div>
+                <div key={m.id} className={`max-w-[75%] px-3 py-2 rounded-2xl shadow-sm ${m.fromId===user?.id ? 'ml-auto bg-gradient-to-r from-blue-600 to-indigo-600 text-white' : 'bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-100'}`}>{m.text}</div>
               ))}
             </div>
-            <div className="p-3 border-t border-white/20 dark:border-white/10 flex items-center gap-2">
+            <div className="p-3 border-t border-white/20 dark:border-white/10 flex items-center gap-2 bg-white/80 dark:bg-slate-900/70 rounded-b-2xl">
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => { if (e.key==='Enter') handleSend(); }}
-                className="flex-1 px-3 py-2 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 focus:outline-none"
+                className="flex-1 px-3 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 focus:outline-none shadow-sm"
                 placeholder="Type a message"
               />
-              <button onClick={handleSend} className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700">Send</button>
+              <button onClick={handleSend} className="px-4 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 shadow">Send</button>
             </div>
           </>
         )}

@@ -34,7 +34,8 @@ function App() {
   const [theme, setTheme] = useState<Theme>('light');
 
   useEffect(() => {
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    // Default to system preference; ignore previous localStorage overrides
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
       setTheme('dark');
     } else {
       setTheme('light');
@@ -44,10 +45,8 @@ function App() {
   useEffect(() => {
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
     } else {
       document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
     }
   }, [theme]);
 

@@ -4,13 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script>
-      // Prevent theme flash by applying dark class before React mounts
+      // Prevent theme flash by applying system dark preference before React mounts
       (function() {
         try {
-          var ls = localStorage.getItem('theme');
           var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-          if (ls === 'dark' || (!ls && prefersDark)) {
+          if (prefersDark) {
             document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
           }
         } catch (e) {}
       })();
