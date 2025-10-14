@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Student } from '../../types';
 
 interface StudentCardProps {
@@ -20,9 +21,9 @@ const StudentCard: React.FC<StudentCardProps> = ({ student }) => {
             </span>
           ))}
         </div>
-         <button className="mt-5 w-full bg-blue-600 text-white py-2.5 px-4 rounded-lg hover:bg-blue-700 transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md hover:shadow-blue-500/30 active:translate-y-0 active:shadow-sm text-sm font-medium">
+        <Link to={`/feed/messages?peer=${encodeURIComponent('s:' + String(student.id))}&name=${encodeURIComponent(student.name)}`} className="mt-5 block w-full text-center bg-blue-600 text-white py-2.5 px-4 rounded-lg hover:bg-blue-700 transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md hover:shadow-blue-500/30 active:translate-y-0 active:shadow-sm text-sm font-medium">
           Connect
-        </button>
+        </Link>
       </div>
     </div>
   );
