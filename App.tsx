@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { supabase } from './context/AuthContext';
 import Navbar from './components/layout/Navbar';
+import LocationConsent from './components/ui/LocationConsent';
 import Footer from './components/layout/Footer';
 import TabBar from './components/layout/TabBar';
 import Home from './pages/Home';
@@ -115,6 +116,31 @@ function App() {
     return user ? <TabBar /> : null;
   };
 
+  const LocationConsentGate: React.FC = () => {
+    const { user } = React.useContext(AuthContext);
+    const [show, setShow] = useState(false);
+    useEffect(() => {
+      if (!user) return setShow(false);
+      try {
+        const dismissed = localStorage.getItem('LOC_CONSENT_DISMISSED') === '1';
+        const saved = localStorage.getItem('PREFERRED_LOCATION_NAME');
+        setShow(!dismissed && !saved);
+      } catch {
+        setShow(false);
+      }
+    }, [user]);
+
+    const accept = () => {
+      try { localStorage.setItem('LOC_CONSENT_DISMISSED', '1'); } catch {}
+      // Trigger geolocation via a transient event consumed by pages if needed
+      window.dispatchEvent(new Event('location:request'));
+      setShow(false);
+    };
+    const dismiss = () => { try { localStorage.setItem('LOC_CONSENT_DISMISSED', '1'); } catch {}; setShow(false); };
+    if (!show) return null;
+    return <LocationConsent onAccept={accept} onDismiss={dismiss} />;
+  };
+
   return (
     <HashRouter>
       <AuthProvider>
@@ -155,6 +181,7 @@ function App() {
             </Routes>
           </main>
           <FooterVisibility />
+          <LocationConsentGate />
           <TabBarVisibility />
         </div>
       </AuthProvider>

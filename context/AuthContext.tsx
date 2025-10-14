@@ -34,6 +34,7 @@ interface User {
   name: string;
   email: string;
   active_role: Role | null;
+  preferred_location?: string | null;
 }
 
 interface AuthContextType {
@@ -75,7 +76,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       try {
         const { data: profile, error } = await supabase
           .from('profiles')
-          .select('full_name, active_role')
+          .select('full_name, active_role, preferred_location')
           .eq('id', sessionUser.id)
           .single();
 
@@ -88,6 +89,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           email: sessionUser.email || '',
           name: profile?.full_name || sessionUser.user_metadata?.full_name || sessionUser.email?.split('@')[0] || 'User',
           active_role: profile?.active_role || 'student', // Default to student
+          preferred_location: (profile as any)?.preferred_location || null,
         });
 
       } catch (error) {
@@ -97,6 +99,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           email: sessionUser.email || '',
           name: sessionUser.user_metadata?.full_name || sessionUser.email?.split('@')[0] || 'User',
           active_role: 'student', // Fallback role
+          preferred_location: null,
         });
       }
     };
@@ -142,6 +145,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           const name = await reverseGeocode(pos.coords.latitude, pos.coords.longitude);
           localStorage.setItem('PREFERRED_LOCATION_NAME', name);
           localStorage.setItem('PREFERRED_LOCATION_TS', String(Date.now()));
+          if (supabase) {
+            try {
+              await supabase
+                .from('profiles')
+                .update({ preferred_location: name, updated_at: new Date() })
+                .eq('id', user!.id);
+            } catch {}
+          }
         } catch {}
       },
       () => {

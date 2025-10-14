@@ -51,6 +51,13 @@ const TutorsNearMe: React.FC = () => {
     try { initialLocation = localStorage.getItem('PREFERRED_LOCATION_NAME') || ''; } catch {}
     fetchTutors('', initialLocation, '');
   }, [fetchTutors]);
+
+  // Optional external trigger from consent banner
+  useEffect(() => {
+    const handler = () => requestLocation();
+    window.addEventListener('location:request', handler as EventListener);
+    return () => window.removeEventListener('location:request', handler as EventListener);
+  }, [requestLocation]);
   
   // Effect to handle geolocation result
   useEffect(() => {

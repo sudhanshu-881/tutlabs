@@ -42,6 +42,13 @@ const StudentsFeed: React.FC = () => {
     requestLocation();
   }, [fetchByLocation, requestLocation]);
 
+  // Optional external trigger from consent banner
+  useEffect(() => {
+    const handler = () => requestLocation();
+    window.addEventListener('location:request', handler as EventListener);
+    return () => window.removeEventListener('location:request', handler as EventListener);
+  }, [requestLocation]);
+
   // When geolocation arrives, reverse geocode and store
   useEffect(() => {
     if (!coords) return;
