@@ -20,20 +20,6 @@ const MoonIcon: React.FC<{className?: string}> = ({className}) => (
 );
 
 
-const ThemeToggle: React.FC<ThemeToggleProps> = ({ theme, toggleTheme }) => {
-  return (
-    <button
-      onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleTheme(); }}
-      className="p-2 rounded-full text-blue-700 dark:text-blue-300 hover:bg-white/70 dark:hover:bg-gray-800/60 focus:outline-none transition-colors"
-      aria-label="Toggle theme"
-    >
-      {theme === 'light' ? (
-        <MoonIcon className="h-6 w-6" />
-      ) : (
-        <SunIcon className="h-6 w-6" />
-      )}
-    </button>
-  );
-};
+const ThemeToggle: React.FC<ThemeToggleProps> = () => null;
 
 export default ThemeToggle;

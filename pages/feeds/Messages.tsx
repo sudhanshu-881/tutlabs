@@ -68,7 +68,10 @@ const Messages: React.FC = () => {
               className={`w-full text-left p-3 rounded-xl border border-white/15 dark:border-white/10 transition ${selectedPeer===c.peerId ? 'bg-white/90 dark:bg-slate-900/70' : 'bg-white/70 dark:bg-slate-900/50 hover:bg-white/80 dark:hover:bg-slate-900/60'}`}
             >
               <div className="flex items-center justify-between">
-                <span className="font-medium text-gray-900 dark:text-white">{c.peerName}</span>
+                <span className="font-medium text-gray-900 dark:text-white flex items-center gap-2">
+                  {c.peerName}
+                  <span className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" title="Online"></span>
+                </span>
                 <span className="text-xs text-gray-600 dark:text-gray-400">{c.messages.at(-1)?.ts ? new Date(c.messages.at(-1)!.ts).toLocaleTimeString() : ''}</span>
               </div>
               <p className="mt-1 text-sm text-gray-700/80 dark:text-gray-300/90 truncate">{c.messages.at(-1)?.text || 'New conversation'}</p>

@@ -52,7 +52,7 @@ const Blog: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto space-y-10">
       <header className="space-y-4">
-        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white drop-shadow-[0_2px_10px_rgba(59,130,246,0.35)]">Tutlabs Blog</h1>
+        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white drop-shadow-[0_2px_10px_rgba(59,130,246,0.35)]">tutlabs blog</h1>
         <p className="text-white/90">News, community stories, and platform updates.</p>
       </header>
 
