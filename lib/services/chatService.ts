@@ -149,3 +149,39 @@ export async function insertMessage(conversationId: string, body: string): Promi
   if (error) return null;
   return data as SupaMessage;
 }
+
+export async function upsertReceipt(messageId: string, status: 'delivered' | 'read') {
+  if (!supabase) return;
+  await supabase.rpc('upsert_receipt', { p_message_id: messageId, p_status: status });
+}
+
+export function subscribeConversation(
+  conversationId: string,
+  handlers: {
+    onMessage?: (m: SupaMessage) => void;
+    onReceipt?: (evt: { message_id: string; status: 'delivered' | 'read' }) => void;
+  }
+) {
+  if (!supabase) return () => {};
+  const channel = supabase.channel(`conv-${conversationId}`);
+  channel.on(
+    'postgres_changes',
+    { event: 'INSERT', schema: 'public', table: 'messages', filter: `conversation_id=eq.${conversationId}` },
+    (payload: any) => {
+      const row = payload.new as SupaMessage;
+      handlers.onMessage?.(row);
+    }
+  );
+  channel.on(
+    'postgres_changes',
+    { event: 'INSERT', schema: 'public', table: 'message_receipts' },
+    (payload: any) => {
+      const row = payload.new as any;
+      handlers.onReceipt?.({ message_id: row.message_id, status: row.status });
+    }
+  );
+  channel.subscribe();
+  return () => {
+    try { supabase.removeChannel(channel); } catch {}
+  };
+}

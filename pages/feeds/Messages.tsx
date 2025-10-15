@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { subscribeToPush } from '../../lib/services/push';
-import { resolvePeerUserId, ensureDirectConversationWith, listMyConversations, fetchConversationMessages, insertMessage } from '../../lib/services/chatService';
+import { resolvePeerUserId, ensureDirectConversationWith, listMyConversations, fetchConversationMessages, insertMessage, subscribeConversation, upsertReceipt } from '../../lib/services/chatService';
 import { useSearchParams } from 'react-router-dom';
 
 type Conversation = {
@@ -44,6 +44,22 @@ const Messages: React.FC = () => {
     const conv = conversations.find((c) => c.conversation_id === selectedConv);
     return conv?.peer_name || params.get('name') || 'User';
   }, [conversations, selectedConv, params]);
+  useEffect(() => {
+    if (!selectedConv) return;
+    const unsub = subscribeConversation(selectedConv, {
+      onMessage: (m) => {
+        setMessages((prev) => [...prev, m]);
+        // mark delivered immediately for receiver
+        upsertReceipt(m.id, 'delivered').catch(()=>{});
+      },
+      onReceipt: (evt) => {
+        if (evt.status === 'read' || evt.status === 'delivered') {
+          setMessages((prev) => prev.map((x) => x.id === evt.message_id ? { ...x, status: evt.status } : x));
+        }
+      },
+    });
+    return () => unsub();
+  }, [selectedConv]);
   useEffect(() => {
     if (!selectedConv) { setMessages([]); return; }
     fetchConversationMessages(selectedConv).then(setMessages);
