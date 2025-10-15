@@ -43,6 +43,8 @@ interface AuthContextType {
   signup: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   switchRole: (newRole: Role) => Promise<void>;
+  phoneSendOtp: (phone: string, fullName?: string) => Promise<void>;
+  phoneVerifyOtp: (phone: string, token: string) => Promise<void>;
   loading: boolean;
   roleSwitching: boolean;
 }
@@ -53,6 +55,8 @@ export const AuthContext = createContext<AuthContextType>({
   signup: async () => {},
   logout: () => {},
   switchRole: async () => {},
+  phoneSendOtp: async () => {},
+  phoneVerifyOtp: async () => {},
   loading: true,
   roleSwitching: false,
 });
@@ -207,6 +211,25 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     if (error) console.error("Error logging out:", error.message);
   };
 
+  const phoneSendOtp = async (phone: string, fullName?: string) => {
+    if (!supabase) throw new Error("Authentication is currently unavailable. Please try again later.");
+    const { error } = await supabase.auth.signInWithOtp({
+      phone,
+      options: {
+        channel: 'sms',
+        data: fullName ? { full_name: fullName } : undefined,
+        shouldCreateUser: true,
+      }
+    });
+    if (error) throw new Error(error.message);
+  };
+
+  const phoneVerifyOtp = async (phone: string, token: string) => {
+    if (!supabase) throw new Error("Authentication is currently unavailable. Please try again later.");
+    const { error } = await supabase.auth.verifyOtp({ type: 'sms', phone, token });
+    if (error) throw new Error(error.message);
+  };
+
   const switchRole = async (newRole: Role) => {
     if (!supabase || !user || roleSwitching) return;
     setRoleSwitching(true);
@@ -246,6 +269,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     loading,
     switchRole,
     roleSwitching,
+    phoneSendOtp,
+    phoneVerifyOtp,
   };
 
   return (
