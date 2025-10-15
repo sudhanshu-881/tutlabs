@@ -8,8 +8,12 @@ const Signup: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [usePhone, setUsePhone] = useState(false);
+  const [phone, setPhone] = useState('');
+  const [otp, setOtp] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
   const [error, setError] = useState('');
-  const { signup, switchRole } = useContext(AuthContext);
+  const { signup, switchRole, phoneSendOtp, phoneVerifyOtp } = useContext(AuthContext);
   const navigate = useNavigate();
 
   // Guard against starting signup without role on mobile/direct link
@@ -25,26 +29,49 @@ const Signup: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters long.');
-      return;
-    }
     try {
-      await signup(name, email, password);
-      const pending = getPendingRole();
-      if (pending) {
-        try {
-          await switchRole(pending);
-        } finally {
-          clearPendingRole();
+      if (usePhone) {
+        if (!otpSent) {
+          if (!name.trim()) {
+            setError('Enter your full name first.');
+            return;
+          }
+          await phoneSendOtp(phone, name);
+          setOtpSent(true);
+          return;
+        } else {
+          await phoneVerifyOtp(phone, otp);
+          const pending = getPendingRole();
+          if (pending) {
+            try { await switchRole(pending); } finally { clearPendingRole(); }
+          } else {
+            setError('Select your current role: Student/Parent or Tutor');
+            toast.error('Select your current role: Student/Parent or Tutor');
+            return;
+          }
+          navigate('/');
+          return;
         }
       } else {
-        // Enforce explicit role selection before signup completes
-        setError('Select your current role: Student/Parent or Tutor');
-        toast.error('Select your current role: Student/Parent or Tutor');
-        return;
+        if (password.length < 6) {
+          setError('Password must be at least 6 characters long.');
+          return;
+        }
+        await signup(name, email, password);
+        const pending = getPendingRole();
+        if (pending) {
+          try {
+            await switchRole(pending);
+          } finally {
+            clearPendingRole();
+          }
+        } else {
+          setError('Select your current role: Student/Parent or Tutor');
+          toast.error('Select your current role: Student/Parent or Tutor');
+          return;
+        }
+        navigate('/awaiting-confirmation', { state: { email } });
       }
-      navigate('/awaiting-confirmation', { state: { email } });
     } catch (err: any) {
       const msg = err.message || 'Failed to create an account. Please try again.';
       setError(msg);
@@ -68,56 +95,40 @@ const Signup: React.FC = () => {
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {error && <p className="text-center text-sm text-red-500 bg-red-100 dark:bg-red-900/50 p-3 rounded-md">{error}</p>}
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="name" className="sr-only">
-                Full Name *
-              </label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                autoComplete="name"
-                required
-                maxLength={100}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 text-gray-900 dark:text-white dark:bg-gray-700 rounded-t-md focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:z-10 sm:text-sm"
-                placeholder="Full Name"
-              />
+          <div className="rounded-md shadow-sm">
+            <div className="flex items-center justify-center gap-3 mb-3">
+              <button type="button" onClick={() => setUsePhone(false)} className={`px-3 py-1 rounded-md text-sm ${!usePhone ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}>Email</button>
+              <button type="button" onClick={() => setUsePhone(true)} className={`px-3 py-1 rounded-md text-sm ${usePhone ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}>Phone</button>
             </div>
             <div>
-              <label htmlFor="email-address" className="sr-only">
-                Email address *
-              </label>
-              <input
-                id="email-address"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 text-gray-900 dark:text-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:z-10 sm:text-sm"
-                placeholder="Email address"
-              />
+              <label htmlFor="name" className="sr-only">Full Name *</label>
+              <input id="name" name="name" type="text" autoComplete="name" required maxLength={100} value={name} onChange={(e) => setName(e.target.value)} className="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 text-gray-900 dark:text-white dark:bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:z-10 sm:text-sm" placeholder="Full Name" />
             </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password *
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="new-password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 text-gray-900 dark:text-white dark:bg-gray-700 rounded-b-md focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:z-10 sm:text-sm"
-                placeholder="Password"
-              />
-            </div>
+            {!usePhone ? (
+              <>
+                <div className="mt-2">
+                  <label htmlFor="email-address" className="sr-only">Email address *</label>
+                  <input id="email-address" name="email" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 text-gray-900 dark:text-white dark:bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:z-10 sm:text-sm" placeholder="Email address" />
+                </div>
+                <div className="mt-2">
+                  <label htmlFor="password" className="sr-only">Password *</label>
+                  <input id="password" name="password" type="password" autoComplete="new-password" required value={password} onChange={(e) => setPassword(e.target.value)} className="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 text-gray-900 dark:text-white dark:bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:z-10 sm:text-sm" placeholder="Password" />
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="mt-2">
+                  <label htmlFor="phone" className="sr-only">Phone *</label>
+                  <input id="phone" name="phone" type="tel" inputMode="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} className="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 text-gray-900 dark:text-white dark:bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:z-10 sm:text-sm" placeholder="Phone (with country code)" />
+                </div>
+                {otpSent && (
+                  <div className="mt-2">
+                    <label htmlFor="otp" className="sr-only">OTP *</label>
+                    <input id="otp" name="otp" type="text" inputMode="numeric" required value={otp} onChange={(e) => setOtp(e.target.value)} className="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 text-gray-900 dark:text-white dark:bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:z-10 sm:text-sm" placeholder="Enter OTP" />
+                  </div>
+                )}
+              </>
+            )}
           </div>
 
           <div>
