@@ -69,7 +69,7 @@ function App() {
     }, [user]);
 
     if (!user) return <Home />;
-    if (!next) return <LoadingSpinner inline={true} />;
+    if (!next) return <LoadingSpinner type="auth" inline={true} />;
     return <Navigate to={next} replace />;
   };
 

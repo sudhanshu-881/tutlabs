@@ -47,7 +47,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   }, [user, loading, location.pathname]);
 
   if (loading || checking) {
-    return <LoadingSpinner inline={false} />;
+    return <LoadingSpinner type="auth" inline={false} />;
   }
 
   if (!user) {
