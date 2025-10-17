@@ -4,6 +4,7 @@ import { AuthContext, supabase } from '../context/AuthContext';
 import type { Role } from '../types';
 import { getPendingRole, clearPendingRole } from '../lib/services/role';
 import toast from 'react-hot-toast';
+import LoadingSpinner from '../components/ui/LoadingSpinner';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -14,6 +15,7 @@ const Login: React.FC = () => {
   const [phone, setPhone] = useState('');
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState('');
+  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -31,6 +33,7 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setSubmitting(true);
     try {
       if (usePhone) {
         if (!otpSent) {
@@ -44,7 +47,7 @@ const Login: React.FC = () => {
       await login(email, password);
       }
       const pending = getPendingRole();
-      // Strong validation: user must log in as their existing role
+      // Align UI role selection with server profile; do not block login
       try {
         if (supabase) {
           const { data: u } = await supabase.auth.getUser();
@@ -57,11 +60,8 @@ const Login: React.FC = () => {
               .single();
             const currentRole = (profile?.active_role as 'student' | 'tutor') || 'student';
             if (pending && pending !== currentRole) {
-              // Logout and force correct selection
-              await supabase.auth.signOut();
-              setError(`Select your current role: ${currentRole === 'student' ? 'Student/Parent' : 'Tutor'}`);
-              toast.error(`Select your current role: ${currentRole === 'student' ? 'Student/Parent' : 'Tutor'}`);
-              return;
+              try { clearPendingRole(); } catch {}
+              toast.success(`Signed in as ${currentRole === 'student' ? 'Student/Parent' : 'Tutor'}`);
             }
           }
         }
@@ -125,6 +125,8 @@ const Login: React.FC = () => {
         setError(msg);
         toast.error(msg);
       }
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -142,7 +144,7 @@ const Login: React.FC = () => {
             </Link>
           </p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="mt-8 space-y-6 relative" onSubmit={handleSubmit}>
           {error && <p className="text-center text-sm text-red-500 bg-red-100 dark:bg-red-900/50 p-3 rounded-md">{error}</p>}
           <div className="rounded-md shadow-sm">
             <div className="flex items-center justify-center gap-3 mb-3">
@@ -225,6 +227,16 @@ const Login: React.FC = () => {
               Sign in
             </button>
           </div>
+          {submitting && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur rounded-lg">
+              <LoadingSpinner inline={true} messages={[
+                'Signing you in…',
+                'Securing your session…',
+                'Checking your role…',
+                'Preparing your dashboard…',
+              ]} />
+            </div>
+          )}
         </form>
       </div>
     </div>

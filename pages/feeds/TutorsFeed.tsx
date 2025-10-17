@@ -1,15 +1,16 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import StudentsNearMe from '../StudentsNearMe';
-import { useEffect, useState } from 'react';
 import { listTuitionRequests, TuitionRequest } from '../../lib/services/requestsService';
 import RequestCard from './components/RequestCard';
 import { NavLink } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
 
 const TutorsFeed: React.FC = () => {
   const { user } = useContext(AuthContext);
   const [requests, setRequests] = useState<TuitionRequest[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [showLoader, setShowLoader] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -32,6 +33,17 @@ const TutorsFeed: React.FC = () => {
     run();
   }, [user?.preferred_location]);
 
+  // Show spinner only for slow loads (>500ms) to avoid flashes
+  useEffect(() => {
+    let t: number | undefined;
+    if (loading) {
+      t = window.setTimeout(() => setShowLoader(true), 500);
+    } else {
+      setShowLoader(false);
+    }
+    return () => { if (t) window.clearTimeout(t); };
+  }, [loading]);
+
   return (
     <div className="space-y-8">
       <div>
@@ -40,7 +52,19 @@ const TutorsFeed: React.FC = () => {
         {/* Top tabs removed; bottom TabBar provides navigation */}
       </div>
       {loading ? (
-        <div className="text-white/90">Loading tuition requests…</div>
+        showLoader ? (
+          <LoadingSpinner
+            messages={[
+              'Finding students near you…',
+              'Matching by subject and pincode…',
+              'Collecting fresh requests…',
+              'Polishing your feed…',
+              'Almost done…',
+            ]}
+          />
+        ) : (
+          <div className="text-white/90">Loading tuition requests…</div>
+        )
       ) : error ? (
         <div className="text-red-200 bg-red-900/40 p-4 rounded-lg">{error}</div>
       ) : requests.length === 0 ? (
