@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { setPendingRole } from '../lib/services/role';
+import RolePicker from '../components/ui/RolePicker';
+import type { Role } from '../types';
 
 const Hero: React.FC<{ onChooseRole: (role: 'student' | 'tutor') => void }> = ({ onChooseRole }) => (
   <div className="text-center py-16 sm:py-24">
@@ -11,13 +13,8 @@ const Hero: React.FC<{ onChooseRole: (role: 'student' | 'tutor') => void }> = ({
     <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-white/90">
       Connect parents, students, and verified tutors. Find nearby tutors or students, manage your profile, and accelerate learning with tutlabs.
     </p>
-    <div id="role-picker" className="mt-8 flex justify-center gap-4">
-      <button onClick={() => onChooseRole('student')} className="inline-block bg-white/90 dark:bg-gray-900/70 text-blue-700 dark:text-white font-semibold px-8 py-3 rounded-md shadow-lg border border-white/20 dark:border-gray-700 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 hover:shadow-2xl">
-        I’m a Student/Parent
-      </button>
-      <button onClick={() => onChooseRole('tutor')} className="inline-block bg-blue-600 text-white font-semibold px-8 py-3 rounded-md shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 hover:shadow-2xl">
-        I’m a Tutor
-      </button>
+    <div className="mt-8 flex justify-center">
+      <RolePicker onChange={(r: Role | null) => { if (r) onChooseRole(r); }} />
     </div>
   </div>
 );

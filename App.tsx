@@ -59,17 +59,8 @@ function App() {
   // Auto-redirect to role-specific feed when logged-in users hit '/'
   const RootRoute = () => {
     const { user } = useContext(AuthContext);
-    const [next, setNext] = useState<string | null>(null);
-
-    useEffect(() => {
-      if (!user) { setNext(null); return; }
-      // Trust the effective role computed in AuthContext; onboarding handled by ProtectedRoute
-      if ((user.active_role as Role) === 'tutor') setNext('/feed/tutor');
-      else setNext('/feed/student');
-    }, [user]);
-
     if (!user) return <Home />;
-    if (!next) return <LoadingSpinner inline={true} />;
+    const next = (user.active_role as Role) === 'tutor' ? '/feed/tutor' : '/feed/student';
     return <Navigate to={next} replace />;
   };
 
