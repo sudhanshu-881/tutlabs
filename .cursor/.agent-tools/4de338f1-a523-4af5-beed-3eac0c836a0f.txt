@@ -1,0 +1,114 @@
+
+Running 6 tests using 2 workers
+
+(node:4130) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4131) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4131) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4130) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [chromium] › tests/smoke.spec.ts:10:3 › App smoke - unauthenticated shell › shows Navbar with brand and hides TabBar/Footer when logged out on feed (8ms)
+  ✘  2 [mobile-chrome] › tests/smoke.spec.ts:10:3 › App smoke - unauthenticated shell › shows Navbar with brand and hides TabBar/Footer when logged out on feed (2ms)
+(node:4154) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4161) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4154) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4161) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  3 [chromium] › tests/smoke.spec.ts:31:3 › App smoke - authenticated layout toggles › TabBar visible for authenticated users on feed routes (visual smoke) (2ms)
+  ✘  4 [mobile-chrome] › tests/smoke.spec.ts:31:3 › App smoke - authenticated layout toggles › TabBar visible for authenticated users on feed routes (visual smoke) (2ms)
+(node:4178) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4178) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  5 [mobile-safari] › tests/smoke.spec.ts:10:3 › App smoke - unauthenticated shell › shows Navbar with brand and hides TabBar/Footer when logged out on feed (2ms)
+(node:4190) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4190) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  6 [mobile-safari] › tests/smoke.spec.ts:31:3 › App smoke - authenticated layout toggles › TabBar visible for authenticated users on feed routes (visual smoke) (2ms)
+
+
+  1) [chromium] › tests/smoke.spec.ts:10:3 › App smoke - unauthenticated shell › shows Navbar with brand and hides TabBar/Footer when logged out on feed 
+
+    Error: browserType.launch: Executable doesn't exist at /home/ubuntu/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+  2) [chromium] › tests/smoke.spec.ts:31:3 › App smoke - authenticated layout toggles › TabBar visible for authenticated users on feed routes (visual smoke) 
+
+    Error: browserType.launch: Executable doesn't exist at /home/ubuntu/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+  3) [mobile-chrome] › tests/smoke.spec.ts:10:3 › App smoke - unauthenticated shell › shows Navbar with brand and hides TabBar/Footer when logged out on feed 
+
+    Error: browserType.launch: Executable doesn't exist at /home/ubuntu/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+  4) [mobile-chrome] › tests/smoke.spec.ts:31:3 › App smoke - authenticated layout toggles › TabBar visible for authenticated users on feed routes (visual smoke) 
+
+    Error: browserType.launch: Executable doesn't exist at /home/ubuntu/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+  5) [mobile-safari] › tests/smoke.spec.ts:10:3 › App smoke - unauthenticated shell › shows Navbar with brand and hides TabBar/Footer when logged out on feed 
+
+    Error: browserType.launch: Executable doesn't exist at /home/ubuntu/.cache/ms-playwright/webkit-2215/pw_run.sh
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+  6) [mobile-safari] › tests/smoke.spec.ts:31:3 › App smoke - authenticated layout toggles › TabBar visible for authenticated users on feed routes (visual smoke) 
+
+    Error: browserType.launch: Executable doesn't exist at /home/ubuntu/.cache/ms-playwright/webkit-2215/pw_run.sh
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+  6 failed
+    [chromium] › tests/smoke.spec.ts:10:3 › App smoke - unauthenticated shell › shows Navbar with brand and hides TabBar/Footer when logged out on feed 
+    [chromium] › tests/smoke.spec.ts:31:3 › App smoke - authenticated layout toggles › TabBar visible for authenticated users on feed routes (visual smoke) 
+    [mobile-chrome] › tests/smoke.spec.ts:10:3 › App smoke - unauthenticated shell › shows Navbar with brand and hides TabBar/Footer when logged out on feed 
+    [mobile-chrome] › tests/smoke.spec.ts:31:3 › App smoke - authenticated layout toggles › TabBar visible for authenticated users on feed routes (visual smoke) 
+    [mobile-safari] › tests/smoke.spec.ts:10:3 › App smoke - unauthenticated shell › shows Navbar with brand and hides TabBar/Footer when logged out on feed 
+    [mobile-safari] › tests/smoke.spec.ts:31:3 › App smoke - authenticated layout toggles › TabBar visible for authenticated users on feed routes (visual smoke) 
