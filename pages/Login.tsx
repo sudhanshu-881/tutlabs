@@ -47,7 +47,7 @@ const Login: React.FC = () => {
       await login(email, password);
       }
       const pending = getPendingRole();
-      // Strong validation: user must log in as their existing role
+      // Align UI role selection with server profile; do not block login
       try {
         if (supabase) {
           const { data: u } = await supabase.auth.getUser();
@@ -60,11 +60,8 @@ const Login: React.FC = () => {
               .single();
             const currentRole = (profile?.active_role as 'student' | 'tutor') || 'student';
             if (pending && pending !== currentRole) {
-              // Logout and force correct selection
-              await supabase.auth.signOut();
-              setError(`Select your current role: ${currentRole === 'student' ? 'Student/Parent' : 'Tutor'}`);
-              toast.error(`Select your current role: ${currentRole === 'student' ? 'Student/Parent' : 'Tutor'}`);
-              return;
+              try { clearPendingRole(); } catch {}
+              toast.success(`Signed in as ${currentRole === 'student' ? 'Student/Parent' : 'Tutor'}`);
             }
           }
         }
