@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { supabase } from './context/AuthContext';
 import Navbar from './components/layout/Navbar';
@@ -24,6 +24,13 @@ import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/routing/ProtectedRoute';
 import AdminRoute from './components/routing/AdminRoute';
 import OnboardingTutor from './pages/onboarding/TutorOnboarding';
+
+// Lazy load heavy components
+const LazyBlog = lazy(() => import('./pages/Blog'));
+const LazyAdmin = lazy(() => import('./pages/Admin'));
+const LazyProfile = lazy(() => import('./pages/Profile'));
+const LazyEditProfile = lazy(() => import('./pages/EditProfile'));
+const LazyOnboardingTutor = lazy(() => import('./pages/onboarding/TutorOnboarding'));
 import { Theme } from './types';
 import { AuthProvider } from './context/AuthContext';
 import { useContext } from 'react';
@@ -31,6 +38,7 @@ import { AuthContext } from './context/AuthContext';
 import type { Role } from './types';
 import { Toaster } from 'react-hot-toast';
 import LoadingSpinner from './components/ui/LoadingSpinner';
+import ErrorBoundary from './components/errors/ErrorBoundary';
 
 function App() {
   const [theme, setTheme] = useState<Theme>('light');
@@ -156,46 +164,73 @@ function App() {
     <HashRouter>
       <AuthProvider>
         <div className="flex flex-col min-h-screen bg-transparent text-gray-900 dark:text-white">
-          <Toaster position="top-right" />
-          <Navbar theme={theme} toggleTheme={toggleTheme} />
-          <MainContainer>
-            <Routes>
-              <Route path="/" element={<RootRoute />} />
-              <Route path="/onboarding/tutor" element={<ProtectedRoute><OnboardingTutor /></ProtectedRoute>} />
-              <Route path="/feed/tutor" element={<ProtectedRoute><TutorOnly><TutorsFeed /></TutorOnly></ProtectedRoute>} />
-              <Route path="/feed/student" element={<ProtectedRoute><StudentOnly><StudentsFeed /></StudentOnly></ProtectedRoute>} />
-              <Route path="/feed/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
-              <Route
-                path="/tutors"
-                element={
-                  <RoleRedirectGate blockRole="tutor">
-                    <TutorsNearMe />
-                  </RoleRedirectGate>
-                }
-              />
-              <Route
-                path="/students"
-                element={
-                  <RoleRedirectGate blockRole="student">
-                    <StudentsNearMe />
-                  </RoleRedirectGate>
-                }
-              />
-              <Route path="/connect" element={<Connect />} />
-              <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/awaiting-confirmation" element={<AwaitingConfirmation />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-              <Route path="/profile/edit" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </MainContainer>
-          <FooterVisibility />
-          <LocationConsentGate />
-          <TabBarVisibility />
+          <Toaster 
+            position="top-right" 
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: 'rgba(255, 255, 255, 0.95)',
+                color: '#1f2937',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+              },
+              success: {
+                iconTheme: {
+                  primary: '#10b981',
+                  secondary: '#ffffff',
+                },
+              },
+              error: {
+                iconTheme: {
+                  primary: '#ef4444',
+                  secondary: '#ffffff',
+                },
+              },
+            }}
+          />
+          <ErrorBoundary>
+            <Navbar theme={theme} toggleTheme={toggleTheme} />
+            <MainContainer>
+              <Suspense fallback={<LoadingSpinner messages={['Loading page...', 'Preparing content...', 'Almost ready...']} />}>
+                <Routes>
+                  <Route path="/" element={<RootRoute />} />
+                  <Route path="/onboarding/tutor" element={<ProtectedRoute><LazyOnboardingTutor /></ProtectedRoute>} />
+                  <Route path="/feed/tutor" element={<ProtectedRoute><TutorOnly><TutorsFeed /></TutorOnly></ProtectedRoute>} />
+                  <Route path="/feed/student" element={<ProtectedRoute><StudentOnly><StudentsFeed /></StudentOnly></ProtectedRoute>} />
+                  <Route path="/feed/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
+                  <Route
+                    path="/tutors"
+                    element={
+                      <RoleRedirectGate blockRole="tutor">
+                        <TutorsNearMe />
+                      </RoleRedirectGate>
+                    }
+                  />
+                  <Route
+                    path="/students"
+                    element={
+                      <RoleRedirectGate blockRole="student">
+                        <StudentsNearMe />
+                      </RoleRedirectGate>
+                    }
+                  />
+                  <Route path="/connect" element={<Connect />} />
+                  <Route path="/admin" element={<AdminRoute><LazyAdmin /></AdminRoute>} />
+                  <Route path="/blog" element={<LazyBlog />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<Signup />} />
+                  <Route path="/awaiting-confirmation" element={<AwaitingConfirmation />} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
+                  <Route path="/profile" element={<ProtectedRoute><LazyProfile /></ProtectedRoute>} />
+                  <Route path="/profile/edit" element={<ProtectedRoute><LazyEditProfile /></ProtectedRoute>} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
+            </MainContainer>
+            <FooterVisibility />
+            <LocationConsentGate />
+            <TabBarVisibility />
+          </ErrorBoundary>
         </div>
       </AuthProvider>
     </HashRouter>

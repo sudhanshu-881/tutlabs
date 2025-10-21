@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { setPendingRole, getPendingRole, clearPendingRole } from '../lib/services/role';
 import toast from 'react-hot-toast';
+import { useFormValidation, commonRules } from '../hooks/useFormValidation';
 
 const Signup: React.FC = () => {
   const [name, setName] = useState('');
@@ -15,6 +16,29 @@ const Signup: React.FC = () => {
   const [error, setError] = useState('');
   const { signup, switchRole, phoneSendOtp, phoneVerifyOtp } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  const validationRules = {
+    name: commonRules.name,
+    email: commonRules.email,
+    password: {
+      ...commonRules.password,
+      custom: (value: string) => {
+        if (value.length < 6) return 'Password must be at least 6 characters';
+        if (!/(?=.*[a-z])/.test(value)) return 'Password must contain at least one lowercase letter';
+        if (!/(?=.*[A-Z])/.test(value)) return 'Password must contain at least one uppercase letter';
+        if (!/(?=.*\d)/.test(value)) return 'Password must contain at least one number';
+        return null;
+      },
+    },
+    phone: commonRules.phone,
+    otp: {
+      required: true,
+      pattern: /^\d{6}$/,
+      message: 'OTP must be 6 digits',
+    },
+  };
+
+  const { errors, validateField, validateForm, clearError, clearAllErrors } = useFormValidation(validationRules);
 
   // Guard against starting signup without role on mobile/direct link
   useEffect(() => {
@@ -29,17 +53,28 @@ const Signup: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    clearAllErrors();
+    
     try {
       if (usePhone) {
         if (!otpSent) {
-          if (!name.trim()) {
-            setError('Enter your full name first.');
+          // Validate name and phone before sending OTP
+          const nameError = validateField('name', name);
+          const phoneError = validateField('phone', phone);
+          if (nameError || phoneError) {
+            setError('Please fix the errors below');
             return;
           }
           await phoneSendOtp(phone, name);
           setOtpSent(true);
           return;
         } else {
+          // Validate OTP before verifying
+          const otpError = validateField('otp', otp);
+          if (otpError) {
+            setError(otpError);
+            return;
+          }
           await phoneVerifyOtp(phone, otp);
           const pending = getPendingRole();
           if (pending) {
@@ -53,8 +88,10 @@ const Signup: React.FC = () => {
           return;
         }
       } else {
-        if (password.length < 6) {
-          setError('Password must be at least 6 characters long.');
+        // Validate all fields
+        const formData = { name, email, password };
+        if (!validateForm(formData)) {
+          setError('Please fix the errors below');
           return;
         }
         await signup(name, email, password);
@@ -101,18 +138,91 @@ const Signup: React.FC = () => {
               <button type="button" onClick={() => setUsePhone(true)} className={`px-3 py-1 rounded-md text-sm ${usePhone ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}>Phone</button>
             </div>
             <div>
-              <label htmlFor="name" className="sr-only">Full Name *</label>
-              <input id="name" name="name" type="text" autoComplete="name" required maxLength={100} value={name} onChange={(e) => setName(e.target.value)} className="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 text-gray-900 dark:text-white dark:bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:z-10 sm:text-sm" placeholder="Full Name" />
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name *</label>
+              <input 
+                id="name" 
+                name="name" 
+                type="text" 
+                autoComplete="name" 
+                required 
+                maxLength={100} 
+                value={name} 
+                onChange={(e) => {
+                  setName(e.target.value);
+                  clearError('name');
+                }}
+                onBlur={() => validateField('name', name)}
+                className={`appearance-none relative block w-full px-3 py-2 border ${
+                  errors.name ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                } placeholder-gray-500 text-gray-900 dark:text-white dark:bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:z-10 sm:text-sm`} 
+                placeholder="Enter your full name"
+                aria-invalid={!!errors.name}
+                aria-describedby={errors.name ? 'name-error' : undefined}
+              />
+              {errors.name && (
+                <p id="name-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+                  {errors.name}
+                </p>
+              )}
             </div>
             {!usePhone ? (
               <>
                 <div className="mt-2">
-                  <label htmlFor="email-address" className="sr-only">Email address *</label>
-                  <input id="email-address" name="email" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 text-gray-900 dark:text-white dark:bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:z-10 sm:text-sm" placeholder="Email address" />
+                  <label htmlFor="email-address" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email address *</label>
+                  <input 
+                    id="email-address" 
+                    name="email" 
+                    type="email" 
+                    autoComplete="email" 
+                    required 
+                    value={email} 
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      clearError('email');
+                    }}
+                    onBlur={() => validateField('email', email)}
+                    className={`appearance-none relative block w-full px-3 py-2 border ${
+                      errors.email ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                    } placeholder-gray-500 text-gray-900 dark:text-white dark:bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:z-10 sm:text-sm`} 
+                    placeholder="Enter your email address"
+                    aria-invalid={!!errors.email}
+                    aria-describedby={errors.email ? 'email-error' : undefined}
+                  />
+                  {errors.email && (
+                    <p id="email-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+                      {errors.email}
+                    </p>
+                  )}
                 </div>
                 <div className="mt-2">
-                  <label htmlFor="password" className="sr-only">Password *</label>
-                  <input id="password" name="password" type="password" autoComplete="new-password" required value={password} onChange={(e) => setPassword(e.target.value)} className="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 text-gray-900 dark:text-white dark:bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:z-10 sm:text-sm" placeholder="Password" />
+                  <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password *</label>
+                  <input 
+                    id="password" 
+                    name="password" 
+                    type="password" 
+                    autoComplete="new-password" 
+                    required 
+                    value={password} 
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      clearError('password');
+                    }}
+                    onBlur={() => validateField('password', password)}
+                    className={`appearance-none relative block w-full px-3 py-2 border ${
+                      errors.password ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                    } placeholder-gray-500 text-gray-900 dark:text-white dark:bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:z-10 sm:text-sm`} 
+                    placeholder="Create a strong password"
+                    aria-invalid={!!errors.password}
+                    aria-describedby={errors.password ? 'password-error' : undefined}
+                  />
+                  {errors.password && (
+                    <p id="password-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+                      {errors.password}
+                    </p>
+                  )}
+                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    Password must be at least 6 characters with uppercase, lowercase, and numbers
+                  </p>
                 </div>
               </>
             ) : (
