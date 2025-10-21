@@ -3,6 +3,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { subscribeToPush } from '../../lib/services/push';
 import { resolvePeerUserId, ensureDirectConversationWith, listMyConversations, fetchConversationMessages, insertMessage, subscribeConversation, upsertReceipt } from '../../lib/services/chatService';
 import { useSearchParams } from 'react-router-dom';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
 
 type Conversation = {
   id: string;
@@ -17,6 +18,8 @@ const Messages: React.FC = () => {
   const [selectedConv, setSelectedConv] = useState<string | null>(null);
   const [input, setInput] = useState('');
   const [refresh, setRefresh] = useState(0);
+  const [initializing, setInitializing] = useState(false);
+  const deepLinkName = params.get('name') || undefined;
   useEffect(() => {
     const VAPID = (import.meta as any)?.env?.VITE_VAPID_PUBLIC_KEY;
     if (user?.id && VAPID) {
@@ -28,11 +31,13 @@ const Messages: React.FC = () => {
   useEffect(() => {
     const peer = params.get('peer');
     if (peer && user?.id) {
+      setInitializing(true);
       resolvePeerUserId(peer).then(async (peerUserId) => {
         if (!peerUserId) return;
         const conv = await ensureDirectConversationWith(peerUserId);
         if (conv) setSelectedConv(conv);
         setRefresh((x)=>x+1);
+        setInitializing(false);
       });
     }
   }, [params, user?.id]);
@@ -99,41 +104,52 @@ const Messages: React.FC = () => {
         )}
       </div>
       <div className="md:col-span-2 p-0 rounded-2xl border border-white/15 dark:border-white/10 bg-white/80 dark:bg-slate-900/70 backdrop-blur h-[30rem] flex flex-col shadow-lg">
-        {!selectedConv ? (
-          <div className="h-full flex items-center justify-center text-gray-700/80 dark:text-gray-300/90">
-            Select a conversation to start messaging.
-          </div>
+        {(!selectedConv && !initializing && !params.get('peer')) ? (
+          <div className="h-full flex items-center justify-center text-gray-700/80 dark:text-gray-300/90">Select a conversation to start messaging.</div>
         ) : (
           <>
             <div className="px-4 py-3 border-b border-white/20 dark:border-white/10 flex items-center justify-between sticky top-0 bg-white/80 dark:bg-slate-900/70 rounded-t-2xl">
               <div className="font-semibold text-gray-900 dark:text-white text-sm flex items-center gap-2">
-                <span>{currentPeerName}</span>
+                <span>{currentPeerName || deepLinkName || 'User'}</span>
                 <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
                   <span className="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span> Online
                 </span>
               </div>
               <div className="text-xs text-gray-500">Secure</div>
             </div>
-            <div className="flex-1 overflow-auto p-4 space-y-2 scroll-smooth">
-              {messages.map((m) => (
-                <div key={m.id} className={`max-w-[75%] px-3 py-2 rounded-2xl shadow-sm ${m.sender_id===user?.id ? 'ml-auto bg-gradient-to-r from-blue-600 to-indigo-600 text-white' : 'bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-100'}`}>
-                  <div>{m.body}</div>
-                  <div className={`mt-1 text-[10px] ${m.sender_id===user?.id ? 'text-white/80' : 'text-gray-500 dark:text-gray-400'}`}>
-                    {m.status === 'read' ? 'Read' : m.status === 'delivered' ? 'Delivered' : 'Sent'}
-                  </div>
+            {initializing && !selectedConv ? (
+              <div className="flex-1 flex items-center justify-center">
+                <LoadingSpinner inline={true} messages={[
+                  'Starting a secure chat…',
+                  'Setting up your conversation…',
+                  'Bringing you together…',
+                ]} />
+              </div>
+            ) : (
+              <>
+                <div className="flex-1 overflow-auto p-4 space-y-2 scroll-smooth">
+                  {messages.map((m) => (
+                    <div key={m.id} className={`max-w-[75%] px-3 py-2 rounded-2xl shadow-sm ${m.sender_id===user?.id ? 'ml-auto bg-gradient-to-r from-blue-600 to-indigo-600 text-white' : 'bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-100'}`}>
+                      <div>{m.body}</div>
+                      <div className={`mt-1 text-[10px] ${m.sender_id===user?.id ? 'text-white/80' : 'text-gray-500 dark:text-gray-400'}`}>
+                        {m.status === 'read' ? 'Read' : m.status === 'delivered' ? 'Delivered' : 'Sent'}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-            <div className="p-3 border-t border-white/20 dark:border-white/10 flex items-center gap-2 bg-white/80 dark:bg-slate-900/70 rounded-b-2xl">
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => { if (e.key==='Enter') handleSend(); }}
-                className="flex-1 px-3 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 focus:outline-none shadow-sm"
-                placeholder="Type a message"
-              />
-              <button onClick={handleSend} className="px-4 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 shadow">Send</button>
-            </div>
+                <div className="p-3 border-t border-white/20 dark:border-white/10 flex items-center gap-2 bg-white/80 dark:bg-slate-900/70 rounded-b-2xl">
+                  <input
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => { if (e.key==='Enter') handleSend(); }}
+                    className="flex-1 px-3 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 focus:outline-none shadow-sm"
+                    placeholder="Type a message"
+                    disabled={!selectedConv}
+                  />
+                  <button onClick={handleSend} disabled={!selectedConv} className="px-4 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 shadow disabled:opacity-50 disabled:cursor-not-allowed">Send</button>
+                </div>
+              </>
+            )}
           </>
         )}
       </div>

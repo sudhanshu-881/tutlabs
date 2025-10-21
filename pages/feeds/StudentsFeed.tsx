@@ -6,10 +6,12 @@ import TutorCard from '../../components/ui/TutorCard';
 import toast from 'react-hot-toast';
 import { useGeolocation } from '../../hooks/useGeolocation';
 import { reverseGeocode } from '../../utils/geocoding';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
 
 const StudentsFeed: React.FC = () => {
   const [tutors, setTutors] = useState<Tutor[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [showLoader, setShowLoader] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [locationName, setLocationName] = useState<string | null>(null);
   const { coords, isLoading: isLocating, error: geoError, requestLocation } = useGeolocation();
@@ -42,6 +44,17 @@ const StudentsFeed: React.FC = () => {
     } catch {}
     requestLocation();
   }, [fetchByLocation, requestLocation]);
+
+  // Show spinner only if loading lasts beyond 500ms to avoid flashes
+  useEffect(() => {
+    let t: number | undefined;
+    if (loading) {
+      t = window.setTimeout(() => setShowLoader(true), 500);
+    } else {
+      setShowLoader(false);
+    }
+    return () => { if (t) window.clearTimeout(t); };
+  }, [loading]);
 
   // Optional external trigger from consent banner
   useEffect(() => {
@@ -77,11 +90,23 @@ const StudentsFeed: React.FC = () => {
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <CardSkeleton key={i} />
-          ))}
-        </div>
+        showLoader ? (
+          <LoadingSpinner
+            messages={[
+              'Finding the best tutors for you…',
+              'Checking nearby locations…',
+              'Personalizing your matches…',
+              'Surfacing top-rated tutors…',
+              'Almost there…',
+            ]}
+          />
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <CardSkeleton key={i} />
+            ))}
+          </div>
+        )
       ) : error ? (
         <div className="text-red-200 bg-red-900/40 p-4 rounded-lg">{error}</div>
       ) : tutors.length === 0 ? (
