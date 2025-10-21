@@ -5,6 +5,7 @@ import type { Role } from '../types';
 import { getPendingRole, clearPendingRole } from '../lib/services/role';
 import toast from 'react-hot-toast';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
+import { useFormValidation, commonRules } from '../hooks/useFormValidation';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -18,6 +19,19 @@ const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
+  const validationRules = {
+    email: commonRules.email,
+    password: commonRules.password,
+    phone: commonRules.phone,
+    otp: {
+      required: true,
+      pattern: /^\d{6}$/,
+      message: 'OTP must be 6 digits',
+    },
+  };
+
+  const { errors, validateField, validateForm, clearError, clearAllErrors } = useFormValidation(validationRules);
 
   // Guard direct navigation without role selection, except when redirected from a protected route
   useEffect(() => {
@@ -33,18 +47,38 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    clearAllErrors();
     setSubmitting(true);
+    
     try {
       if (usePhone) {
         if (!otpSent) {
+          // Validate phone before sending OTP
+          const phoneError = validateField('phone', phone);
+          if (phoneError) {
+            setError(phoneError);
+            return;
+          }
           await phoneSendOtp(phone);
           setOtpSent(true);
           return;
         } else {
+          // Validate OTP before verifying
+          const otpError = validateField('otp', otp);
+          if (otpError) {
+            setError(otpError);
+            return;
+          }
           await phoneVerifyOtp(phone, otp);
         }
       } else {
-      await login(email, password);
+        // Validate email and password
+        const formData = { email, password };
+        if (!validateForm(formData)) {
+          setError('Please fix the errors below');
+          return;
+        }
+        await login(email, password);
       }
       const pending = getPendingRole();
       // Align UI role selection with server profile; do not block login

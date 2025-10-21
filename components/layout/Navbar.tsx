@@ -24,17 +24,25 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
   // When authenticated, show compact in-app header and rely on bottom TabBar for navigation
   if (user) {
     return (
-      <nav className="sticky top-0 z-40 bg-white dark:bg-black">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-12 grid grid-cols-3 items-center">
+      <nav className="sticky top-0 z-40 bg-white/95 dark:bg-black/95 backdrop-blur-md border-b border-gray-200/20 dark:border-white/10" role="navigation" aria-label="Main navigation">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-14 grid grid-cols-3 items-center">
           <div />
           <div className="flex items-center justify-center">
-            <NavLink to={feedPath} className="text-[1.875rem] leading-none font-semibold tracking-tight text-gray-900 dark:text-white font-brand lowercase">
+            <NavLink 
+              to={feedPath} 
+              className="text-[1.875rem] leading-none font-semibold tracking-tight text-gray-900 dark:text-white font-brand lowercase focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md px-2 py-1 transition-all duration-200 hover:scale-105"
+              aria-label="TutLabs - Go to feed"
+            >
               tutlabs
             </NavLink>
           </div>
           <div className="hidden md:flex items-center justify-end space-x-3">
             {user && (
-              <button onClick={logout} className="px-3 py-1.5 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+              <button 
+                onClick={logout} 
+                className="px-3 py-1.5 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                aria-label="Sign out of your account"
+              >
                 Logout
               </button>
             )}
@@ -50,19 +58,19 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
   const homePath = user ? (user.active_role === 'tutor' ? '/feed/tutor' : '/feed/student') : '/';
 
   return (
-    <nav className="bg-white/70 dark:bg-gray-900/70 backdrop-blur-md sticky top-0 z-50 border-b border-white/20 dark:border-white/10 shadow-sm">
+    <nav className="bg-white/70 dark:bg-gray-900/70 backdrop-blur-md sticky top-0 z-50 border-b border-white/20 dark:border-white/10 shadow-sm" role="navigation" aria-label="Main navigation">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <NavLink to={homePath} className="flex-shrink-0">
+            <NavLink to={homePath} className="flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md">
               <span className="text-[2.25rem] leading-none font-bold text-blue-600 dark:text-blue-400 font-brand lowercase">tutlabs</span>
             </NavLink>
             <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-4">
-                <NavLink to={homePath} className={linkClasses} style={({ isActive }) => isActive ? activeLinkStyle : undefined }>Home</NavLink>
-                <NavLink to="/tutors" className={linkClasses} style={({ isActive }) => isActive ? activeLinkStyle : undefined }>Tutors Near Me</NavLink>
-                <NavLink to="/students" className={linkClasses} style={({ isActive }) => isActive ? activeLinkStyle : undefined }>Students Near Me</NavLink>
-                <NavLink to="/connect" className={linkClasses} style={({ isActive }) => isActive ? activeLinkStyle : undefined }>Connect</NavLink>
+              <div className="ml-10 flex items-baseline space-x-4" role="menubar">
+                <NavLink to={homePath} className={linkClasses} style={({ isActive }) => isActive ? activeLinkStyle : undefined } role="menuitem">Home</NavLink>
+                <NavLink to="/tutors" className={linkClasses} style={({ isActive }) => isActive ? activeLinkStyle : undefined } role="menuitem">Tutors Near Me</NavLink>
+                <NavLink to="/students" className={linkClasses} style={({ isActive }) => isActive ? activeLinkStyle : undefined } role="menuitem">Students Near Me</NavLink>
+                <NavLink to="/connect" className={linkClasses} style={({ isActive }) => isActive ? activeLinkStyle : undefined } role="menuitem">Connect</NavLink>
               </div>
             </div>
           </div>
@@ -118,8 +126,15 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
             )}
           </div>
           <div className="-mr-2 flex md:hidden">
-            <button onClick={() => setMobileMenuOpen(!isMobileMenuOpen)} type="button" className="bg-gray-100 dark:bg-gray-800 inline-flex items-center justify-center p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-800 focus:ring-blue-500 ml-2">
-              <span className="sr-only">Open main menu</span>
+            <button 
+              onClick={() => setMobileMenuOpen(!isMobileMenuOpen)} 
+              type="button" 
+              className="bg-gray-100 dark:bg-gray-800 inline-flex items-center justify-center p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-800 focus:ring-blue-500 ml-2 transition-all duration-200"
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-menu"
+              aria-label={isMobileMenuOpen ? "Close main menu" : "Open main menu"}
+            >
+              <span className="sr-only">{isMobileMenuOpen ? "Close main menu" : "Open main menu"}</span>
               {isMobileMenuOpen ? (
                 <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
               ) : (
@@ -131,12 +146,44 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
       </div>
 
       {isMobileMenuOpen && (
-        <div className="md:hidden" id="mobile-menu">
+        <div className="md:hidden" id="mobile-menu" role="menu" aria-label="Mobile navigation menu">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <NavLink to={homePath} className={mobileLinkClasses} onClick={() => setMobileMenuOpen(false)} style={({ isActive }) => isActive ? activeLinkStyle : undefined }>Home</NavLink>
-            <NavLink to="/tutors" className={mobileLinkClasses} onClick={() => setMobileMenuOpen(false)} style={({ isActive }) => isActive ? activeLinkStyle : undefined }>Tutors Near Me</NavLink>
-            <NavLink to="/students" className={mobileLinkClasses} onClick={() => setMobileMenuOpen(false)} style={({ isActive }) => isActive ? activeLinkStyle : undefined }>Students Near Me</NavLink>
-            <NavLink to="/connect" className={mobileLinkClasses} onClick={() => setMobileMenuOpen(false)} style={({ isActive }) => isActive ? activeLinkStyle : undefined }>Connect</NavLink>
+            <NavLink 
+              to={homePath} 
+              className={mobileLinkClasses} 
+              onClick={() => setMobileMenuOpen(false)} 
+              style={({ isActive }) => isActive ? activeLinkStyle : undefined }
+              role="menuitem"
+            >
+              Home
+            </NavLink>
+            <NavLink 
+              to="/tutors" 
+              className={mobileLinkClasses} 
+              onClick={() => setMobileMenuOpen(false)} 
+              style={({ isActive }) => isActive ? activeLinkStyle : undefined }
+              role="menuitem"
+            >
+              Tutors Near Me
+            </NavLink>
+            <NavLink 
+              to="/students" 
+              className={mobileLinkClasses} 
+              onClick={() => setMobileMenuOpen(false)} 
+              style={({ isActive }) => isActive ? activeLinkStyle : undefined }
+              role="menuitem"
+            >
+              Students Near Me
+            </NavLink>
+            <NavLink 
+              to="/connect" 
+              className={mobileLinkClasses} 
+              onClick={() => setMobileMenuOpen(false)} 
+              style={({ isActive }) => isActive ? activeLinkStyle : undefined }
+              role="menuitem"
+            >
+              Connect
+            </NavLink>
           </div>
           <div className="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
             <div className="px-5">
