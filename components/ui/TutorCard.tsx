@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Tutor } from '../../types';
 import { StarIcon, VerifiedIcon } from './Icons';
+import OptimizedImage from './OptimizedImage';
 
 interface TutorCardProps {
   tutor: Tutor;
@@ -11,11 +12,13 @@ const TutorCard: React.FC<TutorCardProps> = ({ tutor }) => {
   return (
     <article className="relative rounded-2xl border border-white/15 dark:border-white/10 bg-white/30 dark:bg-slate-900/30 backdrop-blur-xl shadow-[0_10px_30px_rgba(0,0,0,0.15)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.25)] overflow-hidden transform transition-all duration-300 will-change-transform hover:-translate-y-1 focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2">
       <div className="relative">
-        <img 
-          className="h-48 w-full object-cover" 
+        <OptimizedImage 
+          className="h-48 w-full" 
           src={tutor.image_url} 
           alt={`Profile photo of ${tutor.name}`}
           loading="lazy"
+          width={300}
+          height={192}
         />
         {tutor.verified && (
           <div className="absolute top-2 right-2 bg-blue-500 text-white p-1 rounded-full" aria-label="Verified tutor">

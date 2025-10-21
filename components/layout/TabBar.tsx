@@ -10,14 +10,20 @@ const TabBar: React.FC = () => {
   const feedPath = user.active_role === 'tutor' ? '/feed/tutor' : '/feed/student';
   const discoverPath = user.active_role === 'tutor' ? '/students' : '/tutors';
 
-  const base = 'flex-1 flex items-center justify-center py-2';
-  const link = 'inline-flex flex-col items-center justify-center text-[11px] font-medium transition-colors text-gray-900 dark:text-white';
+  const base = 'flex-1 flex items-center justify-center py-3 px-2 min-h-[60px] touch-manipulation';
+  const link = 'inline-flex flex-col items-center justify-center text-[11px] font-medium transition-all duration-200 text-gray-900 dark:text-white active:scale-95';
   const iconClass = (isActive: boolean) => isActive ? 'text-pink-600 dark:text-pink-500' : 'text-gray-700 dark:text-white/70';
 
   return (
     <nav 
       className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/20 dark:border-white/10 bg-white/40 dark:bg-slate-900/60 backdrop-blur-xl supports-[backdrop-filter]:bg-white/40 supports-[backdrop-filter]:dark:bg-slate-900/60" 
-      style={{ paddingBottom: 'env(safe-area-inset-bottom)', boxShadow: '0 -8px 24px rgba(0,0,0,0.08)' }}
+      style={{ 
+        paddingBottom: 'env(safe-area-inset-bottom)', 
+        boxShadow: '0 -8px 24px rgba(0,0,0,0.08)',
+        WebkitTouchCallout: 'none',
+        WebkitUserSelect: 'none',
+        userSelect: 'none'
+      }}
       role="navigation"
       aria-label="Bottom navigation"
     >

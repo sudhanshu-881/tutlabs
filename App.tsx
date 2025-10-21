@@ -185,7 +185,7 @@ function App() {
               <Suspense fallback={<LoadingSpinner messages={['Loading page...', 'Preparing content...', 'Almost ready...']} />}>
                 <Routes>
                   <Route path="/" element={<RootRoute />} />
-                  <Route path="/onboarding/tutor" element={<ProtectedRoute><OnboardingTutor /></ProtectedRoute>} />
+                  <Route path="/onboarding/tutor" element={<ProtectedRoute><LazyOnboardingTutor /></ProtectedRoute>} />
                   <Route path="/feed/tutor" element={<ProtectedRoute><TutorOnly><TutorsFeed /></TutorOnly></ProtectedRoute>} />
                   <Route path="/feed/student" element={<ProtectedRoute><StudentOnly><StudentsFeed /></StudentOnly></ProtectedRoute>} />
                   <Route path="/feed/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
@@ -206,14 +206,14 @@ function App() {
                     }
                   />
                   <Route path="/connect" element={<Connect />} />
-                  <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
-                  <Route path="/blog" element={<Blog />} />
+                  <Route path="/admin" element={<AdminRoute><LazyAdmin /></AdminRoute>} />
+                  <Route path="/blog" element={<LazyBlog />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/signup" element={<Signup />} />
                   <Route path="/awaiting-confirmation" element={<AwaitingConfirmation />} />
                   <Route path="/reset-password" element={<ResetPassword />} />
-                  <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                  <Route path="/profile/edit" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
+                  <Route path="/profile" element={<ProtectedRoute><LazyProfile /></ProtectedRoute>} />
+                  <Route path="/profile/edit" element={<ProtectedRoute><LazyEditProfile /></ProtectedRoute>} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
