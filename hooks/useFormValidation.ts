@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { sanitizeInput, sanitizeEmail, sanitizePhone } from '../utils/sanitization';
 
 export interface ValidationRule {
   required?: boolean;
@@ -33,32 +34,46 @@ export const useFormValidation = (rules: ValidationRules): UseFormValidationRetu
     const rule = rules[field];
     if (!rule) return null;
 
+    // Sanitize input first
+    let sanitizedValue = value;
+    try {
+      if (field === 'email') {
+        sanitizedValue = sanitizeEmail(value);
+      } else if (field === 'phone') {
+        sanitizedValue = sanitizePhone(value);
+      } else {
+        sanitizedValue = sanitizeInput(value);
+      }
+    } catch (error) {
+      return error instanceof Error ? error.message : 'Invalid input format';
+    }
+
     // Required validation
-    if (rule.required && (!value || value.trim() === '')) {
+    if (rule.required && (!sanitizedValue || sanitizedValue.trim() === '')) {
       return rule.message || `${field} is required`;
     }
 
     // Skip other validations if value is empty and not required
-    if (!value || value.trim() === '') return null;
+    if (!sanitizedValue || sanitizedValue.trim() === '') return null;
 
     // Min length validation
-    if (rule.minLength && value.length < rule.minLength) {
+    if (rule.minLength && sanitizedValue.length < rule.minLength) {
       return rule.message || `${field} must be at least ${rule.minLength} characters`;
     }
 
     // Max length validation
-    if (rule.maxLength && value.length > rule.maxLength) {
+    if (rule.maxLength && sanitizedValue.length > rule.maxLength) {
       return rule.message || `${field} must be no more than ${rule.maxLength} characters`;
     }
 
     // Pattern validation
-    if (rule.pattern && !rule.pattern.test(value)) {
+    if (rule.pattern && !rule.pattern.test(sanitizedValue)) {
       return rule.message || `${field} format is invalid`;
     }
 
     // Custom validation
     if (rule.custom) {
-      return rule.custom(value);
+      return rule.custom(sanitizedValue);
     }
 
     return null;

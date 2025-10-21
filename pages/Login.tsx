@@ -201,9 +201,9 @@ const Login: React.FC = () => {
                       clearError('email');
                     }}
                     onBlur={() => validateField('email', email)}
-                    className={`appearance-none relative block w-full px-3 py-2 border ${
+                    className={`appearance-none relative block w-full px-4 py-3 border ${
                       errors.email ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-                    } placeholder-gray-500 text-gray-900 dark:text-white dark:bg-gray-700 rounded-t-md focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:z-10 sm:text-sm`} 
+                    } placeholder-gray-500 text-gray-900 dark:text-white dark:bg-gray-700 rounded-t-md focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:z-10 text-base sm:text-sm touch-manipulation`} 
                     placeholder="Enter your email address"
                     aria-invalid={!!errors.email}
                     aria-describedby={errors.email ? 'email-error' : undefined}
@@ -228,9 +228,9 @@ const Login: React.FC = () => {
                       clearError('password');
                     }}
                     onBlur={() => validateField('password', password)}
-                    className={`appearance-none relative block w-full px-3 py-2 border ${
+                    className={`appearance-none relative block w-full px-4 py-3 border ${
                       errors.password ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-                    } placeholder-gray-500 text-gray-900 dark:text-white dark:bg-gray-700 rounded-b-md focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:z-10 sm:text-sm`} 
+                    } placeholder-gray-500 text-gray-900 dark:text-white dark:bg-gray-700 rounded-b-md focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:z-10 text-base sm:text-sm touch-manipulation`} 
                     placeholder="Enter your password"
                     aria-invalid={!!errors.password}
                     aria-describedby={errors.password ? 'password-error' : undefined}
@@ -349,7 +349,7 @@ const Login: React.FC = () => {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-500/30 active:translate-y-0 active:shadow-md"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-500/30 active:translate-y-0 active:shadow-md touch-manipulation min-h-[44px]"
             >
               Sign in
             </button>

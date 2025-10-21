@@ -11,6 +11,9 @@ export interface Tutor {
   pincodes?: string[];
   availability?: string | null;
   bio?: string | null;
+  created_at?: string;
+  updated_at?: string;
+  user_id?: string;
 }
 
 export interface Student {
@@ -21,6 +24,9 @@ export interface Student {
   level: string;
   image_url: string;
   pincode?: string | null;
+  created_at?: string;
+  updated_at?: string;
+  user_id?: string;
 }
 
 export type Theme = 'light' | 'dark';
@@ -35,6 +41,49 @@ export interface Profile {
   location: string | null;
   avatar_url: string | null;
   active_role: Role | null;
+  preferred_location?: string | null;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface TuitionRequest {
+  id: number;
+  title: string;
+  description: string;
+  subjects: string[];
+  level: string;
+  location: string;
+  pincode: string;
+  budget_min?: number;
+  budget_max?: number;
+  preferred_timing?: string;
+  contact_phone?: string;
+  contact_email?: string;
+  created_at: string;
+  updated_at: string;
+  user_id: string;
+}
+
+export interface Message {
+  id: string;
+  content: string;
+  sender_id: string;
+  receiver_id: string;
+  created_at: string;
+  updated_at: string;
+  read_at?: string | null;
+}
+
+export interface ApiError {
+  message: string;
+  code?: string;
+  details?: any;
+}
+
+export interface ApiResponse<T> {
+  data?: T;
+  error?: ApiError;
+  success: boolean;
 }
 
 // Defines global types for custom elements to be recognized by TypeScript's JSX parser.
