@@ -1,21 +1,82 @@
 import React from 'react';
 
-const CardSkeleton: React.FC = () => {
-  return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-      <div className="h-48 w-full bg-gray-200 dark:bg-gray-700 animate-pulse" />
-      <div className="p-4 space-y-3">
-        <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-2/3 animate-pulse" />
-        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 animate-pulse" />
-        <div className="flex gap-2">
-          <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-16 animate-pulse" />
-          <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-20 animate-pulse" />
-          <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-12 animate-pulse" />
+interface CardSkeletonProps {
+  variant?: 'tutor' | 'student' | 'request';
+  className?: string;
+}
+
+const CardSkeleton: React.FC<CardSkeletonProps> = ({ variant = 'tutor', className = '' }) => {
+  const baseClasses = "relative rounded-2xl border border-white/15 dark:border-white/10 bg-white/30 dark:bg-slate-900/30 backdrop-blur-xl overflow-hidden";
+  
+  if (variant === 'tutor') {
+    return (
+      <div className={`${baseClasses} ${className}`} role="status" aria-label="Loading tutor card">
+        <div className="h-48 w-full bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 animate-pulse" />
+        <div className="p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="h-6 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded w-32 animate-pulse" />
+            <div className="h-5 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded w-12 animate-pulse" />
+          </div>
+          <div className="h-4 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded w-24 animate-pulse" />
+          <div className="flex flex-wrap gap-2">
+            <div className="h-6 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded-full w-16 animate-pulse" />
+            <div className="h-6 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded-full w-20 animate-pulse" />
+            <div className="h-6 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded-full w-14 animate-pulse" />
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <div className="h-10 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded-lg animate-pulse" />
+            <div className="h-10 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded-lg animate-pulse" />
+          </div>
         </div>
-        <div className="h-9 bg-gray-200 dark:bg-gray-700 rounded w-full animate-pulse" />
+        <span className="sr-only">Loading tutor information...</span>
       </div>
-    </div>
-  );
+    );
+  }
+
+  if (variant === 'student') {
+    return (
+      <div className={`${baseClasses} ${className}`} role="status" aria-label="Loading student card">
+        <div className="h-48 w-full bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 animate-pulse" />
+        <div className="p-5 space-y-4">
+          <div className="h-6 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded w-28 animate-pulse" />
+          <div className="h-4 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded w-20 animate-pulse" />
+          <div className="h-4 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded w-16 animate-pulse" />
+          <div className="flex flex-wrap gap-2">
+            <div className="h-6 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded-full w-18 animate-pulse" />
+            <div className="h-6 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded-full w-22 animate-pulse" />
+          </div>
+          <div className="h-10 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded-lg animate-pulse" />
+        </div>
+        <span className="sr-only">Loading student information...</span>
+      </div>
+    );
+  }
+
+  if (variant === 'request') {
+    return (
+      <div className={`${baseClasses} ${className}`} role="status" aria-label="Loading request card">
+        <div className="p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="h-6 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded w-36 animate-pulse" />
+            <div className="h-5 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded w-20 animate-pulse" />
+          </div>
+          <div className="h-4 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded w-32 animate-pulse" />
+          <div className="space-y-2">
+            <div className="h-4 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded w-full animate-pulse" />
+            <div className="h-4 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded w-3/4 animate-pulse" />
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <div className="h-6 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded-full w-16 animate-pulse" />
+            <div className="h-6 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded-full w-20 animate-pulse" />
+          </div>
+          <div className="h-10 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded-lg animate-pulse" />
+        </div>
+        <span className="sr-only">Loading request information...</span>
+      </div>
+    );
+  }
+
+  return null;
 };
 
 export default CardSkeleton;

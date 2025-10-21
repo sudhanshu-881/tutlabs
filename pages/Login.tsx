@@ -188,24 +188,117 @@ const Login: React.FC = () => {
             {!usePhone ? (
               <>
                 <div>
-                  <label htmlFor="email-address" className="sr-only">Email address *</label>
-                  <input id="email-address" name="email" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 text-gray-900 dark:text-white dark:bg-gray-700 rounded-t-md focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:z-10 sm:text-sm" placeholder="Email address" />
+                  <label htmlFor="email-address" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email address *</label>
+                  <input 
+                    id="email-address" 
+                    name="email" 
+                    type="email" 
+                    autoComplete="email" 
+                    required 
+                    value={email} 
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      clearError('email');
+                    }}
+                    onBlur={() => validateField('email', email)}
+                    className={`appearance-none relative block w-full px-3 py-2 border ${
+                      errors.email ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                    } placeholder-gray-500 text-gray-900 dark:text-white dark:bg-gray-700 rounded-t-md focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:z-10 sm:text-sm`} 
+                    placeholder="Enter your email address"
+                    aria-invalid={!!errors.email}
+                    aria-describedby={errors.email ? 'email-error' : undefined}
+                  />
+                  {errors.email && (
+                    <p id="email-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+                      {errors.email}
+                    </p>
+                  )}
                 </div>
                 <div>
-                  <label htmlFor="password" className="sr-only">Password *</label>
-                  <input id="password" name="password" type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} className="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 text-gray-900 dark:text-white dark:bg-gray-700 rounded-b-md focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:z-10 sm:text-sm" placeholder="Password" />
+                  <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password *</label>
+                  <input 
+                    id="password" 
+                    name="password" 
+                    type="password" 
+                    autoComplete="current-password" 
+                    required 
+                    value={password} 
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      clearError('password');
+                    }}
+                    onBlur={() => validateField('password', password)}
+                    className={`appearance-none relative block w-full px-3 py-2 border ${
+                      errors.password ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                    } placeholder-gray-500 text-gray-900 dark:text-white dark:bg-gray-700 rounded-b-md focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:z-10 sm:text-sm`} 
+                    placeholder="Enter your password"
+                    aria-invalid={!!errors.password}
+                    aria-describedby={errors.password ? 'password-error' : undefined}
+                  />
+                  {errors.password && (
+                    <p id="password-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+                      {errors.password}
+                    </p>
+                  )}
                 </div>
               </>
             ) : (
               <>
                 <div>
-                  <label htmlFor="phone" className="sr-only">Phone *</label>
-                  <input id="phone" name="phone" type="tel" inputMode="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} className="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 text-gray-900 dark:text-white dark:bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:z-10 sm:text-sm" placeholder="Phone (with country code)" />
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone *</label>
+                  <input 
+                    id="phone" 
+                    name="phone" 
+                    type="tel" 
+                    inputMode="tel" 
+                    required 
+                    value={phone} 
+                    onChange={(e) => {
+                      setPhone(e.target.value);
+                      clearError('phone');
+                    }}
+                    onBlur={() => validateField('phone', phone)}
+                    className={`appearance-none relative block w-full px-3 py-2 border ${
+                      errors.phone ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                    } placeholder-gray-500 text-gray-900 dark:text-white dark:bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:z-10 sm:text-sm`} 
+                    placeholder="Phone (with country code)"
+                    aria-invalid={!!errors.phone}
+                    aria-describedby={errors.phone ? 'phone-error' : undefined}
+                  />
+                  {errors.phone && (
+                    <p id="phone-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+                      {errors.phone}
+                    </p>
+                  )}
                 </div>
                 {otpSent && (
                   <div className="mt-2">
-                    <label htmlFor="otp" className="sr-only">OTP *</label>
-                    <input id="otp" name="otp" type="text" inputMode="numeric" required value={otp} onChange={(e) => setOtp(e.target.value)} className="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 text-gray-900 dark:text-white dark:bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:z-10 sm:text-sm" placeholder="Enter OTP" />
+                    <label htmlFor="otp" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">OTP *</label>
+                    <input 
+                      id="otp" 
+                      name="otp" 
+                      type="text" 
+                      inputMode="numeric" 
+                      required 
+                      value={otp} 
+                      onChange={(e) => {
+                        setOtp(e.target.value);
+                        clearError('otp');
+                      }}
+                      onBlur={() => validateField('otp', otp)}
+                      className={`appearance-none relative block w-full px-3 py-2 border ${
+                        errors.otp ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                      } placeholder-gray-500 text-gray-900 dark:text-white dark:bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:z-10 sm:text-sm`} 
+                      placeholder="Enter 6-digit OTP"
+                      maxLength={6}
+                      aria-invalid={!!errors.otp}
+                      aria-describedby={errors.otp ? 'otp-error' : undefined}
+                    />
+                    {errors.otp && (
+                      <p id="otp-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+                        {errors.otp}
+                      </p>
+                    )}
                   </div>
                 )}
               </>

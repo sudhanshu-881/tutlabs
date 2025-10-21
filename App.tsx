@@ -24,6 +24,13 @@ import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/routing/ProtectedRoute';
 import AdminRoute from './components/routing/AdminRoute';
 import OnboardingTutor from './pages/onboarding/TutorOnboarding';
+
+// Lazy load heavy components
+const LazyBlog = lazy(() => import('./pages/Blog'));
+const LazyAdmin = lazy(() => import('./pages/Admin'));
+const LazyProfile = lazy(() => import('./pages/Profile'));
+const LazyEditProfile = lazy(() => import('./pages/EditProfile'));
+const LazyOnboardingTutor = lazy(() => import('./pages/onboarding/TutorOnboarding'));
 import { Theme } from './types';
 import { AuthProvider } from './context/AuthContext';
 import { useContext } from 'react';
