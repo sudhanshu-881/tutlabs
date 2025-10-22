@@ -34,7 +34,8 @@
     "analyze": "vite-bundle-analyzer",
     "db:migrate": "supabase db push",
     "db:reset": "supabase db reset",
-    "db:seed": "supabase db seed"
+    "db:seed": "supabase db seed",
+    "vercel-build": "vite build"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",

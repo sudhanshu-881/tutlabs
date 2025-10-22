@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "name": "tutlabs",
   "builds": [
     {
       "src": "package.json",
@@ -27,5 +28,9 @@
     "app/api/**/*.ts": {
       "runtime": "nodejs18.x"
     }
+  },
+  "github": {
+    "enabled": true,
+    "autoAlias": false
   }
 }
