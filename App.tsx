@@ -24,6 +24,7 @@ import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/routing/ProtectedRoute';
 import AdminRoute from './components/routing/AdminRoute';
 import OnboardingTutor from './pages/onboarding/TutorOnboarding';
+import BackendStatus from './pages/BackendStatus';
 
 // Lazy load heavy components
 const LazyBlog = lazy(() => import('./pages/Blog'));
@@ -223,6 +224,7 @@ function App() {
                   <Route path="/reset-password" element={<ResetPassword />} />
                   <Route path="/profile" element={<ProtectedRoute><LazyProfile /></ProtectedRoute>} />
                   <Route path="/profile/edit" element={<ProtectedRoute><LazyEditProfile /></ProtectedRoute>} />
+                  <Route path="/backend-status" element={<BackendStatus />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>

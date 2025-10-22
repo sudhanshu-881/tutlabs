@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import ThemeToggle from '../ui/ThemeToggle';
+import BackendIndicator from '../BackendIndicator';
 import { Theme } from '../../types';
 import { AuthContext } from '../../context/AuthContext';
 import { getPendingRole } from '../../lib/services/role';
@@ -37,6 +38,7 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
             </NavLink>
           </div>
           <div className="hidden md:flex items-center justify-end space-x-3">
+            <BackendIndicator />
             {user && (
               <button 
                 onClick={logout} 
@@ -75,6 +77,7 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
             </div>
           </div>
           <div className="hidden md:flex items-center space-x-4">
+            <BackendIndicator />
             {user ? (
               <>
                 <NavLink to="/profile" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-pink-600 dark:hover:text-pink-400 transition-all duration-200 hover:-translate-y-0.5">Profile</NavLink>
