@@ -44,7 +44,7 @@
     "@upstash/redis": "^1.28.3",
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
-    "framer-motion": "^11.0.0",
+    "framer-motion": "^11.11.0",
     "lodash-es": "^4.17.21",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
