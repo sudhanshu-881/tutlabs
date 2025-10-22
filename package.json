@@ -25,6 +25,7 @@
     "test:coverage": "vitest --coverage",
     "test:backend": "node scripts/test-backend.js",
     "setup:backend": "node scripts/setup-backend.js",
+    "setup:single-backend": "node scripts/setup-single-backend.js",
     "verify:production": "node scripts/verify-production.js",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint . --ext ts,tsx --fix",
