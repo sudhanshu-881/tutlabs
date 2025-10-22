@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "name": "tutlabs",
   "builds": [
     {
       "src": "package.json",
@@ -22,11 +21,6 @@
   "build": {
     "env": {
       "NODE_ENV": "production"
-    }
-  },
-  "functions": {
-    "app/api/**/*.ts": {
-      "runtime": "nodejs18.x"
     }
   },
   "github": {
