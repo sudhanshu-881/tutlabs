@@ -1,17 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { testBackendConnection, generateBackendSetupInstructions } from '../lib/utils/backendTest';
+import { testProductionBackend, generateProductionReport } from '../lib/utils/productionTest';
 import BackendStatus from '../components/BackendStatus';
 
 const BackendStatusPage: React.FC = () => {
   const [status, setStatus] = useState<any>(null);
+  const [productionStatus, setProductionStatus] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [showInstructions, setShowInstructions] = useState(false);
+  const [showProductionReport, setShowProductionReport] = useState(false);
 
   useEffect(() => {
     const checkBackend = async () => {
       try {
-        const result = await testBackendConnection();
-        setStatus(result);
+        const [basicResult, productionResult] = await Promise.all([
+          testBackendConnection(),
+          testProductionBackend()
+        ]);
+        setStatus(basicResult);
+        setProductionStatus(productionResult);
       } catch (error) {
         console.error('Backend test failed:', error);
       } finally {
@@ -106,6 +113,54 @@ const BackendStatusPage: React.FC = () => {
               </div>
             </div>
           </div>
+
+          {/* Production Status */}
+          {productionStatus && (
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                  Production Status
+                </h2>
+                <button
+                  onClick={() => setShowProductionReport(!showProductionReport)}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                >
+                  {showProductionReport ? 'Hide' : 'Show'} Report
+                </button>
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded">
+                  <span className="font-medium text-gray-900 dark:text-white">Environment</span>
+                  <span className={`text-sm ${productionStatus.environmentDetected ? 'text-green-600' : 'text-yellow-600'}`}>
+                    {productionStatus.environmentDetected ? '✅ Production' : '⚠️ Development'}
+                  </span>
+                </div>
+                
+                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded">
+                  <span className="font-medium text-gray-900 dark:text-white">Database Access</span>
+                  <span className={`text-sm ${productionStatus.databaseAccessible ? 'text-green-600' : 'text-red-600'}`}>
+                    {productionStatus.databaseAccessible ? '✅ Accessible' : '❌ Not Accessible'}
+                  </span>
+                </div>
+                
+                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded">
+                  <span className="font-medium text-gray-900 dark:text-white">Authentication</span>
+                  <span className={`text-sm ${productionStatus.authenticationWorking ? 'text-green-600' : 'text-red-600'}`}>
+                    {productionStatus.authenticationWorking ? '✅ Working' : '❌ Not Working'}
+                  </span>
+                </div>
+              </div>
+
+              {showProductionReport && (
+                <div className="mt-4">
+                  <pre className="bg-gray-100 dark:bg-gray-900 p-4 rounded-lg overflow-x-auto text-sm whitespace-pre-wrap">
+                    {generateProductionReport(productionStatus)}
+                  </pre>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Setup Instructions */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
