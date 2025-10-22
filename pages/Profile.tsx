@@ -4,6 +4,7 @@ import { AuthContext, supabase } from '../context/AuthContext';
 import { Profile } from '../types';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
+import { getPlaceholderAvatar } from '../utils/placeholder';
 
 const ProfilePage: React.FC = () => {
     const { user, logout } = useContext(AuthContext);
@@ -133,7 +134,7 @@ const ProfilePage: React.FC = () => {
           <div className="flex items-center gap-4">
             <button onClick={() => avatarUrl && setAvatarModal(true)} className="relative rounded-full p-0.5 bg-gradient-to-tr from-pink-500 to-yellow-400">
               <div className="bg-white dark:bg-gray-900 rounded-full p-1">
-                <img src={avatarUrl || 'https://via.placeholder.com/150'} alt="Profile" className="w-24 h-24 rounded-full object-cover" />
+                <img src={avatarUrl || getPlaceholderAvatar(fullName || 'User', 150)} alt="Profile" className="w-24 h-24 rounded-full object-cover" />
               </div>
             </button>
             <div className="min-w-0 flex-1">

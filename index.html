@@ -24,10 +24,10 @@
     <meta http-equiv="Content-Security-Policy" content="
       default-src 'self';
       script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://aistudiocdn.com;
-      style-src 'self' 'unsafe-inline';
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
       img-src 'self' blob: data: https://via.placeholder.com https://*.supabase.co;
       connect-src 'self' https://*.supabase.co wss://*.supabase.co https://unpkg.com https://nominatim.openstreetmap.org;
-      font-src 'self';
+      font-src 'self' https://fonts.gstatic.com;
       object-src 'none';
       base-uri 'self';
       form-action 'self';
@@ -77,73 +77,10 @@
     <meta name="twitter:image" content="https://via.placeholder.com/1200x630.png?text=tutlabs">
     <meta name="twitter:site" content="@tutlabs">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <script src="https://cdn.tailwindcss.com" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&display=swap" rel="stylesheet">
-    <script defer>
-      tailwind.config = {
-        darkMode: 'class',
-        theme: {
-          extend: {
-            fontFamily: {
-              brand: ['"League Spartan"', 'system-ui', 'sans-serif']
-            },
-            keyframes: {
-              shimmer: {
-                '0%': { backgroundPosition: '0% 50%' },
-                '50%': { backgroundPosition: '100% 50%' },
-                '100%': { backgroundPosition: '0% 50%' },
-              },
-              'fade-in': {
-                '0%': { opacity: '0', transform: 'translateY(10px)' },
-                '100%': { opacity: '1', transform: 'translateY(0)' },
-              },
-            },
-            animation: {
-              shimmer: 'shimmer 20s ease-in-out infinite',
-              'fade-in': 'fade-in 0.3s ease-out',
-            },
-            colors: {
-              border: 'hsl(214.3 31.8% 91.4%)',
-              input: 'hsl(214.3 31.8% 91.4%)',
-              ring: 'hsl(222.2 84% 4.9%)',
-              background: 'hsl(0 0% 100%)',
-              foreground: 'hsl(222.2 84% 4.9%)',
-              primary: {
-                DEFAULT: 'hsl(222.2 47.4% 11.2%)',
-                foreground: 'hsl(210 40% 98%)',
-              },
-              secondary: {
-                DEFAULT: 'hsl(210 40% 96.1%)',
-                foreground: 'hsl(222.2 47.4% 11.2%)',
-              },
-              neon: '#39FF14',
-              destructive: {
-                DEFAULT: 'hsl(0 84.2% 60.2%)',
-                foreground: 'hsl(210 40% 98%)',
-              },
-              muted: {
-                DEFAULT: 'hsl(210 40% 96.1%)',
-                foreground: 'hsl(215 20.2% 65.1%)',
-              },
-              accent: {
-                DEFAULT: 'hsl(210 40% 96.1%)',
-                foreground: 'hsl(222.2 47.4% 11.2%)',
-              },
-              popover: {
-                DEFAULT: 'hsl(0 0% 100%)',
-                foreground: 'hsl(222.2 84% 4.9%)',
-              },
-              card: {
-                DEFAULT: 'hsl(0 0% 100%)',
-                foreground: 'hsl(222.2 84% 4.9%)',
-              },
-            },
-          }
-        }
-      }
-    </script>
+    <link rel="stylesheet" href="/src/index.css">
   <script type="importmap">
 {
   "imports": {

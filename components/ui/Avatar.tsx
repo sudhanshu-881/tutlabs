@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { supabase } from '../../context/AuthContext'
+import { getPlaceholderAvatar } from '../../utils/placeholder'
 
 // SECURITY NOTE: The security of file uploads depends on Supabase Storage Policies.
 // Ensure your 'avatars' bucket has policies that restrict uploads to authenticated users,
@@ -81,7 +82,7 @@ const Avatar: React.FC<AvatarProps> = ({ url, size, userId, onUpload }) => {
   return (
     <div className="flex flex-col items-center">
       <img
-        src={avatarUrl || `https://via.placeholder.com/${size}`}
+        src={avatarUrl || getPlaceholderAvatar(name || 'User', size)}
         alt="Avatar"
         className="rounded-full object-cover shadow-lg"
         style={{ height: size, width: size }}
