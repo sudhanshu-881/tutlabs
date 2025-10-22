@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug - Environment Variables</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .test { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+    </style>
+</head>
+<body>
+    <h1>🔍 TutLabs Debug Page</h1>
+    <p>This page helps debug environment variable loading issues.</p>
+    
+    <div id="results"></div>
+    
+    <script type="module">
+        const results = document.getElementById('results');
+        
+        function addTest(name, value, isValid, details = '') {
+            const div = document.createElement('div');
+            div.className = 'test ' + (isValid ? 'success' : 'error');
+            div.innerHTML = `<strong>${name}:</strong> ${value || 'undefined'} ${isValid ? '✅' : '❌'} ${details ? `<br><small>${details}</small>` : ''}`;
+            results.appendChild(div);
+        }
+        
+        function addInfo(message) {
+            const div = document.createElement('div');
+            div.className = 'test info';
+            div.innerHTML = `<strong>Info:</strong> ${message}`;
+            results.appendChild(div);
+        }
+        
+        // Test if we're in a module context
+        addInfo('Running in module context: ' + (typeof import.meta !== 'undefined'));
+        
+        // Test environment variables
+        if (typeof import.meta !== 'undefined' && import.meta.env) {
+            addTest('VITE_SUPABASE_URL', import.meta.env.VITE_SUPABASE_URL, 
+                    import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_URL.includes('supabase.co'),
+                    'Should be a Supabase URL');
+            
+            addTest('VITE_SUPABASE_ANON_KEY', import.meta.env.VITE_SUPABASE_ANON_KEY ? 'Set' : 'Not set', 
+                    import.meta.env.VITE_SUPABASE_ANON_KEY && import.meta.env.VITE_SUPABASE_ANON_KEY.startsWith('eyJ'),
+                    'Should be a JWT token starting with eyJ');
+            
+            addTest('VITE_CONTACT_EMAIL', import.meta.env.VITE_CONTACT_EMAIL, 
+                    import.meta.env.VITE_CONTACT_EMAIL && import.meta.env.VITE_CONTACT_EMAIL.includes('@'),
+                    'Should be a valid email');
+            
+            addTest('NODE_ENV', import.meta.env.NODE_ENV, 
+                    import.meta.env.NODE_ENV === 'production',
+                    'Should be production in Vercel');
+        } else {
+            addTest('import.meta.env', 'Not available', false, 'Environment variables not accessible');
+        }
+        
+        // Test if React is available
+        addTest('React Available', typeof React !== 'undefined' ? 'Yes' : 'No', 
+                typeof React !== 'undefined', 'React should be available for the app to work');
+        
+        // Test if the main app script loads
+        setTimeout(() => {
+            const scripts = document.querySelectorAll('script[type="module"]');
+            addInfo(`Found ${scripts.length} module scripts`);
+            
+            scripts.forEach((script, index) => {
+                addInfo(`Script ${index + 1}: ${script.src || 'inline'}`);
+            });
+        }, 1000);
+        
+        // Test for JavaScript errors
+        window.addEventListener('error', (e) => {
+            addTest('JavaScript Error', e.message, false, `File: ${e.filename}, Line: ${e.lineno}`);
+        });
+        
+        // Test for unhandled promise rejections
+        window.addEventListener('unhandledrejection', (e) => {
+            addTest('Promise Rejection', e.reason, false, 'Unhandled promise rejection');
+        });
+    </script>
+</body>
+</html>
