@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Environment Test</title>
+</head>
+<body>
+    <h1>Environment Variables Test</h1>
+    <div id="output"></div>
+    
+    <script type="module">
+        const output = document.getElementById('output');
+        
+        try {
+            // Test environment variables
+            const env = {
+                VITE_SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL,
+                VITE_SUPABASE_ANON_KEY: import.meta.env.VITE_SUPABASE_ANON_KEY,
+                VITE_CONTACT_EMAIL: import.meta.env.VITE_CONTACT_EMAIL,
+                NODE_ENV: import.meta.env.NODE_ENV,
+                MODE: import.meta.env.MODE,
+                DEV: import.meta.env.DEV,
+                PROD: import.meta.env.PROD
+            };
+            
+            output.innerHTML = '<pre>' + JSON.stringify(env, null, 2) + '</pre>';
+            
+            // Test if we can create a Supabase client
+            if (env.VITE_SUPABASE_URL && env.VITE_SUPABASE_ANON_KEY) {
+                try {
+                    const { createClient } = await import('@supabase/supabase-js');
+                    const supabase = createClient(env.VITE_SUPABASE_URL, env.VITE_SUPABASE_ANON_KEY);
+                    output.innerHTML += '<p style="color: green;">✅ Supabase client created successfully!</p>';
+                } catch (error) {
+                    output.innerHTML += `<p style="color: red;">❌ Error creating Supabase client: ${error.message}</p>`;
+                }
+            } else {
+                output.innerHTML += '<p style="color: red;">❌ Missing Supabase credentials</p>';
+            }
+        } catch (error) {
+            output.innerHTML += `<p style="color: red;">❌ Error: ${error.message}</p>`;
+        }
+    </script>
+</body>
+</html>
