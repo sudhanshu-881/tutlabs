@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { testBackendConnection, generateBackendSetupInstructions } from '../lib/utils/backendTest';
 import { testProductionBackend, generateProductionReport } from '../lib/utils/productionTest';
 import BackendStatus from '../components/BackendStatus';
+import ProductionDiagnostic from '../components/ProductionDiagnostic';
 
 const BackendStatusPage: React.FC = () => {
   const [status, setStatus] = useState<any>(null);
@@ -67,6 +68,14 @@ const BackendStatusPage: React.FC = () => {
         </div>
 
         <div className="space-y-6">
+          {/* Production Diagnostic */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+              Production Diagnostic
+            </h2>
+            <ProductionDiagnostic />
+          </div>
+
           {/* Status Card */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <div className="flex items-center justify-between mb-4">
