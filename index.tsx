@@ -12,6 +12,8 @@ if (!rootElement) {
   throw new Error("Could not find root element to mount to");
 }
 
+console.log('🔧 Debug: React app starting to mount...');
+
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
@@ -20,3 +22,5 @@ root.render(
     </ErrorBoundary>
   </React.StrictMode>
 );
+
+console.log('🔧 Debug: React app mounted successfully');

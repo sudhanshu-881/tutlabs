@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TutLabs Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success { background: rgba(34, 197, 94, 0.3); border: 1px solid #22c55e; }
+        .error { background: rgba(239, 68, 68, 0.3); border: 1px solid #ef4444; }
+        .info { background: rgba(59, 130, 246, 0.3); border: 1px solid #3b82f6; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔧 TutLabs White Screen Debug</h1>
+        
+        <div id="status-container">
+            <div class="status success">✅ Server is running on port 3000</div>
+            <div class="status info">🔍 Testing React app loading...</div>
+        </div>
+        
+        <div id="root"></div>
+        
+        <script>
+            console.log('🔧 Debug: Starting app test...');
+            
+            // Test server connectivity
+            fetch('http://localhost:3000')
+                .then(response => {
+                    console.log('✅ Server response:', response.status);
+                    if (response.ok) {
+                        document.getElementById('status-container').innerHTML += 
+                            '<div class="status success">✅ Server responding correctly</div>';
+                    } else {
+                        document.getElementById('status-container').innerHTML += 
+                            '<div class="status error">❌ Server error: ' + response.status + '</div>';
+                    }
+                })
+                .catch(error => {
+                    console.error('❌ Server error:', error);
+                    document.getElementById('status-container').innerHTML += 
+                        '<div class="status error">❌ Cannot connect to server: ' + error.message + '</div>';
+                });
+            
+            // Test if React is loading
+            setTimeout(() => {
+                const rootElement = document.getElementById('root');
+                if (rootElement && rootElement.innerHTML.trim() === '') {
+                    document.getElementById('status-container').innerHTML += 
+                        '<div class="status error">❌ React app not loading - white screen detected</div>';
+                } else {
+                    document.getElementById('status-container').innerHTML += 
+                        '<div class="status success">✅ React app loaded successfully</div>';
+                }
+            }, 3000);
+        </script>
+        
+        <script type="module" src="http://localhost:3000/index.tsx"></script>
+    </div>
+</body>
+</html>
