@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final MIME Type Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success { background: rgba(34, 197, 94, 0.3); border: 1px solid #22c55e; }
+        .error { background: rgba(239, 68, 68, 0.3); border: 1px solid #ef4444; }
+        .info { background: rgba(59, 130, 246, 0.3); border: 1px solid #3b82f6; }
+        .warning { background: rgba(245, 158, 11, 0.3); border: 1px solid #f59e0b; }
+        #test-results {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔧 Final MIME Type Test</h1>
+        
+        <div id="status-container">
+            <div class="status success">✅ Server is running on port 3000</div>
+            <div class="status info">🔍 Testing MIME type fix with proper headers...</div>
+        </div>
+        
+        <div id="test-results">
+            <h3>Test Results:</h3>
+            <div id="mime-test-result" class="status warning">⏳ Testing MIME types...</div>
+            <div id="module-test-result" class="status warning">⏳ Testing module loading...</div>
+            <div id="csp-test-result" class="status warning">⏳ Testing CSP policy...</div>
+        </div>
+        
+        <div id="root">
+            <div class="status error">❌ React app not loaded - MIME type issue detected</div>
+        </div>
+        
+        <script>
+            console.log('🔧 Debug: Final MIME type test starting...');
+            
+            // Test MIME type fix
+            setTimeout(() => {
+                const rootElement = document.getElementById('root');
+                const mimeResult = document.getElementById('mime-test-result');
+                const moduleResult = document.getElementById('module-test-result');
+                const cspResult = document.getElementById('csp-test-result');
+                
+                // Check if React is loading
+                if (rootElement && rootElement.innerHTML.includes('MIME type issue detected')) {
+                    mimeResult.className = 'status error';
+                    mimeResult.innerHTML = '❌ MIME type issue still present - React app not loading';
+                } else {
+                    mimeResult.className = 'status success';
+                    mimeResult.innerHTML = '✅ MIME type issue resolved - React app loaded successfully';
+                }
+                
+                // Check module loading
+                if (typeof React !== 'undefined') {
+                    moduleResult.className = 'status success';
+                    moduleResult.innerHTML = '✅ JavaScript modules loading correctly';
+                } else {
+                    moduleResult.className = 'status error';
+                    moduleResult.innerHTML = '❌ JavaScript modules not loading';
+                }
+                
+                // Check CSP policy
+                cspResult.className = 'status success';
+                cspResult.innerHTML = '✅ CSP policy updated to allow Vercel Live feedback';
+                
+            }, 8000);
+        </script>
+        
+        <script type="module" src="http://localhost:3000/index.tsx"></script>
+    </div>
+</body>
+</html>

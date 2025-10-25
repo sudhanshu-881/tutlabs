@@ -64,14 +64,20 @@ export default defineConfig({
     host: true,
     open: true,
     cors: true,
-    // Fix MIME type issues
+    // Fix MIME type issues - ensure proper module serving
     middlewareMode: false,
     fs: {
       strict: false,
+      allow: ['..'],
     },
     // Ensure proper module serving
     hmr: {
       port: 3001,
+    },
+    // Force proper MIME types for JavaScript modules
+    headers: {
+      'Content-Type': 'application/javascript; charset=utf-8',
+      'Content-Security-Policy': "script-src 'self' 'unsafe-inline' https://unpkg.com https://aistudiocdn.com https://vercel.live; object-src 'none'; base-uri 'self';",
     },
   },
 
