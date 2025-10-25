@@ -64,6 +64,15 @@ export default defineConfig({
     host: true,
     open: true,
     cors: true,
+    // Fix MIME type issues
+    middlewareMode: false,
+    fs: {
+      strict: false,
+    },
+    // Ensure proper module serving
+    hmr: {
+      port: 3001,
+    },
   },
 
   // Preview server configuration
@@ -96,6 +105,8 @@ export default defineConfig({
       'lodash-es',
       'date-fns',
     ],
+    // Force re-optimization to fix MIME issues
+    force: true,
   },
 
   // Performance optimizations

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIME Type Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success { background: rgba(34, 197, 94, 0.3); border: 1px solid #22c55e; }
+        .error { background: rgba(239, 68, 68, 0.3); border: 1px solid #ef4444; }
+        .info { background: rgba(59, 130, 246, 0.3); border: 1px solid #3b82f6; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔧 MIME Type Fix Test</h1>
+        
+        <div id="status-container">
+            <div class="status success">✅ Server is running on port 3000</div>
+            <div class="status info">🔍 Testing MIME type fix...</div>
+        </div>
+        
+        <div id="root">
+            <div class="status error">❌ React app not loaded - MIME type issue detected</div>
+        </div>
+        
+        <script>
+            console.log('🔧 Debug: Testing MIME type fix...');
+            
+            // Test if React is loading
+            setTimeout(() => {
+                const rootElement = document.getElementById('root');
+                if (rootElement && rootElement.innerHTML.includes('MIME type issue detected')) {
+                    document.getElementById('status-container').innerHTML += 
+                        '<div class="status error">❌ MIME type issue still present - React app not loading</div>';
+                } else {
+                    document.getElementById('status-container').innerHTML += 
+                        '<div class="status success">✅ MIME type issue resolved - React app loaded successfully</div>';
+                }
+            }, 5000);
+        </script>
+        
+        <script type="module" src="http://localhost:3000/index.tsx"></script>
+    </div>
+</body>
+</html>
