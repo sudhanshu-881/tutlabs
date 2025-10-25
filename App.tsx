@@ -16,9 +16,11 @@ function ProductionApp() {
     }
     
     // Simulate app loading
+    console.log('🔧 Debug: Starting loading simulation...');
     setTimeout(() => {
+      console.log('🔧 Debug: Loading simulation complete, setting isLoading to false');
       setIsLoading(false);
-    }, 1000);
+    }, 500);
   }, []);
 
   useEffect(() => {
@@ -34,17 +36,20 @@ function ProductionApp() {
   };
 
   if (isLoading) {
+    console.log('🔧 Debug: App is in loading state, rendering loading component');
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-700 via-indigo-600 to-pink-600 flex items-center justify-center">
         <div className="text-center text-white">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
           <h2 className="text-2xl font-bold mb-2">Loading TutLabs...</h2>
           <p className="text-white/80">Preparing your learning experience</p>
+          <p className="text-white/60 text-sm mt-2">Debug: Loading state active</p>
         </div>
       </div>
     );
   }
 
+  console.log('🔧 Debug: App is rendering main content, isLoading is false');
   return (
     <HashRouter>
       <div className="flex flex-col min-h-screen bg-transparent text-gray-900 dark:text-white">
